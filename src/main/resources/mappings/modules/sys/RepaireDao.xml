@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.modules.sys.dao.RepaireDao">
+<sql id="repaireMasterCol">
+  id,
+  repairer,
+  repairer_phone as repairerPhone,
+  repairer_time as repairerTime,
+  repaire_type as repaireType,
+  status,
+  comments,
+  approval_status as approvalStatus,
+  isDelete,
+  checker,
+  work,
+  equipment,
+  image as nameImage,
+  payment,
+  start_time as startTime,
+  end_time as endTime,
+  third_com as thirdCom,
+  applier,
+  validate_time as validateTime,
+  masterID,
+  houseID
+</sql>
+
+<sql id="repaireColumns">
+	rep.id,
+	e.name as tenement,
+	h.room_no as roomNum,
+	r.name as roomType,
+	h.area as roomSize,
+	n.building_id  as floor,
+	n.name as building,
+	rep.repairer,
+	rep.repairer_phone as repairerPhone,
+	rep.repairer_time as repairerTime,
+	rep.repaire_type as repaireType,
+	rep.status,
+	rep.comments,
+	rep.approval_status as approvalStatus,
+	rep.isDelete,
+	rep.checker,
+	rep.work,
+	rep.equipment,
+	rep.image as nameImage,
+	rep.payment,
+	rep.start_time as startTime,
+	rep.end_time as endTime,
+	rep.third_com as thirdCom,
+	rep.applier,
+	rep.validate_time as validateTime,
+	rep.masterID,
+	rep.houseID,
+	h.state as houseStatus,
+	h.originState as originHouseStatus
+</sql>
+
+<sql id="queryRepaire">
+select 
+	<include refid="repaireColumns"/>
+from repaire rep inner join pr_house h on rep.houseID = h.id
+inner join building_no n on h.building_no_id = n.id
+inner join estate e on h.estate_id = e.id
+inner join room_type r on h.ROOM_TYPE_ID = r.id
+</sql>
+
+<select id="get" resultType="Repaire">
+	<include refid="queryRepaire"/>
+	WHERE rep.id = #{id}
+	and rep.isDelete = 'false'
+</select>
+
+<select id="findList" resultType="Repaire">
+		<include refid="queryRepaire"/>
+		WHERE 1=1
+		and rep.isDelete = 'false'
+		<if test="tenement != null and tenement != ''">
+		and e.name = #{tenement}
+		</if>
+</select>
+
+<select id="findSubmit" resultType="Repaire">
+		<include refid="queryRepaire"/>
+		where rep.isDelete = 'false'
+		<if test="tenement != null and tenement != ''">
+			and e.name = #{tenement}
+		</if>
+		<if test="thirdCom != null">
+			and rep.third_com = #{thirdCom}
+		</if>
+</select>
+
+<select id="listAllRepaireReport" resultType="Repaire">
+		<include refid="queryRepaire"/>
+		where rep.isDelete = 'false'
+		<if test="tenement != null and tenement != ''">
+		and e.name = #{tenement}
+		</if>
+</select>
+
+<select id="getRepaireByMasterID" resultType="Repaire">
+		<include refid="queryRepaire"/>
+		where rep.isDelete = 'false'
+		<if test="masterID != null  and masterID != ''">
+		and rep.masterID = #{masterID}
+		</if>
+		order by rep.repairer_time desc
+</select>
+
+<select id="search" resultType="Repaire">
+	<include refid="queryRepaire"/>
+		where rep.isDelete = 'false'
+	<if test="tenement != null and tenement != ''">
+		and e.name = #{tenement}
+	</if>
+	<if test="roomNum != null">
+		and h.room_no = #{roomNum}
+	</if>
+	<if test="building != null and building != ''">
+		and substr(n.name, length(n.name )-2,1) = #{building}
+	</if>
+	<if test="floor != null and floor != ''">
+		and n.building_id =#{floor}
+	</if>
+	<if test="repairer != null and repairer != ''">
+		and rep.repairer like '%'||#{repairer}||'%' 
+	</if>
+	<!-- <if test="company != null">
+		and company like #{company}
+	</if> -->
+	<if test="id != null">
+		and rep.id = #{id}
+	</if>
+	<if test="repairerTime != null and repairerTime != ''">
+		and rep.repairer_time >= #{repairerTime}
+	</if>
+	<if test="startTime != null and startTime != ''">
+		and rep.start_time >= #{startTime}
+	</if>
+	<if test="endTime != null and endTime != ''">
+		and rep.end_time &lt;= #{endTime}
+	</if>
+	<if test="status != null and status != ''">
+		and rep.status = #{status}
+	</if>
+	<if test="thirdCom != null">
+		and rep.third_com = #{thirdCom}
+	</if>
+</select>
+
+<update id="updateStatus">
+	update repaire set
+		<if test="repairer != null and repairer != ''">
+			repairer= #{repairer},
+		</if>
+		<if test="repairerPhone != null and repairerPhone != ''">
+			repairer_phone=#{repairerPhone}, 
+		</if>
+		<if test="repaireType != null and repaireType != ''">
+			repaire_type=#{repaireType},
+		</if>
+		<if test="repairerTime != null and repairerTime != ''">
+			repairer_time=#{repairerTime}, 
+		</if>
+		<if test="comments != null and comments != ''">
+			comments = #{comments}, 
+		</if>
+		<if test='checker == "-1"'>
+			checker = null, 
+		</if>
+		<if test='checker != null and checker != "" and checker != "-1"'>
+			checker = #{checker}, 
+		</if>
+		<if test="work != null and work != ''">
+			work = #{work}, 
+		</if>
+		<if test="equipment != null and equipment != ''">
+			equipment = #{equipment}, 
+		</if>
+		<if test="nameImage != null and nameImage != ''">
+			image = #{nameImage}, 
+		</if>
+		<if test='payment == "-1"'>
+			payment = null,
+		</if>
+		<if test='payment != null and payment != "" and payment != "-1"'>
+			payment=#{payment},
+		</if>
+		status = '完成检查'
+	where id = #{id}
+</update>
+
+<update id="addApprover">
+	update repaire set
+	  checker = #{checker}
+	where id = #{id}
+</update>
+
+<update id="updateRepaireStatus">
+	update repaire set
+	  status = #{status}
+	where id = #{id}
+</update>
+
+<update id="submitThird">
+	update repaire set
+		<if test="thirdCom != null">
+			third_com = #{thirdCom},
+		</if>
+		<if test="startTime != null">
+			start_time = #{startTime},
+		</if>
+		<if test="endTime != null">
+			end_time = #{endTime},
+		</if>
+		<if test="applier != null">
+			applier = #{applier},
+		</if>
+		<if test="status != null and status != ''">
+			status = #{status}
+		</if>
+	where id = #{id}
+</update>
+
+<update id="validateUpdate">
+	update repaire set
+		<if test="status != null">
+			status = #{status},
+		</if>
+		validate_time = #{validateTime}
+	where id = #{id}
+</update>
+
+<update id="update">
+	UPDATE repaire SET 
+		repairer= #{repairer},
+		repairer_phone=#{repairerPhone}, 
+		repairer_time=#{repairerTime},
+		repaire_type=#{repaireType},    
+		comments = #{comments}
+		
+	where id = #{id}
+</update>
+
+<insert id="insert">
+ INSERT INTO repaire(
+    id,
+	repairer,
+	repairer_phone,
+	repairer_time,
+	repaire_type,
+	comments,
+	floor,
+	status,
+	masterID,
+	houseID
+	
+ ) values (
+    #{id},
+ 	#{repairer},
+ 	#{repairerPhone},
+ 	#{repairerTime},
+ 	#{repaireType},
+ 	#{comments},
+ 	#{floor},
+ 	'已登记',
+ 	#{masterID},
+ 	#{houseID}
+ 
+ )
+</insert>
+
+<update id="delete">
+	UPDATE repaire SET 
+		isDelete = 'true'
+	WHERE id = #{id}
+</update>
+
+<select id="findByMaster" resultType="com.rent.modules.sys.entity.Repaire" parameterType="java.lang.Integer">
+		SELECT
+			<include refid="repaireMasterCol"/>
+		FROM repaire 
+		where	masterid=#{0}
+		and isDelete = 'false'
+</select>
+
+<select id="findByHouse" resultType="com.rent.modules.sys.entity.Repaire">
+		<include refid="queryRepaire"/>
+		where houseID=#{houseID}
+		and rep.isDelete = 'false'
+</select>
+
+</mapper>
+	

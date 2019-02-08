@@ -1,0 +1,75 @@
+package aaa;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.apache.catalina.core.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.rent.common.utils.MyDateUtil;
+import com.rent.dao.PrHouseMapper;
+import com.rent.dao.ReportMapper;
+import com.rent.entity.PrHouse;
+import com.rent.entity.Report;
+import com.rent.entity.Student;
+
+import freemarker.template.Configuration;
+ import freemarker.template.Template;
+ 
+ public class Test {
+ 
+     private Configuration configuration = null;
+   
+ 
+     public Test() {
+         configuration = new Configuration();
+         configuration.setDefaultEncoding("UTF-8");
+     }
+ 
+     public void createWord() {
+         Map<String, Object> dataMap = new HashMap<String, Object>();
+        try {
+            	String id="1";
+            	String name="xxx";
+            	
+            	
+            	String bDate="2012-1-1";
+            	String eDate="2012-1-1";
+                 dataMap.put("id", id);
+                 dataMap.put("name", name);
+                 dataMap.put("bDate", bDate);
+                 dataMap.put("eDate", eDate);
+                 
+                 configuration.setClassForTemplateLoading(this.getClass(), "/aaa"); // FTL文件所存在的位置
+                 Template template = configuration.getTemplate("xxx.ftl");
+
+                 File outFile = new File("E:/Doc1.doc");
+                 Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile),"UTF-8"));
+                 template.process(dataMap, out);
+                 out.close();
+          
+           
+             
+         } catch (Exception e) {
+            e.printStackTrace();
+        }
+     }
+
+    public static void main(String[] args) {
+    		
+		int n=0;
+		n=n+1;
+		n++;
+
+    	
+    	
+     }
+}

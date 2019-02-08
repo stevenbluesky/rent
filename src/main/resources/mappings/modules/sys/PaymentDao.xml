@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.modules.sys.dao.PaymentDao">
+	
+	<sql id="items">
+		id as paymentID,
+		project,
+		count,
+		price,
+		repaireID
+	</sql>
+	
+	<select id="getRepaireItems" resultType="Payment">
+		select
+		<include refid="items"></include>
+		from repaire_payment
+		where 1=1
+		and repaireID = #{repaireID}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO repaire_payment(
+			id, 
+			project, 
+			count, 
+			price, 
+			repaireID
+		) VALUES (
+			#{paymentID}, 
+			#{project}, 
+			#{count}, 
+			#{price}, 
+			#{repaireID}
+		)
+	</insert>
+	
+	<update id="delete">
+		delete from repaire_payment where id = #{paymentID}
+	</update>
+	
+	<update id="deleteByRepaireID">
+		delete from repaire_payment where repaireID = #{repaireID}
+	</update>
+	
+	<update id="update">
+		update repaire_payment set
+			project = #{project},
+			count = #{count},
+			price = #{price},
+			repaireID = #{repaireID}
+		where id = #{paymentID}
+	</update>
+	
+</mapper>

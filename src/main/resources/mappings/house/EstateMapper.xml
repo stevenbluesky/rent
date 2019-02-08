@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rent.dao.EstateMapper" >
+  <resultMap id="BaseResultMap" type="com.rent.entity.Estate" >
+   
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE_ID" property="typeId" jdbcType="DECIMAL" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="author_Code" property="authorCode" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="map_Pic" property="mapPic" jdbcType="DECIMAL" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+   
+    ID, NAME, TYPE_ID, ADDRESS, REMARK,price,author_Code,phone,map_Pic
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from ESTATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+ 
+ <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from ESTATE order by id
+ </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+   
+    delete from ESTATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.rent.entity.Estate" >
+   
+    insert into ESTATE (ID, NAME, TYPE_ID, 
+      ADDRESS, REMARK,price,author_Code,phone,map_Pic)
+    values (seq_estate.nextval, #{name,jdbcType=VARCHAR}, #{typeId,jdbcType=DECIMAL}, 
+      #{address,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{authorCode,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR},#{mapPic,jdbcType=VARCHAR})
+  </insert>
+ 
+ 
+  <insert id="insertSelective" parameterType="com.rent.entity.Estate" >
+  
+    insert into ESTATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="typeId != null" >
+        TYPE_ID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.rent.entity.Estate" >
+    
+    update ESTATE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        TYPE_ID = #{typeId,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="phone!= null" >
+        phone= #{phone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.rent.entity.Estate" >
+   
+    update ESTATE
+    set NAME = #{name,jdbcType=VARCHAR},
+      TYPE_ID = #{typeId,jdbcType=DECIMAL},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      author_Code=#{authorCode,jdbcType=VARCHAR},
+      phone= #{phone,jdbcType=VARCHAR},
+      map_Pic= #{mapPic,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+  <select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+      	*
+    from ESTATE where name=#{0}
+    
+  </select>
+  
+  <select id="getCurrId" resultType="java.lang.Integer">
+  	select seq_estate.currval from dual
+  </select>
+  
+  
+</mapper>

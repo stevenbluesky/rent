@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rent.dao.ReportMapper" >
+  <resultMap id="BaseResultMap" type="com.rent.entity.Report" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="YEAR" property="year" jdbcType="DECIMAL" />
+    <result column="MONTH" property="month" jdbcType="DECIMAL" />
+    <result column="DAY" property="day" jdbcType="DECIMAL" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+   
+    ID, YEAR, MONTH, DAY, TOTAL
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  
+    select 
+    <include refid="Base_Column_List" />
+    from REPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+ <!--  一、日报数据      -->
+<!--1.每日收租金  -->  
+ <select id="findDayRent" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select extract(day from logdate) as "day", sum(credit) as total 
+	   		from prh_payment  
+	where ref1='R' and ref2 is null and logshift is null 
+		   and extract(year from logdate)=#{year} 
+		  and extract(month from logdate)=#{month}
+		   and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+      )
+	group by extract(day from logdate)
+	order by extract(day from logdate)
+</select>
+
+<!--2,每日收押金 -->
+ <select id="findDayDesposit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select extract(day from logdate) as "day", sum(credit) as total from prh_payment  
+  	 where ref1='D' and ref2 is null  and extract(month from logdate)=#{month}
+  	 and extract(year from logdate)=#{year}
+  	  and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+      )
+ 	 group by extract(day from logdate)
+	order by extract(day from logdate)
+</select>
+
+
+ <!-- 3.每日 退租金 -->
+ <select id="findDayExitRent" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select extract(day from tuidate) as "day",sum(tuimoney) as total from prh_master 
+	where tuimoney is not null and  extract(month from tuidate)=#{month}
+	and extract(year from tuidate)=#{year}
+	 and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+	 
+	group by extract(day from tuidate)
+	order by extract(day from tuidate)
+</select>
+
+
+<!-- 4.每日退押金金 -->
+ <select id="findDayExitDesposit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select extract(day from tuidate) as "day",sum(TUIDESPOSIT) as total from prh_master 
+	where TUIDESPOSIT is not null and  extract(month from tuidate)=#{month}
+	and extract(year from tuidate)=#{year}
+	and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+	group by extract(day from tuidate)
+	order by extract(day from tuidate)
+</select>
+
+<!--  二、月报数据      -->
+
+<!--1.月收租金  -->
+ <select id="findMonthRent" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	select extract(month from logdate) as "month", sum(credit) as total from prh_payment  
+   where ref1='R' and ref2 is null and logshift is null and extract(year from logdate)=#{year}
+    and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+      )
+   group by extract(month from logdate)
+order by extract(month from logdate)
+ </select>
+ 
+ <!--2.月收押金  -->
+ <select id="findMonthDesposit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	select extract(month from logdate) as "month", sum(credit) as total from prh_payment  
+   where ref1='D' and ref2 is null and extract(year from logdate)=#{year}
+    and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+      )
+   group by extract(month from logdate)
+order by extract(month from logdate)
+ 	
+ </select>
+ 
+ <!--3.月收押金  -->
+ <select id="findMonthExitRent" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	select extract(month from tuidate) as "month",sum(tuimoney) as total from prh_master 
+where tuimoney is not null and  extract(year from tuidate)=#{year}
+ and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+group by extract(month from tuidate)
+order by extract(month from tuidate)
+ </select>
+ 
+  <!--4.月收押金  -->
+ <select id="findMonthExitDesposit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	select extract(month from tuidate) as "month",sum(TUIDESPOSIT) as total from prh_master 
+where TUIDESPOSIT is not null and  extract(year from tuidate)=#{year}
+ and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+group by extract(month from tuidate)
+order by extract(month from tuidate)
+ 	
+ </select>
+	
+	
+<select id ="renterReport" resultType="java.lang.Double" parameterType="java.lang.Integer">
+<!-- 3.租户分析  -->
+<!--统计房间数 -->
+select count(*) as total, 1 as sort from  pr_house where estate_id=#{estateId}
+
+union
+<!-- 统计入住房间数 -->
+select count(*) as total, 2 as sort from( 
+  select count(*) as c from prh_master m where (sta=1 or sta=2 or sta=6 or sta=8) and house_id in (select h.id from pr_house h where estate_id=#{estateId} )
+  group by house_id
+  )
+union
+<!-- 统计入住人数 -->
+select sum(numbs) as total, 3 as sort from prh_master where ( sta=1 or sta=2 or sta=6 or sta=8) and house_id in (select h.id from pr_house h where estate_id=#{estateId} )
+
+union
+<!-- 入住面积 -->
+
+select sum(h.area) as total, 4 as sort from prh_master m
+inner join pr_house h on m.house_id=h.id
+where ( m.sta=1 or m.sta=2 or m.sta=6 or m.sta=8) and h.estate_id=#{estateId}
+union
+
+
+<!-- 实收租金 -->
+select sum(credit) as total, 5 as sort from prh_payment where logshift is null and ref2 is null and ref1='R'
+ and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+      )
+    union 
+ 
+ <!-- 实收押金 -->
+select sum(credit) as total, 6 as sort from prh_payment where logshift is null and ref2 is null and ref1='D'
+ and prtno in(
+       select r.id from prh_rental r where accnt in (
+          select m.id from prh_master m where house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+            )
+        )
+)
+union
+
+
+<!--应收租金  -->
+select sum(rate) as total,7 as sort from prh_rental
+where inumber !=0 and accnt in(
+   select m.id from prh_master m where  (sta=1 or sta=2 or sta=4 or sta=6 or sta=8 or sta=9) and  house_id in (
+            select h.id from pr_house h where estate_id=#{estateId}
+       )
+  )
+union
+<!--应退租金  -->
+  select sum(tuimoney) as total,8 as sort  from prh_master 
+  where tuimoney is not null 
+   and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+  union
+  
+  <!--应退押金  -->
+  select sum(TUIDESPOSIT) as total,9 as sort   from prh_master 
+	where TUIDESPOSIT is not null 
+	and house_id in (
+         select h.id from pr_house h where estate_id=#{estateId}
+     )
+
+order by sort
+	</select>
+	
+</mapper>
+
+
+
+

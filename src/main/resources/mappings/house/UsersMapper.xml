@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rent.dao.UsersMapper" >
+  <resultMap id="BaseResultMap" type="com.rent.entity.Users" >
+    
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="DECIMAL" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="ESTATE_ID" property="estateId" jdbcType="DECIMAL" />
+    <result column="ROLES" property="roles" jdbcType="VARCHAR" />
+    <result column="CREATEUSER" property="createuser" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createtime" jdbcType="DATE" />
+    <result column="UPDATEUSER" property="updateuser" jdbcType="VARCHAR" />
+    <result column="UPDATETIME" property="updatetime" jdbcType="DATE" />
+    <result column="del" property="del" jdbcType="DECIMAL" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    ID, NAME, PWD, SEX, PHONE, ADDRESS, ESTATE_ID, ROLES, CREATEUSER, CREATETIME, UPDATEUSER, 
+    UPDATETIME,del
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    
+    select 
+    <include refid="Base_Column_List" />
+    from USERS
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+   
+    delete from USERS
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+ 
+ 
+  <insert id="insert" parameterType="com.rent.entity.Users" >
+    
+    insert into USERS (ID, NAME, PWD, 
+      SEX, PHONE, ADDRESS, 
+      ESTATE_ID, ROLES, CREATEUSER, 
+      CREATETIME, UPDATEUSER, UPDATETIME,del
+      )
+    values (seq_users.nextval, #{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{estateId,jdbcType=DECIMAL}, #{roles,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=DATE}, #{updateuser,jdbcType=VARCHAR}, #{updatetime,jdbcType=DATE},
+      #{del,jdbcType=DECIMAL}
+      )
+  </insert>
+ 
+ 
+  <insert id="insertSelective" parameterType="com.rent.entity.Users" >
+   
+    insert into USERS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="pwd != null" >
+        PWD,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="estateId != null" >
+        ESTATE_ID,
+      </if>
+      <if test="roles != null" >
+        ROLES,
+      </if>
+      <if test="createuser != null" >
+        CREATEUSER,
+      </if>
+      <if test="createtime != null" >
+        CREATETIME,
+      </if>
+      <if test="updateuser != null" >
+        UPDATEUSER,
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=DECIMAL},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="estateId != null" >
+        #{estateId,jdbcType=DECIMAL},
+      </if>
+      <if test="roles != null" >
+        #{roles,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null" >
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updateuser != null" >
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.rent.entity.Users" >
+   
+    update USERS
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        PWD = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=DECIMAL},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="estateId != null" >
+        ESTATE_ID = #{estateId,jdbcType=DECIMAL},
+      </if>
+      <if test="roles != null" >
+        ROLES = #{roles,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null" >
+        CREATEUSER = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CREATETIME = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updateuser != null" >
+        UPDATEUSER = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        UPDATETIME = #{updatetime,jdbcType=DATE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.rent.entity.Users" >
+    
+    update USERS
+    set NAME = #{name,jdbcType=VARCHAR},
+      PWD = #{pwd,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=DECIMAL},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      ESTATE_ID = #{estateId,jdbcType=DECIMAL},
+      ROLES = #{roles,jdbcType=VARCHAR},
+      CREATEUSER = #{createuser,jdbcType=VARCHAR},
+      CREATETIME = #{createtime,jdbcType=DATE},
+      UPDATEUSER = #{updateuser,jdbcType=VARCHAR},
+      UPDATETIME = #{updatetime,jdbcType=DATE},
+      del = #{del,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+ 
+ 
+  <select id="findByUsers" resultMap="BaseResultMap" parameterType="com.rent.entity.Users" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from USERS where del=0 
+	     <if test="name != null" >
+       and  NAME = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="pwd != null" >
+     and   PWD = #{pwd,jdbcType=VARCHAR}
+      </if>
+      <if test="sex != null" >
+      and  SEX = #{sex,jdbcType=DECIMAL}
+      </if>
+      <if test="phone != null" >
+       and PHONE = #{phone,jdbcType=VARCHAR}
+      </if>
+      <if test="address != null" >
+      and  ADDRESS = #{address,jdbcType=VARCHAR}
+      </if>
+      <if test="estateId != null" >
+      and  ESTATE_ID = #{estateId,jdbcType=DECIMAL}
+      </if>
+      <if test="roles != null" >
+      and  ROLES = #{roles,jdbcType=VARCHAR}
+      </if>
+      <if test="createuser != null" >
+       and CREATEUSER = #{createuser,jdbcType=VARCHAR}
+      </if>
+     
+      <if test="updateuser != null" >
+       and UPDATEUSER = #{updateuser,jdbcType=VARCHAR}
+      </if>
+     
+  </select>
+  
+  
+  <select id="findAll" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from USERS where del=0 order by id
+  </select>
+  
+  <select id="findThirdUsers" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List"/>
+  	from USERS where instr(roles,'8',1,1)> 0
+  	and del = 0
+  	order by id
+  </select>
+  
+   <select id="findByName" resultMap="BaseResultMap"  parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from USERS where del=0 and name=#{0} order by id
+  </select>
+</mapper>
+
+

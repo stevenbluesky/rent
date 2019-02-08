@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.modules.sys.dao.TenementDao">
+<sql id="tenColumns">
+	id,
+	name,
+	address,
+	comments
+</sql>
+
+<select id="get" resultType="Tenement">
+	SELECT
+			<include refid="tenColumns"/>
+	FROM tenement a
+	WHERE 1=1
+	and id = #{id}
+</select>
+
+<select id="findList" resultType="Tenement">
+		SELECT
+			<include refid="tenColumns"/>
+		FROM tenement a
+		WHERE 1=1
+</select>
+
+<select id="listAll" resultType="Tenement">
+		SELECT
+			<include refid="tenColumns"/>
+		FROM tenement a
+		WHERE 1=1
+</select>
+
+</mapper>
