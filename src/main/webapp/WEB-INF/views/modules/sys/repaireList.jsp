@@ -21,7 +21,7 @@
 	function changeURL(event){
 		var printSubmitReport = document.querySelector("#printReport");
 		if(event.checked) {
-			printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=rent&type=register";
+			printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=审批单&type=register";
 		}else{
 			printSubmitReport.href = "javascript:void(0)";
 		}
@@ -31,6 +31,7 @@
 			if(hs){
 				hs.prop('disabled', false);
 			}
+
 			$("#delete").click(function(){
 				var repaire = document.querySelector('#contentTable input[type="radio"]:checked');
 				if(!repaire) {
@@ -301,7 +302,7 @@
 	</table>
 	<div class="pagination">${page}</div>
 	<div>
-		<button id="printReport" class="btn" style="margin-right:10px;" value="打印单据">打印单据</button>
+		<a href="javascript:void(0)" id="printReport" class="btn" style="margin-right:10px;" value="打印单据">打印单据</a>
 		<button id="delete" class="btn" style="margin-right:10px;" value="删除">删除</button>
 		<button id="update" class="btn" style="margin-right:10px;" value="修改">修改</button>
 	</div>

@@ -78,7 +78,7 @@ public class SubsidyServiceImpl implements SubsidyService{
 		this.subsidyTypeMapper = subsidyTypeMapper;
 	}
 	/**
-	 * ÉèÖÃµ¼º½ÊôÐÔ
+	 * ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param subsidies
 	 */
 	public void setGuideProperty(List<Subsidy> subsidies){
@@ -86,13 +86,13 @@ public class SubsidyServiceImpl implements SubsidyService{
 			s.setEstate(estateMapper.selectByPrimaryKey(s.getEstateId()));
 			s.setSubsidyPercent(subsidyPercentMapper.selectByPrimaryKey(s.getInPercentId()));
 			List<SubsidyWithType> withTypes = subsidyWithTypeMapper.findAll();
-			//ÀàÐÍ±í
+			//ï¿½ï¿½ï¿½Í±ï¿½
 			List<SubsidyType> subsidyTypes=subsidyTypeMapper.findAll();
-			//·â×°²¹ÌùÈËÀàÐÍ²¹Ìù±ÈÀý
+			//ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			Map<Integer, Double> ins=new HashMap<Integer, Double>();
 			Map<Integer, Double> outs=new HashMap<Integer, Double>();
 
-			//²¹ÌùÈËÀàÐÍ£¨ÏÈ°ÑËùÓÐÀàÐÍÃû³õÊ¼»¯µ½key£©
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½È°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½keyï¿½ï¿½
 			
 			for (SubsidyType sType : subsidyTypes) {
 				ins.put(sType.getId(),null);
@@ -102,9 +102,9 @@ public class SubsidyServiceImpl implements SubsidyService{
 			if (withTypes!=null&&withTypes.size()!=0) {
 				for (SubsidyWithType w  : withTypes) {
 					Double num= Double.parseDouble((new DecimalFormat("#0.0000").format(w.getPercent()))) ;
-					if (w.getSubsidyId()==s.getId()&& w.getInOrOut()==1) {
+					if (w.getSubsidyId().intValue()==s.getId().intValue()&& w.getInOrOut()==1) {
 						ins.put(w.getTypeId(), num);
-					}else if(w.getSubsidyId()==s.getId()&&w.getInOrOut()==2){
+					}else if(w.getSubsidyId().intValue()==s.getId().intValue()&&w.getInOrOut()==2){
 						outs.put(w.getTypeId(), num);
 					}
 				}
@@ -116,21 +116,21 @@ public class SubsidyServiceImpl implements SubsidyService{
 	
 	}
 	/**
-	 * ÉèÖÃµ¼º½ÊôÐÔ
+	 * ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param subsidies
 	 */
 	public void setGuideProperty(Subsidy s){
 		
 			s.setEstate(estateMapper.selectByPrimaryKey(s.getEstateId()));
 			s.setSubsidyPercent(subsidyPercentMapper.selectByPrimaryKey(s.getInPercentId()));
-			//¹ØÁª±í
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			List<SubsidyWithType> withTypes = subsidyWithTypeMapper.findAll();
-			//ÀàÐÍ±í
+			//ï¿½ï¿½ï¿½Í±ï¿½
 			List<SubsidyType> subsidyTypes=subsidyTypeMapper.findAll();
 			Map<Integer, Double> ins=new HashMap<Integer, Double>();
 			Map<Integer, Double> outs=new HashMap<Integer, Double>();
 			
-			//²¹ÌùÈËÀàÐÍ£¨ÏÈ°ÑËùÓÐÀàÐÍÃû³õÊ¼»¯µ½key£©
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½È°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½keyï¿½ï¿½
 			
 			for (SubsidyType sType : subsidyTypes) {
 				ins.put(sType.getId(),null);
@@ -141,9 +141,9 @@ public class SubsidyServiceImpl implements SubsidyService{
 				for (SubsidyWithType w  : withTypes) {
 					Double num= Double.parseDouble((new DecimalFormat("#0.0000").format(w.getPercent()))) ;
 					System.out.println(w.getPercent()+"---"+ num);
-					if (w.getSubsidyId()==s.getId()&& w.getInOrOut()==1) {
+					if (w.getSubsidyId().intValue()==s.getId().intValue()&& w.getInOrOut()==1) {
 						ins.put(w.getTypeId(), num);
-					}else if(w.getSubsidyId()==s.getId()&&w.getInOrOut()==2){
+					}else if(w.getSubsidyId().intValue()==s.getId().intValue()&&w.getInOrOut()==2){
 						outs.put(w.getTypeId(), num);
 					}
 				}
@@ -207,7 +207,7 @@ public class SubsidyServiceImpl implements SubsidyService{
 	}
 	
 	/**
-	 * »ñÈ¡µ±Ç°×ÔÔöµÄid
+	 * ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½id
 	 */
 	public Integer getCurrSubsidyPercentId() {
      return	subsidyPercentMapper.getCurrId();

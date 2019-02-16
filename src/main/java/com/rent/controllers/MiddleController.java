@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.rent.common.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.rent.common.utils.GenerateSequenceUtil;
-import com.rent.common.utils.MyConvertUtil;
-import com.rent.common.utils.MyDateUtil;
-import com.rent.common.utils.ObjectUtils;
-import com.rent.common.utils.WordGenerator;
 import com.rent.entity.PrHouse;
 import com.rent.entity.PrhMaster;
 import com.rent.entity.PrhRental;
@@ -86,7 +82,7 @@ public class MiddleController {
         
         PrhMaster master = prhMasterService.findById(Integer.valueOf(req.getParameter("id")));
         
-        String docName = req.getParameter("name");
+        String docName = StringUtils.isBlank(req.getParameter("name"))?"退租单":req.getParameter("name");
         String type = req.getParameter("type");
         
         System.out.println("id"+req.getParameter("id"));
@@ -106,8 +102,7 @@ public class MiddleController {
             resp.setContentType("application/msword");
             
             // 设置浏览器以下载的方式处理该文件默认名为resume.doc  
-            resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");  
-              
+			resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
             out = resp.getOutputStream();  
             byte[] buffer = new byte[512];  // 缓冲区  
             int bytesToRead = -1;

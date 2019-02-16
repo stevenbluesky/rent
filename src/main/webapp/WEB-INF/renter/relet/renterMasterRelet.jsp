@@ -737,11 +737,11 @@ a:hover {
 			 </c:if></c:forEach></c:if></c:forEach>
 				
 				
-			<%-- 	<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
+<%--			 	<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 					<input class="btn confirmBtn"  value="续租确认" type="button" onclick="toConfirmApply()" /> &nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==19}">
 					<input class="btn confirmBtn"  value="续租确认" type="button" onclick="toConfirmApply()" /> &nbsp;&nbsp;
-			 				</c:if></c:forEach></c:if></c:forEach> --%>
+			 				</c:if></c:forEach></c:if></c:forEach>--%>
 			 				
 			 		
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">

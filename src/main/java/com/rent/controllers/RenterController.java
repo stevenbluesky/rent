@@ -1404,7 +1404,8 @@ public class RenterController {
 			resp.setCharacterEncoding("utf-8");
 			resp.setContentType("application/msword");
 			// 设置浏览器以下载的方式处理该文件默认名为resume.doc
-			resp.addHeader("Content-Disposition", "attachment;filename=" + docName + ".doc");
+			//resp.addHeader("Content-Disposition", "attachment;filename=" + docName + ".doc");
+			resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
 
 			out = resp.getOutputStream();
 			byte[] buffer = new byte[512]; // 缓冲区

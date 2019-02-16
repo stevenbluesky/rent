@@ -79,7 +79,7 @@ public class RoomTypeController {
 			return "prhCode/roomType/roomTypeAdd.jsp";
 		}
 		roomTypeService.addRoomType(roomType);
-		map.put("tip", "删除成功");
+		map.put("tip", "新增成功");
 		return "../findAllRoomTypePaged.do";
 	}
 

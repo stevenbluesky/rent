@@ -331,30 +331,21 @@
 		</tbody>
 	</table>
 		<ul class="nav nav-tabs">
-						<li>
-							<div class="row-fluid repaire-search" style="margin-bottom:0px;">	
-							<table >		
-									<tr>			
-											<td >
-												<div style="margin-right: 100px;"  >
-												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input value="${user.id }"  name="userId" type="hidden" id="master" style="width:100px;margin-top: 7px;" onkeyup="value=value.replace(/[^\d.]/g,'')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</input>
-												核算人:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input value="${user.name }"   type="text" id="master" style="width:100px;margin-top: 7px;" onkeyup="value=value.replace(/[^\d.]/g,'')" readonly="readonly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</input>
-												
-												</div>
-											</td>
-											
-						
-											
-											
-											
-											</tr>
-											
-									
-									</table>
-							</div>
-						</li>
-					
-						</ul>
+			<li>
+				<div class="row-fluid repaire-search" style="margin-bottom:0px;">
+				<table >
+						<tr>
+							<td >
+								<div style="margin-right: 100px;"  >
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input value="${user.id }"  name="userId" type="hidden" id="master" style="width:100px;margin-top: 7px;" onkeyup="value=value.replace(/[^\d.]/g,'')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</input>
+								核算人:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input value="${user.name }"   type="text" id="master" style="width:100px;margin-top: 7px;" onkeyup="value=value.replace(/[^\d.]/g,'')" readonly="readonly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</input>
+								</div>
+							</td>
+						</tr>
+						</table>
+				</div>
+			</li>
+		</ul>
 	<div>
 		<input type="button" <c:if test="${prhMaster.refer1 eq '1' }">disabled="disabled" </c:if> id="oper" class="btn" style="margin-right:10px;" value="核算确认" onclick="opeForm()"></input>
 	</div>

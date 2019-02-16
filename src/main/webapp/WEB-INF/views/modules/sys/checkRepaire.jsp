@@ -28,7 +28,7 @@
 	function changeURL(event){
 		var printSubmitReport = document.querySelector("#printReport");
 		if(event.checked) {
-			printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=rent&type=accept";
+			printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=交办单&type=accept";
 		}else{
 			printSubmitReport.href = "javascript:void(0)";
 		}

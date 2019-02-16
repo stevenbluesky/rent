@@ -25,8 +25,7 @@
 		 /* 操作后的提示语 */
 		if (<%=request.getAttribute("tip") != null%>) {
 			
-			$.jBox.tip("<%=request.getAttribute("tip")%>
-	");
+			$.jBox.tip("<%=request.getAttribute("tip")%>");
 		}
 
 	});
@@ -102,7 +101,6 @@
 		}
 	}
 	function checkSel() {
-
 		//判断  复选框是否选中了复选框
 		var chks = $(".chk");
 		for (var i = 0; i < chks.length; i++) {
@@ -112,13 +110,11 @@
 				return false;
 			}
 		}
-
 		return false;
 	}
+
 	function batchAudit() {
-
 		//判断是否有复选框   被选中 如果有 那就传 复选框 的c
-
 		var estateId = $("#estateIdc").val();
 		var roomtypeid = $("#roomtypeIdc").val();
 		var danyuanid = $("#danyuanidc").val();
@@ -139,9 +135,7 @@
 					location.reload();
 				}
 			});
-
 		});
-
 	}
 </script>
 

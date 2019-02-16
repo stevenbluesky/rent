@@ -68,8 +68,7 @@
 	        url: 'prHouseAdd.do',
 	        data: $('#myForm').serialize(),
 	        success: function (result) {
-	        	
-	       	 	if (result==0) {
+	       	 	if (result==="0") {
 					$>jBox.tip("房源信息重复！");
 					$(".addBtn").removeAttr("disabled");
 				}else{

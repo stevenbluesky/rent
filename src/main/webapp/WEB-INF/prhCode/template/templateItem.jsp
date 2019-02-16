@@ -134,9 +134,9 @@ ul {
 }
 -->
 </style>
-<link rel="stylesheet" href="css/page.css" type="text/css"></link>
+<%--<link rel="stylesheet" href="css/page.css" type="text/css"></link>
 <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="js/page.js"></script>
+<script type="text/javascript" src="js/page.js"></script>--%>
 
 <script type="text/javascript">
 	$(function() {

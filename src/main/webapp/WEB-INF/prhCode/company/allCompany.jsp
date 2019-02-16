@@ -57,7 +57,7 @@ a:hover {
 	function updateCom(){		
 			var rent = document.querySelector('#contentTable input[type="radio"]:checked');
 			if (!rent) {
-				$.jBox.tip('请选择具体的单位档案！');
+				$.jBox.tip('请选择具体的单位！');
 				return;
 			}
 			var rentID = rent.value;
@@ -101,7 +101,7 @@ a:hover {
 		if (confirm("确认删除吗?")) {
 			var rent = document.querySelector('#contentTable input[type="radio"]:checked');
 			if (!rent) {
-				$.jBox.tip('请选择具体的档案！');
+				$.jBox.tip('请选择具体的单位！');
 				return;
 			}
 			var rentID = rent.value;

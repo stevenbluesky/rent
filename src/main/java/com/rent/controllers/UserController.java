@@ -229,9 +229,9 @@ public class UserController {
 	public String toRoleAdd(Integer level1, String name, String modulesIds, Integer moduleNum, Integer[] level1Counts,
 			ModelMap map) throws UnsupportedEncodingException {
 
-		if (name != null) {
+/*		if (name != null) {
 			name = new String(name.getBytes("iso-8859-1"), "utf-8");
-		}
+		}*/
 		if (moduleNum == null) {
 			moduleNum = 0;
 		}

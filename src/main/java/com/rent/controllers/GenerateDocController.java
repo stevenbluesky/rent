@@ -46,20 +46,21 @@ public class GenerateDocController{
         InputStream fin = null;  
         ServletOutputStream out = null;  
         try {  
-            // µ÷ÓÃ¹¤¾ßÀàWordGeneratorµÄcreateDoc·½·¨Éú³ÉWordÎÄµµ  
+            // ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½WordGeneratorï¿½ï¿½createDocï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wordï¿½Äµï¿½  
             file = WordGenerator.createDoc(map, type);  
             fin = new FileInputStream(file);  
               
             resp.setCharacterEncoding("utf-8");  
             resp.setContentType("application/msword");
             
-            // ÉèÖÃä¯ÀÀÆ÷ÒÔÏÂÔØµÄ·½Ê½´¦Àí¸ÃÎÄ¼þÄ¬ÈÏÃûÎªresume.doc  
-            resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");  
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ØµÄ·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½Îªresume.doc  
+            //resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");
+            resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
               
             out = resp.getOutputStream();  
-            byte[] buffer = new byte[512];  // »º³åÇø  
+            byte[] buffer = new byte[512];  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             int bytesToRead = -1;
-            // Í¨¹ýÑ­»·½«¶ÁÈëµÄWordÎÄ¼þµÄÄÚÈÝÊä³öµ½ä¯ÀÀÆ÷ÖÐ  
+            // Í¨ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wordï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             while((bytesToRead = fin.read(buffer)) != -1) {  
                 out.write(buffer, 0, bytesToRead);
             }
@@ -69,7 +70,7 @@ public class GenerateDocController{
         } finally {  
             if(fin != null) fin.close();
             if(out != null) out.close();  
-            if(file != null) file.delete(); // É¾³ýÁÙÊ±ÎÄ¼þ  
+            if(file != null) file.delete(); // É¾ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½  
         }  
     }
     
@@ -92,20 +93,21 @@ public class GenerateDocController{
         InputStream fin = null;  
         ServletOutputStream out = null;  
         try {  
-            // µ÷ÓÃ¹¤¾ßÀàWordGeneratorµÄcreateDoc·½·¨Éú³ÉWordÎÄµµ  
+            // ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½WordGeneratorï¿½ï¿½createDocï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wordï¿½Äµï¿½  
             file = WordGenerator.createDoc(map, type);  
             fin = new FileInputStream(file);  
               
             resp.setCharacterEncoding("utf-8");  
             resp.setContentType("application/msword");
             
-            // ÉèÖÃä¯ÀÀÆ÷ÒÔÏÂÔØµÄ·½Ê½´¦Àí¸ÃÎÄ¼þÄ¬ÈÏÃûÎªresume.doc  
-            resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");  
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ØµÄ·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½Îªresume.doc  
+            //resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");
+            resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
               
             out = resp.getOutputStream();  
-            byte[] buffer = new byte[512];  // »º³åÇø  
+            byte[] buffer = new byte[512];  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             int bytesToRead = -1;
-            // Í¨¹ýÑ­»·½«¶ÁÈëµÄWordÎÄ¼þµÄÄÚÈÝÊä³öµ½ä¯ÀÀÆ÷ÖÐ  
+            // Í¨ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wordï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             while((bytesToRead = fin.read(buffer)) != -1) {  
                 out.write(buffer, 0, bytesToRead);
             }
@@ -115,7 +117,7 @@ public class GenerateDocController{
         } finally {  
             if(fin != null) fin.close();
             if(out != null) out.close();  
-            if(file != null) file.delete(); // É¾³ýÁÙÊ±ÎÄ¼þ  
+            if(file != null) file.delete(); // É¾ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½  
         }  
     }
 }
