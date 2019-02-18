@@ -17,11 +17,11 @@ public class CardServiceImpl implements CardService {
 
 	@Autowired
 	private CardMapper cardMapper;
-	
+
 	@Autowired
 	private HistoryIdenPwdMapper historyIdenPwdMapper;
-	
-	
+
+
 	public HistoryIdenPwdMapper getHistoryIdenPwdMapper() {
 		return historyIdenPwdMapper;
 	}
@@ -40,14 +40,14 @@ public class CardServiceImpl implements CardService {
 
 	@Override
 	public void addCard(Card card) {
-		 cardMapper.insert(card);
-		
+		cardMapper.insert(card);
+
 	}
 
 	@Override
 	public void editCard(Card card) {
 		cardMapper.updateByPrimaryKey(card);
-		
+
 	}
 
 	@Override
@@ -84,12 +84,12 @@ public class CardServiceImpl implements CardService {
 	public Integer getRoomIdSeq() {
 		return cardMapper.getRoomIdSeq();
 	}
-	//Ìí¼ÓÀúÊ·Éí·İÖ¤¶ÔÂë
+	//æ·»åŠ å†å²èº«ä»½è¯å¯¹ç 
 	@Override
 	public int addHistoryIdenPwd(HistoryIdenPwd historyIdenPwd) {
 		return historyIdenPwdMapper.insert(historyIdenPwd);
 	}
-	//²éÑ¯ÀúÊ·Éí·İÖ¤¶ÔÂë
+	//æŸ¥è¯¢å†å²èº«ä»½è¯å¯¹ç 
 	@Override
 	public List<HistoryIdenPwd> findAllHistoryIdenPwd() {
 		return historyIdenPwdMapper.findAll();

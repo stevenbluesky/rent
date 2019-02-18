@@ -27,7 +27,7 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 
 	@Autowired
 	private BuildingService buildingService;
-	
+
 	public EstateService getEstateService() {
 		return estateService;
 	}
@@ -44,18 +44,18 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 		this.buildingNoMapper = buildingNoMapper;
 	}
 
-	// ·â×°µ¼º½ÊôĞÔ
+	// å°è£…å¯¼èˆªå±æ€§
 	private void setGuideProperty(List<BuildingNo> buildingNos) {
 		for (BuildingNo b : buildingNos) {
 			Estate estate = estateService.findById(b.getEstateId());
 			if (b.getBuildingId()!=null) {
-				
+
 			}
 			b.setEstate(estate);
 		}
 	}
 
-	// ·â×°µ¼º½ÊôĞÔ
+	// å°è£…å¯¼èˆªå±æ€§
 	private void setGuideProperty(BuildingNo b) {
 
 		Estate estate = estateService.findById(b.getEstateId());
@@ -64,7 +64,7 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * ²éÑ¯È«²¿
+	 * æŸ¥è¯¢å…¨éƒ¨
 	 */
 	public List<BuildingNo> findAll() {
 		List<BuildingNo> buildingNos = buildingNoMapper.findAll();
@@ -73,7 +73,7 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * ĞÂÔö
+	 * æ–°å¢
 	 */
 
 	public int addBuildingNo(BuildingNo buildingNo) {
@@ -86,14 +86,14 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * ĞŞ¸Ä
+	 * ä¿®æ”¹
 	 */
 	public int updateBuildingNo(BuildingNo buildingNo) {
 		return buildingNoMapper.updateByPrimaryKey(buildingNo);
 	}
 
 	/**
-	 * Í¨¹ıid²éÕÒ
+	 * é€šè¿‡idæŸ¥æ‰¾
 	 */
 
 	public BuildingNo findById(String id) {
@@ -102,7 +102,7 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * É¾³ı
+	 * åˆ é™¤
 	 */
 	public int delBuildingNo(String id) {
 
@@ -111,31 +111,31 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 
 
 	/**
-	 * É¾³ı
+	 * åˆ é™¤
 	 */
 	public int delBuildingNo(String[] id) {
-		
+
 		for (String string : id) {
-			buildingNoMapper.deleteByPrimaryKey(string);	
+			buildingNoMapper.deleteByPrimaryKey(string);
 		}
 		return 1;
-		
+
 	}
 
-	
+
 	/**
-	 * ÎïÒµ¼¯ºÏ
+	 * ç‰©ä¸šé›†åˆ
 	 */
 	public List<Estate> getAllEstate() {
 		return estateService.findAll();
 	}
 
 	/**
-	 * 
-	 * ¸ù¾İÎïÒµ·ÖÒ³²éÑ¯
+	 *
+	 * æ ¹æ®ç‰©ä¸šåˆ†é¡µæŸ¥è¯¢
 	 */
 	public List<BuildingNo> findByEstatePaged(Integer estateId,
-			Integer currage, Integer size) {
+											  Integer currage, Integer size) {
 
 		Integer begin = (currage - 1) * size + 1;
 		Integer end = begin + size - 1;
@@ -147,7 +147,7 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * ¸ù¾İÎïÒµ»ñÈ¡×ÜÌõÊı
+	 * æ ¹æ®ç‰©ä¸šè·å–æ€»æ¡æ•°
 	 */
 	public int getCountByEstate(Integer estateId) {
 		return buildingNoMapper.getCountByEstate(estateId);
@@ -158,14 +158,14 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	}
 
 	/**
-	 * ¸ù¾İid²éÑ¯Â¥ºÅ¼¯ºÏ
+	 * æ ¹æ®idæŸ¥è¯¢æ¥¼å·é›†åˆ
 	 */
 	public List<BuildingNo> findByEstate(int estate) {
 
 		return buildingNoMapper.findByEstateId(estate);
 	}
 
-	// ¸ù¾İÃû³Æ²éÕÒ
+	// æ ¹æ®åç§°æŸ¥æ‰¾
 	public BuildingNo findByName(Integer estateId, String name) {
 		BuildingNo buildingNo = buildingNoMapper.findByName(estateId.toString(), name);
 		if (buildingNo!=null) {
@@ -183,5 +183,5 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	public int clearBuildingIdBy(int buildingId, int estateId) {
 		return buildingNoMapper.clearBuildingIdBy(buildingId, estateId);
 	}
-	
+
 }

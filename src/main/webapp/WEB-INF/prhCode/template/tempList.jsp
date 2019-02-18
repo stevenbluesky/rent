@@ -164,7 +164,7 @@ function toAdd(){
 		});
 
 			if (count == 0) {
-			$.jBox.tip("请选择要删除的配套设施类型！");
+			$.jBox.tip("请选择要删除的设备模板！");
 			$("#myForm").submit(function() {
 				return false;
 			});

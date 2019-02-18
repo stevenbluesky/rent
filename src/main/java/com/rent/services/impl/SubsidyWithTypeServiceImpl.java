@@ -17,7 +17,7 @@ public class SubsidyWithTypeServiceImpl implements SubsidyWithTypeService{
 
 	@Autowired
 	private SubsidyWithTypeMapper subsidyWithTypeMapper;
-	
+
 	public SubsidyWithTypeMapper getSubsidyWithTypeMapper() {
 		return subsidyWithTypeMapper;
 	}
@@ -49,13 +49,13 @@ public class SubsidyWithTypeServiceImpl implements SubsidyWithTypeService{
 			}
 		}
 		return 1;
-		
+
 	}
 
 	public SubsidyWithType findById(Integer id) {
 		return subsidyWithTypeMapper.selectByPrimaryKey(id);
 	}
-	//批量新增
+	//鎵归噺鏂板
 	public int addAuto(List<SubsidyWithType> subsidyWithTypes) {
 		int  insert=0;
 		for (SubsidyWithType subsidyWithType : subsidyWithTypes) {
@@ -64,16 +64,16 @@ public class SubsidyWithTypeServiceImpl implements SubsidyWithTypeService{
 				return -1;
 			}
 		}
-		
+
 		return 1;
 	}
-	
+
 	public int deleteBySubsidy(int subsidyId) {
 		return subsidyWithTypeMapper.deleteBySubsidy(subsidyId);
 	}
-	
+
 	public int deleteBySubsidy(Integer [] subsidyId) {
-		
+
 		int result=0;
 		if (subsidyId.length!=0) {
 			for (Integer id : subsidyId) {
@@ -85,5 +85,5 @@ public class SubsidyWithTypeServiceImpl implements SubsidyWithTypeService{
 		}
 		return 1;
 	}
-	
+
 }

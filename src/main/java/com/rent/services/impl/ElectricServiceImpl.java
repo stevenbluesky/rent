@@ -14,11 +14,11 @@ import com.rent.entity.Electric;
 @Service
 @Transactional(readOnly = true)
 public class ElectricServiceImpl implements ElectricService{
-	
+
 	@Autowired
 	private ElectricMapper electricMapper;
-	
-	
+
+
 	public ElectricMapper getElectricMapper() {
 		return electricMapper;
 	}
@@ -26,32 +26,32 @@ public class ElectricServiceImpl implements ElectricService{
 		this.electricMapper = electricMapper;
 	}
 	/**
-	 * ĞÂÔö
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ–°å¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int addElectric(Electric electric){
 		return electricMapper.insert(electric);
 	}
 	/**
-	 * ĞŞ¸Ä
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * ä¿®æ”¹
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int updateElectric(Electric electric){
 		return electricMapper.updateByPrimaryKey(electric);
 	}
-	
+
 	/**
-	 * É¾³ı
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delElectric(Integer id){
 		return electricMapper.deleteByPrimaryKey(id);
 	}
-	
+
 
 	/**
-	 * É¾³ı(¸ù¾İÊı×é)
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤(æ ¹æ®æ•°ç»„)
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delElectric(Integer[] ids){
 		int result=0;
@@ -66,28 +66,28 @@ public class ElectricServiceImpl implements ElectricService{
 		return 1;
 	}
 	/**
-	 * ¸ù¾İÖ÷¼ü²éÑ¯
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ ¹æ®ä¸»é”®æŸ¥è¯¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public Electric findById(Integer id){
 		return electricMapper.selectByPrimaryKey(id);
 	}
-	
+
 	/**
-	 * ·ÖÒ³²éÑ¯È«²¿
-	 * @param µ±Ç°Ò³
-	 * @param Ò³´óĞ¡
-	 * @return ·¿ÎİÀàĞÍ¼¯ºÏ
+	 * åˆ†é¡µæŸ¥è¯¢å…¨éƒ¨
+	 * @param currpage
+	 * @param size
+	 * @return æˆ¿å±‹ç±»å‹é›†åˆ
 	 */
 	public List<Electric> findAllPaged(Integer currpage,Integer size){
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
 		return electricMapper.findAllPaged(begin, end);
 	}
-	
+
 	/**
-	 * ²éÑ¯×ÜÊı
-	 * @return ×ÜÊı
+	 * æŸ¥è¯¢æ€»æ•°
+	 * @return æ€»æ•°
 	 */
 	public Integer getTotalCount(){
 		return electricMapper.getTotalCount();

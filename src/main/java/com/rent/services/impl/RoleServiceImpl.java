@@ -93,7 +93,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public int delete(Integer[] ids) {
-		// ²éÑ¯½ÇÉ«ÊÇ·ñ±»Ê¹ÓÃ
+		// æŸ¥è¯¢è§’è‰²æ˜¯å¦è¢«ä½¿ç”¨
 		boolean isOnUse = false;
 		for (Integer id : ids) {
 			if (this.getOnUseNum(id) != 0) {
@@ -101,7 +101,7 @@ public class RoleServiceImpl implements RoleService {
 				break;
 			}
 		}
-		// ÊÇ·ñÕıÔÚÊ¹ÓÃ
+		// æ˜¯å¦æ­£åœ¨ä½¿ç”¨
 		if (isOnUse) {
 			return -1;
 		} else {
@@ -127,10 +127,10 @@ public class RoleServiceImpl implements RoleService {
 			boolean isAdd=false;
 			for (String s : splits) {
 				Module module = moduleService.findById(Integer.parseInt(s));
-				
+
 				if (module!=null&& module.getPid()==0&&!isAdd) {
 					role.setIsHouseManager(true);
-					
+
 					isAdd=true;
 				}else if(module!=null&& module.getPid()!=0&&!isAdd){
 					if (module!=null) {
@@ -142,9 +142,9 @@ public class RoleServiceImpl implements RoleService {
 							}
 						}
 					}
-					 
+
 				}
-				
+
 				modulesList.add(module);
 
 			}
@@ -152,7 +152,7 @@ public class RoleServiceImpl implements RoleService {
 		return modulesList;
 	}
 
-	// ÉèÖÃÊıÁ¿
+	// è®¾ç½®æ•°é‡
 	private void setRightsCountOfLevel1(Role role) {
 		Map<Integer, Module> modulesList = new HashMap<Integer, Module>();
 		String modules = role.getModules();
@@ -161,18 +161,18 @@ public class RoleServiceImpl implements RoleService {
 			for (String s : splits) {
 				Module module = moduleService.findById(Integer.parseInt(s));
 				if (module!=null) {
-					modulesList.put(module.getId(), module);	
+					modulesList.put(module.getId(), module);
 				}
-				
-				// ÅĞ¶Ï
+
+				// åˆ¤æ–­
 			}
 		}
 
-		// ±éÀú
+		// éå†
 		for (Integer mId : modulesList.keySet()) {
 
 			Module module = modulesList.get(mId);
-			// ¶ş¼¶²Ëµ¥
+			// äºŒçº§èœå•
 			if (module.getLevels() == 2) {
 				Module level1 = modulesList.get(module.getPid());
 				if (level1 != null) {
@@ -180,9 +180,9 @@ public class RoleServiceImpl implements RoleService {
 					level1.setRightsCountOfLevel1(count == null ? 1 : count + 1);
 				}
 
-				// °´Å¥²Ëµ¥
+				// æŒ‰é’®èœå•
 			} else if (module.getLevels() == 3) {
-				// Ò»¼¶²Ëµ¥
+				// ä¸€çº§èœå•
 				Module level1 = modulesList.get(modulesList.get(module.getPid()).getPid());
 				if (level1 != null) {
 					level1.setRightsCountOfLevel1(

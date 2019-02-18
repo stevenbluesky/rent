@@ -18,7 +18,7 @@ import com.rent.entity.Equipment;
 public class EquipmentServiceImpl implements EquipmentService{
 	@Autowired
 	private EquipmentMapper equipmentMapper;
-	
+
 	public EquipmentMapper getEquipmentMapper() {
 		return equipmentMapper;
 	}
@@ -26,32 +26,32 @@ public class EquipmentServiceImpl implements EquipmentService{
 		this.equipmentMapper = equipmentMapper;
 	}
 	/**
-	 * ĞÂÔö
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ–°å¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int addEquipment(Equipment equipment){
 		return equipmentMapper.insert(equipment);
 	}
 	/**
-	 * ĞŞ¸Ä
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * ä¿®æ”¹
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int updateEquipment(Equipment equipment){
 		return equipmentMapper.updateByPrimaryKey(equipment);
 	}
-	
+
 	/**
-	 * É¾³ı
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delEquipment(Integer id){
 		return equipmentMapper.deleteByPrimaryKey(id);
 	}
-	
+
 
 	/**
-	 * É¾³ı(¸ù¾İÊı×é)
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤(æ ¹æ®æ•°ç»„)
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delEquipment(Integer[] ids){
 		int result=0;
@@ -66,43 +66,43 @@ public class EquipmentServiceImpl implements EquipmentService{
 		return 1;
 	}
 	/**
-	 * ¸ù¾İÖ÷¼ü²éÑ¯
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ ¹æ®ä¸»é”®æŸ¥è¯¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public Equipment findById(Integer id){
 		return equipmentMapper.selectByPrimaryKey(id);
 	}
 	@Override
 	public List<Equipment> findAllPaged(Integer currpage, Integer size) {
-		
+
 		int begin = (currpage - 1) * size + 1;
 		int end = begin + size - 1;
 		List<Equipment> Equipment = equipmentMapper.findAllPaged(
 				(currpage - 1) * size + 1, end);
-			
+
 		return Equipment;
 	}
 	@Override
 	public Integer getTotalCount() {
-		
+
 		return equipmentMapper.getTotalCount();
 	}
 	@Override
 	public List<Equipment> findAllEqu() {
-		
+
 		return equipmentMapper.findAllEqu();
 	}
-	
+
 	/**
-	 * ·ÖÒ³²éÑ¯È«²¿
-	 * @param µ±Ç°Ò³
-	 * @param Ò³´óĞ¡
-	 * @return ·¿ÎİÀàĞÍ¼¯ºÏ
+	 * åˆ†é¡µæŸ¥è¯¢å…¨éƒ¨
+	 * @param å½“å‰é¡µ
+	 * @param é¡µå¤§å°
+	 * @return æˆ¿å±‹ç±»å‹é›†åˆ
 	 */
 
 	/**
-	 * ²éÑ¯×ÜÊı
-	 * @return ×ÜÊı
+	 * æŸ¥è¯¢æ€»æ•°
+	 * @return æ€»æ•°
 	 */
-	
+
 }

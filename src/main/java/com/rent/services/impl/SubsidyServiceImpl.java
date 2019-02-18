@@ -35,7 +35,7 @@ public class SubsidyServiceImpl implements SubsidyService{
 	private SubsidyPercentMapper subsidyPercentMapper;
 	@Autowired
 	private SubsidyMapper subsidyMapper;
-	
+
 	@Autowired
 	private SubsidyWithTypeMapper subsidyWithTypeMapper;
 	@Autowired
@@ -78,7 +78,7 @@ public class SubsidyServiceImpl implements SubsidyService{
 		this.subsidyTypeMapper = subsidyTypeMapper;
 	}
 	/**
-	 * ���õ�������
+	 * 设置导航属性
 	 * @param subsidies
 	 */
 	public void setGuideProperty(List<Subsidy> subsidies){
@@ -86,19 +86,19 @@ public class SubsidyServiceImpl implements SubsidyService{
 			s.setEstate(estateMapper.selectByPrimaryKey(s.getEstateId()));
 			s.setSubsidyPercent(subsidyPercentMapper.selectByPrimaryKey(s.getInPercentId()));
 			List<SubsidyWithType> withTypes = subsidyWithTypeMapper.findAll();
-			//���ͱ�
+			//类型表
 			List<SubsidyType> subsidyTypes=subsidyTypeMapper.findAll();
-			//��װ���������Ͳ�������
+			//封装补贴人类型补贴比例
 			Map<Integer, Double> ins=new HashMap<Integer, Double>();
 			Map<Integer, Double> outs=new HashMap<Integer, Double>();
 
-			//���������ͣ��Ȱ�������������ʼ����key��
-			
+			//补贴人类型（先把所有类型名初始化到key）
+
 			for (SubsidyType sType : subsidyTypes) {
 				ins.put(sType.getId(),null);
 				outs.put(sType.getId(), null);
 			}
-			
+
 			if (withTypes!=null&&withTypes.size()!=0) {
 				for (SubsidyWithType w  : withTypes) {
 					Double num= Double.parseDouble((new DecimalFormat("#0.0000").format(w.getPercent()))) ;
@@ -111,51 +111,51 @@ public class SubsidyServiceImpl implements SubsidyService{
 			}
 			s.setIn(ins);
 			s.setOut(outs);
-			
+
 		}
-	
+
 	}
 	/**
-	 * ���õ�������
+	 * 设置导航属性
 	 * @param subsidies
 	 */
 	public void setGuideProperty(Subsidy s){
-		
-			s.setEstate(estateMapper.selectByPrimaryKey(s.getEstateId()));
-			s.setSubsidyPercent(subsidyPercentMapper.selectByPrimaryKey(s.getInPercentId()));
-			//������
-			List<SubsidyWithType> withTypes = subsidyWithTypeMapper.findAll();
-			//���ͱ�
-			List<SubsidyType> subsidyTypes=subsidyTypeMapper.findAll();
-			Map<Integer, Double> ins=new HashMap<Integer, Double>();
-			Map<Integer, Double> outs=new HashMap<Integer, Double>();
-			
-			//���������ͣ��Ȱ�������������ʼ����key��
-			
-			for (SubsidyType sType : subsidyTypes) {
-				ins.put(sType.getId(),null);
-				outs.put(sType.getId(),null);
-			}
-			
-			if (withTypes!=null&&withTypes.size()!=0) {
-				for (SubsidyWithType w  : withTypes) {
-					Double num= Double.parseDouble((new DecimalFormat("#0.0000").format(w.getPercent()))) ;
-					System.out.println(w.getPercent()+"---"+ num);
-					if (w.getSubsidyId().intValue()==s.getId().intValue()&& w.getInOrOut()==1) {
-						ins.put(w.getTypeId(), num);
-					}else if(w.getSubsidyId().intValue()==s.getId().intValue()&&w.getInOrOut()==2){
-						outs.put(w.getTypeId(), num);
-					}
+
+		s.setEstate(estateMapper.selectByPrimaryKey(s.getEstateId()));
+		s.setSubsidyPercent(subsidyPercentMapper.selectByPrimaryKey(s.getInPercentId()));
+		//关联表
+		List<SubsidyWithType> withTypes = subsidyWithTypeMapper.findAll();
+		//类型表
+		List<SubsidyType> subsidyTypes=subsidyTypeMapper.findAll();
+		Map<Integer, Double> ins=new HashMap<Integer, Double>();
+		Map<Integer, Double> outs=new HashMap<Integer, Double>();
+
+		//补贴人类型（先把所有类型名初始化到key）
+
+		for (SubsidyType sType : subsidyTypes) {
+			ins.put(sType.getId(),null);
+			outs.put(sType.getId(),null);
+		}
+
+		if (withTypes!=null&&withTypes.size()!=0) {
+			for (SubsidyWithType w  : withTypes) {
+				Double num= Double.parseDouble((new DecimalFormat("#0.0000").format(w.getPercent()))) ;
+				System.out.println(w.getPercent()+"---"+ num);
+				if (w.getSubsidyId().intValue()==s.getId().intValue()&& w.getInOrOut()==1) {
+					ins.put(w.getTypeId(), num);
+				}else if(w.getSubsidyId().intValue()==s.getId().intValue()&&w.getInOrOut()==2){
+					outs.put(w.getTypeId(), num);
 				}
 			}
-			s.setIn(ins);
-			s.setOut(outs);
-			
-		
+		}
+		s.setIn(ins);
+		s.setOut(outs);
+
+
 	}
-	
+
 	public int addSubsidy(Subsidy subsidy) {
-		
+
 		return subsidyMapper.insert(subsidy);
 	}
 
@@ -181,7 +181,7 @@ public class SubsidyServiceImpl implements SubsidyService{
 	}
 
 	public Subsidy findById(Integer id) {
-		
+
 		Subsidy subsidy = subsidyMapper.selectByPrimaryKey(id);
 		setGuideProperty(subsidy);
 		return subsidy ;
@@ -190,28 +190,28 @@ public class SubsidyServiceImpl implements SubsidyService{
 	public List<Subsidy> findByEstatePaged(Integer estateId, Integer currpage, Integer size) {
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
-		
+
 		List<Subsidy> subsidies =null;
 		if (estateId!=null) {
 			subsidies = subsidyMapper.findByEstatePaged(estateId, begin, end);
-			setGuideProperty(subsidies);	
+			setGuideProperty(subsidies);
 		}
-		
+
 		return  subsidies;
-		
+
 	}
 
 	public Integer getCountByEstate(int estateId) {
-		
+
 		return subsidyMapper.getCountByEstate(estateId);
 	}
-	
+
 	/**
-	 * ��ȡ��ǰ������id
+	 * 获取当前自增的id
 	 */
 	public Integer getCurrSubsidyPercentId() {
-     return	subsidyPercentMapper.getCurrId();
-		
+		return	subsidyPercentMapper.getCurrId();
+
 	}
 	public int addSubsidyPercent(SubsidyPercent subsidyPercent) {
 		return subsidyPercentMapper.insert(subsidyPercent);
@@ -225,10 +225,10 @@ public class SubsidyServiceImpl implements SubsidyService{
 	@Override
 	public SubsidyCal findSubsidyCal(int estateId, int typeId, int inOrOut, Date date) {
 		List<SubsidyCal> findSubsidyCal = subsidyMapper.findSubsidyCal(estateId, typeId, inOrOut,date );
-		
+
 		return findSubsidyCal!=null&&findSubsidyCal.size()!=0?findSubsidyCal.get(0):null;
 	}
-	
+
 
 
 }

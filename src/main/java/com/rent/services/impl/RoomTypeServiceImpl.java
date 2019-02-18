@@ -16,38 +16,38 @@ public class RoomTypeServiceImpl implements RoomTypeService{
 
 	@Autowired
 	private RoomTypeMapper roomTypeMapper;
-	
-	
+
+
 	public RoomTypeMapper getRoomTypeMapper() {
 		return roomTypeMapper;
 	}
 	public void setRoomTypeMapper(RoomTypeMapper roomTypeMapper) {
 		this.roomTypeMapper = roomTypeMapper;
 	}
-	
+
 	/**
-	 * 新增
+	 * 鏂板
 	 */
 	public int addRoomType(RoomType roomType) {
-		
+
 		return roomTypeMapper.insert(roomType);
 	}
 	/**
-	 * 修改
+	 * 淇敼
 	 */
 	public int updateRoomType(RoomType roomType) {
-		
+
 		return roomTypeMapper.updateByPrimaryKey(roomType);
 	}
 	/**
-	 * 根据id删除
+	 * 鏍规嵁id鍒犻櫎
 	 */
 	public int delRoomType(Integer id) {
-		
+
 		return roomTypeMapper.deleteByPrimaryKey(id);
 	}
 	/**
-	 * 根据数组删除
+	 * 鏍规嵁鏁扮粍鍒犻櫎
 	 */
 	public int delRoomType(Integer[] ids) {
 		int result=0;
@@ -63,43 +63,43 @@ public class RoomTypeServiceImpl implements RoomTypeService{
 	}
 
 	/**
-	 * 根据id查询房屋类型
+	 * 鏍规嵁id鏌ヨ鎴垮眿绫诲瀷
 	 */
 	public RoomType findById(Integer id) {
-		
+
 		return roomTypeMapper.selectByPrimaryKey(id);
 	}
 
 	/**
-	 * 分页查询
+	 * 鍒嗛〉鏌ヨ
 	 */
 	public List<RoomType> findAllPaged(Integer currpage, Integer size) {
-	
+
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
 		return roomTypeMapper.findAllByPaged(begin, end);
 	}
-	
+
 	/**
-	 * 查询总数
+	 * 鏌ヨ鎬绘暟
 	 */
-	
+
 	public Integer getTotalCount(){
 		return roomTypeMapper.getTotalCount();
 	}
 	/**
-	 * 查询全部
+	 * 鏌ヨ鍏ㄩ儴
 	 */
 	public List<RoomType> findAll() {
 		return roomTypeMapper.findAll();
 	}
-	
+
 	public RoomType findtByName(String name) {
 		return roomTypeMapper.findByName(name);
 	}
 	@Override
 	public Integer findMaxId() {
-		
+
 		return roomTypeMapper.findMaxId();
 	}
 

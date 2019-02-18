@@ -17,8 +17,8 @@ public class ReportServiceImpl implements ReportService {
 
 	@Autowired
 	private ReportMapper reportMapper;
-	
-	
+
+
 	public ReportMapper getReportMapper() {
 		return reportMapper;
 	}
@@ -28,7 +28,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	private Map<Integer, Double> dayTotal=new HashMap<Integer,Double>();
-	
+
 	public Map<Integer, Double> getDayTotal() {
 		return dayTotal;
 	}
@@ -37,110 +37,110 @@ public class ReportServiceImpl implements ReportService {
 		this.dayTotal = dayTotal;
 	}
 
-	// Ã¿ÈÕ×â½ğ
+	// æ¯æ—¥ç§Ÿé‡‘
 	@Override
 	public Map<Integer, Double> findDayRent(Integer year, Integer month,Integer estateId) {
-		Map< Integer, Double> map=new HashMap<Integer, Double>(); 
-		 List<Report> list = reportMapper.findDayRent(month,year,estateId);
-		 dayTotal.put(1, 0.0);
-		 for (Report l : list) {
+		Map< Integer, Double> map=new HashMap<Integer, Double>();
+		List<Report> list = reportMapper.findDayRent(month,year,estateId);
+		dayTotal.put(1, 0.0);
+		for (Report l : list) {
 			map.put(l.getDay().intValue() , l.getTotal().doubleValue());
-			//¼ÆËã×ÜÊı
+			//è®¡ç®—æ€»æ•°
 			if (dayTotal.containsKey(1)) {
-				dayTotal.put(1, dayTotal.get(1)+l.getTotal().doubleValue());	
+				dayTotal.put(1, dayTotal.get(1)+l.getTotal().doubleValue());
 			}else{
 				dayTotal.put(1, 0.0);
 			}
-			
-			
-		 }
-		 return map;
+
+
+		}
+		return map;
 	}
 
-	// Ã¿ÈÕÊÕ×â½ğ
+	// æ¯æ—¥æ”¶ç§Ÿé‡‘
 	@Override
 	public Map<Integer, Double> findDayDesposit(Integer year, Integer month,Integer estateId) {
-		Map< Integer, Double> map=new HashMap<Integer, Double>(); 
-		 List<Report> list =  reportMapper.findDayDesposit(month,year,estateId);
-			 for (Report l : list) {
-					map.put(l.getDay().intValue() , l.getTotal().doubleValue());
-				 }
-		 return map;
+		Map< Integer, Double> map=new HashMap<Integer, Double>();
+		List<Report> list =  reportMapper.findDayDesposit(month,year,estateId);
+		for (Report l : list) {
+			map.put(l.getDay().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
 
-	// Ã¿ÈÕ ÍË×â½ğ
+	// æ¯æ—¥ é€€ç§Ÿé‡‘
 	@Override
 	public Map<Integer, Double> findDayExitRent(Integer year, Integer month,Integer estateId) {
-		Map< Integer, Double> map=new HashMap<Integer, Double>(); 
-		 List<Report> list =  reportMapper.findDayExitRent(month,year,estateId);
-		 for (Report l : list) {
-				map.put(l.getDay().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
+		Map< Integer, Double> map=new HashMap<Integer, Double>();
+		List<Report> list =  reportMapper.findDayExitRent(month,year,estateId);
+		for (Report l : list) {
+			map.put(l.getDay().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
 
-	// Ã¿ÈÕ ÊµÍË×â½ğ
+	// æ¯æ—¥ å®é€€ç§Ÿé‡‘
 	@Override
 	public Map<Integer, Double> findDayExitDesposit(Integer year, Integer month,Integer estateId) {
-		Map< Integer, Double> map=new HashMap<Integer, Double>(); 
-		 List<Report> list =  reportMapper.findDayExitDesposit(month,year,estateId);
-		 for (Report l : list) {
-				map.put(l.getDay().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
+		Map< Integer, Double> map=new HashMap<Integer, Double>();
+		List<Report> list =  reportMapper.findDayExitDesposit(month,year,estateId);
+		for (Report l : list) {
+			map.put(l.getDay().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
 
-	  //Ã¿ÔÂ ÊµÍË×â½ğ  
+	//æ¯æœˆ å®é€€ç§Ÿé‡‘
 
 	@Override
 	public Map<Integer, Double> findMonthRent(Integer year, Integer estateId) {
 		Map< Integer, Double> map=new HashMap<Integer, Double>();
-		
-		 List<Report> list = reportMapper.findMonthRent(year, estateId);
-		 for (Report l : list) {
-				map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
-		
+
+		List<Report> list = reportMapper.findMonthRent(year, estateId);
+		for (Report l : list) {
+			map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
+
 	}
-	 //Ã¿ÔÂÑº½ğ
+	//æ¯æœˆæŠ¼é‡‘
 
 	@Override
 	public Map<Integer, Double>findMonthDesposit(Integer year, Integer estateId) {
 		Map< Integer, Double> map=new HashMap<Integer, Double>();
 		List<Report> list = reportMapper.findMonthDesposit(year, estateId);
-		 for (Report l : list) {
-				map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
+		for (Report l : list) {
+			map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
-	//Ã¿ÔÂÍË×â½ğ
+	//æ¯æœˆé€€ç§Ÿé‡‘
 
 	@Override
 	public Map<Integer, Double> findMonthExitRent(Integer year, Integer estateId) {
 		Map< Integer, Double> map=new HashMap<Integer, Double>();
 		List<Report> list = reportMapper.findMonthExitRent(year, estateId);
-		 for (Report l : list) {
-				map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
+		for (Report l : list) {
+			map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
-	//Ã¿ÔÂÍËÑº½ğ
+	//æ¯æœˆé€€æŠ¼é‡‘
 
 	@Override
 	public Map<Integer, Double> findMonthExitDesposit(Integer year, Integer estateId) {
 		Map< Integer, Double> map=new HashMap<Integer, Double>();
 		List<Report> list = reportMapper.findMonthExitDesposit(year, estateId);
-		 for (Report l : list) {
-				map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
-			 }
-		 return map;
+		for (Report l : list) {
+			map.put(l.getMonth().intValue() , l.getTotal().doubleValue());
+		}
+		return map;
 	}
 
 	@Override
 	public List<Double> renterReport(Integer estateId) {
-		//1.·¿¼äÊı¡¢Èë×¡·¿¼äÊı¡¢Èë×¡ÈËÊı¡¢Èë×¡Ãæ»ı¡¢ÊµÊÕ×â½ğ¡¢ÊµÊÕÑº½ğ£¨°´Ë³Ğò£©
+		//1.æˆ¿é—´æ•°ã€å…¥ä½æˆ¿é—´æ•°ã€å…¥ä½äººæ•°ã€å…¥ä½é¢ç§¯ã€å®æ”¶ç§Ÿé‡‘ã€å®æ”¶æŠ¼é‡‘ï¼ˆæŒ‰é¡ºåºï¼‰
 		return reportMapper.renterReport(estateId);
 	}
-	
+
 }

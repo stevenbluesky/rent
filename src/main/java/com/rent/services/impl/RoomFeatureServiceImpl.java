@@ -22,30 +22,30 @@ public class RoomFeatureServiceImpl implements RoomFeatureService{
 	public void setRoomFeatureMapper(RoomFeatureMapper roomFeatureMapper) {
 		this.roomFeatureMapper = roomFeatureMapper;
 	}
-	
+
 	/**
-	 * 新增
+	 * 鏂板
 	 */
 	public int addRoomFeature(RoomFeature roomFeature) {
-		
+
 		return roomFeatureMapper.insert(roomFeature);
 	}
 	/**
-	 * 修改
+	 * 淇敼
 	 */
 	public int updateRoomFeature(RoomFeature roomFeature) {
-		
+
 		return roomFeatureMapper.updateByPrimaryKey(roomFeature);
 	}
 	/**
-	 * 根据id删除
+	 * 鏍规嵁id鍒犻櫎
 	 */
 	public int delRoomFeature(Integer id) {
-		
+
 		return roomFeatureMapper.deleteByPrimaryKey(id);
 	}
 	/**
-	 * 根据数组删除
+	 * 鏍规嵁鏁扮粍鍒犻櫎
 	 */
 	public int delRoomFeature(Integer[] ids) {
 		int result=0;
@@ -61,24 +61,24 @@ public class RoomFeatureServiceImpl implements RoomFeatureService{
 	}
 
 	/**
-	 * 根据id查询房屋类型
+	 * 鏍规嵁id鏌ヨ鎴垮眿绫诲瀷
 	 */
 	public RoomFeature findById(Integer id) {
-		
+
 		return roomFeatureMapper.selectByPrimaryKey(id);
 	}
 	/**
-	 * 分页查询
+	 * 鍒嗛〉鏌ヨ
 	 */
 	public List<RoomFeature> findAllPaged(Integer currpage, Integer size) {
-	
+
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
 		return roomFeatureMapper.findAllPaged(begin, end);
 	}
-	
+
 	/**
-	 * 查询总数
+	 * 鏌ヨ鎬绘暟
 	 */
 
 	public Integer getTotalCount(){

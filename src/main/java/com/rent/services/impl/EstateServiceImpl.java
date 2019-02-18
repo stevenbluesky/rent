@@ -40,40 +40,40 @@ public class EstateServiceImpl implements EstateService {
 		this.estateMapper = estateMapper;
 	}
 
-	// ·â×°µ¼º½ÊôĞÔ
+	// å°è£…å¯¼èˆªå±æ€§
 	private void setGuideProperty(List<Estate> estates) {
 		for (Estate e : estates) {
-			// ÎïÒµÀàĞÍ
+			// ç‰©ä¸šç±»å‹
 			EstateType type = estateTypeMapper
 					.selectByPrimaryKey(e.getTypeId());
 			e.setEstateType(type);
 		}
 	}
 
-	// ·â×°µ¼º½ÊôĞÔ
+	// å°è£…å¯¼èˆªå±æ€§
 	private void setGuideProperty(Estate e) {
-		// ÎïÒµÀàĞÍ
-		
+		// ç‰©ä¸šç±»å‹
+
 		EstateType type = estateTypeMapper.selectByPrimaryKey(e.getTypeId());
 		e.setEstateType(type);
 
 	}
 
-	// ²éÑ¯È«²¿
+	// æŸ¥è¯¢å…¨éƒ¨
 	public List<Estate> findAll() {
 		List<Estate> estates = estateMapper.findAll();
 		this.setGuideProperty(estates);
 		return estates;
 	}
 
-	// ĞÂÔö
+	// æ–°å¢
 	public int addEstate(Estate estate) {
 		Estate e = this.findById(estate.getId());
 		if (e != null) {
 			return -1;
 		}
-		
-	
+
+
 		String code= GenerateSequenceUtil.generateSequenceNo();
 		if (code.length()!=24) {
 			if (code.length()>24) {
@@ -81,8 +81,8 @@ public class EstateServiceImpl implements EstateService {
 			}else{
 				int num= 24-code.length();
 				for (int i = 0; i < num; i++) {
-					 Random r=new Random();
-					 String s=r.nextInt(10)+"";
+					Random r=new Random();
+					String s=r.nextInt(10)+"";
 					code+=s;
 				}
 			}
@@ -91,29 +91,29 @@ public class EstateServiceImpl implements EstateService {
 		return estateMapper.insert(estate);
 	}
 
-	// ĞŞ¸Ä
+	// ä¿®æ”¹
 	public int updateEstate(Estate estate) {
 
 		return estateMapper.updateByPrimaryKey(estate);
 	}
 
-	// É¾³ı
+	// åˆ é™¤
 	public int delEstate(Integer id) {
 		return estateMapper.deleteByPrimaryKey(id);
 	}
 
-	// ¸ù¾İÖ÷¼ü²éÑ¯
+	// æ ¹æ®ä¸»é”®æŸ¥è¯¢
 	public Estate findById(Integer id) {
 		return estateMapper.selectByPrimaryKey(id);
 	}
 
-	// ²éÑ¯ËùÓĞÎïÒµÀàĞÍ
+	// æŸ¥è¯¢æ‰€æœ‰ç‰©ä¸šç±»å‹
 	public List<EstateType> findAllEstateTypes() {
 		List<EstateType> types = estateTypeMapper.findAll();
 		return types;
 	}
 
-	// °´Ãû³Æ²éÕÒ
+	// æŒ‰åç§°æŸ¥æ‰¾
 	public Estate findByName(String name) {
 		Estate estate = estateMapper.findByName(name);
 		if (estate!=null) {

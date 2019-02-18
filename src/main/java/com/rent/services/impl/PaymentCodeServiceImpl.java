@@ -22,34 +22,34 @@ public class PaymentCodeServiceImpl implements PaymentCodeService{
 	public void setPaymentCodeMapper(PaymentCodeMapper paymentCodeMapper) {
 		this.paymentCodeMapper = paymentCodeMapper;
 	}
-	
+
 	/**
-	 * ĞÂÔö
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ–°å¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int addPaymentCode(PaymentCode paymentCode){
 		return paymentCodeMapper.insert(paymentCode);
 	}
 	/**
-	 * ĞŞ¸Ä
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * ä¿®æ”¹
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int updatePaymentCode(PaymentCode paymentCode){
 		System.out.println("testtest");
 		return paymentCodeMapper.updateByPrimaryKey(paymentCode);
 	}
-	
+
 	/**
-	 * É¾³ı
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delPaymentCode(Integer id){
 		return paymentCodeMapper.deleteByPrimaryKey(id);
 	}
 
 	/**
-	 * É¾³ı(¸ù¾İÊı×é)
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * åˆ é™¤(æ ¹æ®æ•°ç»„)
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public int delPaymentCode(Integer[] ids){
 		int result=0;
@@ -64,31 +64,31 @@ public class PaymentCodeServiceImpl implements PaymentCodeService{
 		return 1;
 	}
 	/**
-	 * ¸ù¾İÖ÷¼ü²éÑ¯
-	 * @return Ö´ĞĞ½á¹û1»ò-1
+	 * æ ¹æ®ä¸»é”®æŸ¥è¯¢
+	 * @return æ‰§è¡Œç»“æœ1æˆ–-1
 	 */
 	public PaymentCode findById(Integer id){
 		return paymentCodeMapper.selectByPrimaryKey(id);
 	}
-	
+
 	/**
-	 * ·ÖÒ³²éÑ¯È«²¿
-	 * @param µ±Ç°Ò³
-	 * @param Ò³´óĞ¡
-	 * @return ·¿ÎİÀàĞÍ¼¯ºÏ
+	 * åˆ†é¡µæŸ¥è¯¢å…¨éƒ¨
+	 * @param currpage
+	 * @param size
+	 * @return æˆ¿å±‹ç±»å‹é›†åˆ
 	 */
 	public List<PaymentCode> findAllPaged(Integer currpage,Integer size){
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
 		return paymentCodeMapper.findAllPaged(begin, end);
 	}
-	
+
 	/**
-	 * ²éÑ¯×ÜÊı
-	 * @return ×ÜÊı
+	 * æŸ¥è¯¢æ€»æ•°
+	 * @return æ€»æ•°
 	 */
 	public Integer getTotalCount(){
-		return paymentCodeMapper.getTotalCount(); 
-		
+		return paymentCodeMapper.getTotalCount();
+
 	}
 }

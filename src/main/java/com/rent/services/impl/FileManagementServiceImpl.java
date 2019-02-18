@@ -17,9 +17,9 @@ import com.rent.services.FileManagementService;
 @Transactional(readOnly = true)
 public class FileManagementServiceImpl  implements FileManagementService{
 	@Autowired
-	 private ProfileMapper profileMapper;
+	private ProfileMapper profileMapper;
 	@Autowired
-	 private PrhMasterMapper prhMasterMapper;
+	private PrhMasterMapper prhMasterMapper;
 
 	public ProfileMapper getProfileMapper() {
 		return profileMapper;
@@ -31,7 +31,7 @@ public class FileManagementServiceImpl  implements FileManagementService{
 
 	@Override
 	public List<Profile> findProfileByCondition( String cla,String sta, String name) {
-		
+
 		return profileMapper.findProfileByCondition(cla,sta, name);
 	}
 	@Override
@@ -48,12 +48,12 @@ public class FileManagementServiceImpl  implements FileManagementService{
 		}else{
 			return true;
 		}
-		
+
 	}
 	@Override
 	@Transactional(readOnly=false)
 	public Boolean updateProFile(Profile record) {
-		
+
 		int flag=0;
 		try {
 			flag =profileMapper.updateByPrimaryKey(record);
@@ -71,7 +71,7 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	}
 	@Override
 	public Boolean deleteProFile(String guestno) {
-		
+
 		int flag=0;
 		try {
 			flag =profileMapper.deleteByPrimaryKey(guestno);
@@ -85,7 +85,7 @@ public class FileManagementServiceImpl  implements FileManagementService{
 			return true;
 		}
 	}
-	
+
 	@Override
 	public List<Profile> findByCardId(String cardId) {
 		return profileMapper.findByCardId(cardId);
@@ -95,13 +95,13 @@ public class FileManagementServiceImpl  implements FileManagementService{
 		return profileMapper.selectByPrimaryKey(id);
 	}
 	@Override
-	//·ÖÒ³²éÑ¯
+	//åˆ†é¡µæŸ¥è¯¢
 	public List<Profile> findProfileByConditionAndPage(String cla, String sta, String name, Integer currage,
-			Integer size) {
+													   Integer size) {
 		int begin = (currage - 1) * size + 1;
 		int end = begin + size - 1;
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage(cla, sta, name, begin, end);
-			System.out.println(cla);
+		System.out.println(cla);
 		return profile;
 	}
 	@Override
@@ -112,7 +112,7 @@ public class FileManagementServiceImpl  implements FileManagementService{
 		}else{
 			return m.getName();
 		}
-		
+
 	}
 	@Override
 	public List<Profile> findProfileByConditionAndPage1(FileCondition condition, Integer currage, Integer size) {
@@ -121,12 +121,12 @@ public class FileManagementServiceImpl  implements FileManagementService{
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage1(condition);
-			
+
 		return profile;
 	}
 	@Override
 	public List<Profile> findProfileByCondition1(FileCondition condition) {
-		
+
 		return profileMapper.findProfileByCondition1(condition);
 	}
 	@Override
@@ -135,12 +135,12 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	}
 	@Override
 	public String findNameByHouseId(Integer houseid) {
-	
+
 		return profileMapper.findNameByHouseId(houseid);
 	}
 	@Override
 	public List<Profile> findProfileByCondition2(FileCondition condition) {
-		
+
 		return profileMapper.findProfileByCondition2(condition);
 	}
 	@Override
@@ -152,7 +152,7 @@ public class FileManagementServiceImpl  implements FileManagementService{
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage2(condition);
 		return profile;
 	}
-	
+
 	@Override
 	public List<Profile> findCompanyByEstatePaged(Integer estateId,String name, Integer currpage, Integer size) {
 		Integer[] beginEnd = MyConvertUtil.toPagedBeginEnd(currpage, size);
@@ -160,8 +160,8 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	}
 	@Override
 	public Integer findCompanyByEstateCount(Integer estateId,String company) {
-		return profileMapper.findCompanyByEstateCount(estateId,company); 
+		return profileMapper.findCompanyByEstateCount(estateId,company);
 	}
-	
-	
+
+
 }

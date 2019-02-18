@@ -27,8 +27,8 @@ public class PrhTempLiveManServiceImpl implements PrhTempLiveManService{
 	private PrhMasterService prhMasterService;
 	@Autowired
 	private CardService cardService;
-	
-	
+
+
 	public FileManagementService getFileManagementService() {
 		return fileManagementService;
 	}
@@ -61,33 +61,33 @@ public class PrhTempLiveManServiceImpl implements PrhTempLiveManService{
 		this.prhTempLiveManMapper = prhTempLiveManMapper;
 	}
 
-	
 
-	// ∑‚◊∞µº∫Ω Ù–‘
-		private void setGuideProperty(List<PrhTempLiveMan> prhLinkmans) {
-			for (PrhTempLiveMan b : prhLinkmans) {
-				b.setProfile(fileManagementService.findById(b.getGuestno()));
-				b.setPrhMaster(prhMasterService.findById(b.getMasterId()));
+
+	// Â∞ÅË£ÖÂØºËà™Â±ûÊÄß
+	private void setGuideProperty(List<PrhTempLiveMan> prhLinkmans) {
+		for (PrhTempLiveMan b : prhLinkmans) {
+			b.setProfile(fileManagementService.findById(b.getGuestno()));
+			b.setPrhMaster(prhMasterService.findById(b.getMasterId()));
 				/*List<Card> cards = cardService.findByMasterAndLink(b.getMasterId(),b.getId(),0,1);
-				
+
 				if (cards!=null&&cards.size()!=0) {
 					b.setCard(cards.get(0));
 				}
 				List<Card> icards = cardService.findByMasterAndLink(b.getMasterId(),b.getId(), 1,1);
-				
+
 				if (icards!=null&&icards.size()!=0) {
 					b.setIdentityCard(icards.get(0));
-					
+
 				}
 				System.out.println("sososso"+b.getIdentityCard());*/
-				
-			}
-		}
 
-		// ∑‚◊∞µº∫Ω Ù–‘
-		private void setGuideProperty(PrhTempLiveMan b) {
-			b.setProfile(fileManagementService.findById(b.getGuestno()));
-			b.setPrhMaster(prhMasterService.findById(b.getMasterId()));
+		}
+	}
+
+	// Â∞ÅË£ÖÂØºËà™Â±ûÊÄß
+	private void setGuideProperty(PrhTempLiveMan b) {
+		b.setProfile(fileManagementService.findById(b.getGuestno()));
+		b.setPrhMaster(prhMasterService.findById(b.getMasterId()));
 			
 			/*List<Card> cards = cardService.findByMasterAndLink(b.getMasterId(),b.getId(),0,1);
 			if (cards!=null&&cards.size()!=0) {
@@ -99,8 +99,8 @@ public class PrhTempLiveManServiceImpl implements PrhTempLiveManService{
 			}*/
 
 
-		}
-	
+	}
+
 	@Override
 	public List<PrhTempLiveMan> findByMaster(Integer masterId) {
 		List<PrhTempLiveMan> mans = prhTempLiveManMapper.findByMaster(masterId);

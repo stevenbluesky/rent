@@ -15,53 +15,53 @@ public class ModuleServiceImpl implements ModuleService{
 
 	@Autowired
 	private ModuleMapper moduleMapper;
-	
+
 
 	public ModuleMapper getModuleMapper() {
 		return moduleMapper;
 	}
-	
+
 	private void setGuildProperty(Module module){
 		if (module.getPid()!=null) {
-			 module.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
-			
-		 }
+			module.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
+
+		}
 	}
 	private void setGuildProperty(List<Module> modules){
 		for (Module module : modules) {
 			if (module.getPid()!=null) {
-				 module.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
-			}	
+				module.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
+			}
 		}
 	}
 
 	public void setModuleMapper(ModuleMapper moduleMapper) {
 		this.moduleMapper = moduleMapper;
 	}
-	//条件查询
+	//鏉′欢鏌ヨ
 	@Override
 	public List<Module> findByCondition(Module module) {
-		 List<Module> findByCondition = moduleMapper.findByCondition(module);
-		 setGuildProperty(findByCondition);
-		 return findByCondition;
+		List<Module> findByCondition = moduleMapper.findByCondition(module);
+		setGuildProperty(findByCondition);
+		return findByCondition;
 	}
-	
-	//条件查询，带按钮
+
+	//鏉′欢鏌ヨ锛屽甫鎸夐挳
 	@Override
 	public List<Module> findByConditionWithBtn(Module module) {
-		//条件查询
-		 List<Module> modules = moduleMapper.findByCondition(module);
-			for (Module m : modules) {
-				if (m.getPid()!=null) {
-					 m.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
-				}	
-				//添加按钮集合
-				if (m.getLevels()==2) {
-					List<Module> btns = moduleMapper.findByCondition(new Module(null, null, null, m.getId(), 3));
-					m.getBtnModules().addAll(btns);
-				}
+		//鏉′欢鏌ヨ
+		List<Module> modules = moduleMapper.findByCondition(module);
+		for (Module m : modules) {
+			if (m.getPid()!=null) {
+				m.setParentModule(moduleMapper.selectByPrimaryKey(module.getPid()));
 			}
-		 return modules;
+			//娣诲姞鎸夐挳闆嗗悎
+			if (m.getLevels()==2) {
+				List<Module> btns = moduleMapper.findByCondition(new Module(null, null, null, m.getId(), 3));
+				m.getBtnModules().addAll(btns);
+			}
+		}
+		return modules;
 	}
 
 	@Override

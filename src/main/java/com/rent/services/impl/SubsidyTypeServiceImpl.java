@@ -18,26 +18,26 @@ public class SubsidyTypeServiceImpl implements SubsidyTypeService{
 
 	@Autowired
 	private SubsidyTypeMapper subsidyTypeMapper;
-	
+
 	public SubsidyTypeMapper getSubsidyTypeMapper() {
 		return subsidyTypeMapper;
 	}
 	public void setSubsidyTypeMapper(SubsidyTypeMapper subsidyTypeMapper) {
 		this.subsidyTypeMapper = subsidyTypeMapper;
 	}
-	//新增
+	//鏂板
 	public int addSubsidyType(SubsidyType subsidyType) {
 		return subsidyTypeMapper.insert(subsidyType);
 	}
-	//修改
+	//淇敼
 	public int updateSubsidyType(SubsidyType subsidyType) {
 		return subsidyTypeMapper.updateByPrimaryKey(subsidyType);
 	}
-	//删除
+	//鍒犻櫎
 	public int delSubsidyType(Integer id) {
 		return subsidyTypeMapper.deleteByPrimaryKey(id);
 	}
-	//删除集合
+	//鍒犻櫎闆嗗悎
 	public int delSubsidyType(Integer[] ids) {
 		int result=0;
 		if (ids.length!=0) {
@@ -49,34 +49,34 @@ public class SubsidyTypeServiceImpl implements SubsidyTypeService{
 			}
 		}
 		return 1;
-		
+
 	}
-	//根据id查找
+	//鏍规嵁id鏌ユ壘
 	public SubsidyType findById(Integer id) {
-		
+
 		return subsidyTypeMapper.selectByPrimaryKey(id);
 	}
-	//查询全部
+	//鏌ヨ鍏ㄩ儴
 	public List<SubsidyType> findAll() {
-		
+
 		return subsidyTypeMapper.findAll();
 	}
-	//分页查询
+	//鍒嗛〉鏌ヨ
 	public List<SubsidyType> findAllPaged(Integer currpage, Integer size) {
 
 		Integer begin=(currpage-1)*size+1;
 		Integer end=begin+size-1;
 		return subsidyTypeMapper.findAllByPaged(begin, end);
-		
+
 	}
-	//查询总数
+	//鏌ヨ鎬绘暟
 	public Integer getTotalCount() {
 		return subsidyTypeMapper.getTotalCount();
 	}
-	//通过名称查找
+	//閫氳繃鍚嶇О鏌ユ壘
 	public SubsidyType findByName(String name) {
-		
+
 		return subsidyTypeMapper.findByName(name);
 	}
-	
+
 }

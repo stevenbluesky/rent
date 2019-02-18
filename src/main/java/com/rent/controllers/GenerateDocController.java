@@ -29,58 +29,50 @@ public class GenerateDocController{
 
     @Autowired
 	private SystemService systemService;
-    
-    
-    
+
+
+
     @RequestMapping(value = "export1")
-    protected void export1(HttpServletRequest req, HttpServletResponse resp) throws Exception{  
-          
-        Map<String, Object> map = new HashMap<String, Object>();  
+    protected void export1(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+
+        Map<String, Object> map = new HashMap<String, Object>();
         Repaire rep = systemService.getRepaireByID(req.getParameter("id"));
         String docName = req.getParameter("name");
         String type = req.getParameter("type");
-        
+
         map = ObjectUtils.objToMap(rep);
-      
-        File file = null;  
-        InputStream fin = null;  
-        ServletOutputStream out = null;  
-        try {  
-            // ���ù�����WordGenerator��createDoc��������Word�ĵ�  
-            file = WordGenerator.createDoc(map, type);  
-            fin = new FileInputStream(file);  
-              
-            resp.setCharacterEncoding("utf-8");  
+
+        File file = null;
+        InputStream fin = null;
+        ServletOutputStream out = null;
+        try {
+            // 调用工具类WordGenerator的createDoc方法生成Word文档
+            file = WordGenerator.createDoc(map, type);
+            fin = new FileInputStream(file);
+
+            resp.setCharacterEncoding("utf-8");
             resp.setContentType("application/msword");
-            
-            // ��������������صķ�ʽ������ļ�Ĭ����Ϊresume.doc  
-            //resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");
+
+            // 设置浏览器以下载的方式处理该文件默认名为resume.doc
+//            resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");
             resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
-              
-            out = resp.getOutputStream();  
-            byte[] buffer = new byte[512];  // ������  
+            out = resp.getOutputStream();
+            byte[] buffer = new byte[512];  // 缓冲区
             int bytesToRead = -1;
-            // ͨ��ѭ���������Word�ļ�������������������  
-            while((bytesToRead = fin.read(buffer)) != -1) {  
+            // 通过循环将读入的Word文件的内容输出到浏览器中
+            while((bytesToRead = fin.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesToRead);
             }
             out.flush();
             resp.flushBuffer();
             // resp.flushBuffer();
-        } finally {  
+        } finally {
             if(fin != null) fin.close();
-            if(out != null) out.close();  
-            if(file != null) file.delete(); // ɾ����ʱ�ļ�  
-        }  
+            if(out != null) out.close();
+            if(file != null) file.delete(); // 删除临时文件
+        }
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
     @RequestMapping(value = "export")
     protected void export(HttpServletRequest req, HttpServletResponse resp) throws Exception{  
         req.setCharacterEncoding("utf-8");  
@@ -93,21 +85,21 @@ public class GenerateDocController{
         InputStream fin = null;  
         ServletOutputStream out = null;  
         try {  
-            // ���ù�����WordGenerator��createDoc��������Word�ĵ�  
+            // 调用工具类WordGenerator的createDoc方法生成Word文档
             file = WordGenerator.createDoc(map, type);  
             fin = new FileInputStream(file);  
               
             resp.setCharacterEncoding("utf-8");  
             resp.setContentType("application/msword");
             
-            // ��������������صķ�ʽ������ļ�Ĭ����Ϊresume.doc  
+            // 设置浏览器以下载的方式处理该文件默认名为resume.doc
             //resp.addHeader("Content-Disposition", "attachment;filename="+docName+".doc");
             resp.addHeader("Content-Disposition", "attachment;filename="+new String(docName.getBytes("gbk"), "iso-8859-1")+".doc");
               
             out = resp.getOutputStream();  
-            byte[] buffer = new byte[512];  // ������  
+            byte[] buffer = new byte[512];  // 缓冲区
             int bytesToRead = -1;
-            // ͨ��ѭ���������Word�ļ�������������������  
+            // 通过循环将读入的Word文件的内容输出到浏览器中
             while((bytesToRead = fin.read(buffer)) != -1) {  
                 out.write(buffer, 0, bytesToRead);
             }
@@ -117,7 +109,7 @@ public class GenerateDocController{
         } finally {  
             if(fin != null) fin.close();
             if(out != null) out.close();  
-            if(file != null) file.delete(); // ɾ����ʱ�ļ�  
+            if(file != null) file.delete(); //删除临时文件
         }  
     }
 }
