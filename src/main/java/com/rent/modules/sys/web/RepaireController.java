@@ -74,7 +74,9 @@ public class RepaireController {
 				}
 			}
 		}
-
+		if(estate==null){
+			return null;
+		}
 		//单元集合
 		List<BuildingNo> buildingNos = buildingNoService.findByEstate(estate.getId());
 		model.addAttribute("buildingNos", buildingNos);
@@ -108,7 +110,7 @@ public class RepaireController {
         if(repaire == null) {
         	repaire = new Repaire();
         }
-        repaire.setTenement(estate.getName());
+        repaire.setTenement(estate!=null?estate.getName():"请先创建物业");
         Page<Repaire> page = systemService.findRepaire(new Page<Repaire>(request, response), repaire);
         model.addAttribute("thirdUsers",systemService.getThirdUsers(null));
         model.addAttribute("page", page);
@@ -122,7 +124,7 @@ public class RepaireController {
         if(repaire == null) {
         	repaire = new Repaire();
         }
-        repaire.setTenement(estate.getName());
+        repaire.setTenement(estate!=null?estate.getName():"请先创建物业");
 		Page<Repaire> page = systemService.findRepaire(new Page<Repaire>(request, response), repaire);
 		model.addAttribute("page", page);
 		return "views/modules/sys/checkRepaire.jsp";
@@ -135,7 +137,7 @@ public class RepaireController {
         if(repaire == null) {
         	repaire = new Repaire();
         }
-        repaire.setTenement(estate.getName());
+        repaire.setTenement(estate!=null?estate.getName():"请先创建物业");
         Users user = (Users)request.getSession().getAttribute(Global.USER);
         if(user != null && user.getId().intValue() != 1)
         	repaire.setThirdCom(user.getId().toString());

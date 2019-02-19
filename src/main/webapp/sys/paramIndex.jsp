@@ -403,7 +403,7 @@
 				</div>
 			</div>
 			<div id="footer" class="row-fluid">
-				Copyright &copy; 2012-2016 廊坊公租房管理系统 - Powered By <a
+				Copyright &copy; 2016-2020 公租房管理系统 - Powered By <a
 					href="http://jeesite.com" target="_blank"></a> V1.2.7
 			</div>
 		</div>
