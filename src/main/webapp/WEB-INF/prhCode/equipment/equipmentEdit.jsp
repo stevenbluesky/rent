@@ -59,6 +59,10 @@
 	   		    <td class="title" >名称:</td>
 	   		   <td><input type="text" name="name" class="name" value="${equipment.name}"></td>
 	   		</tr>
+		   <tr>
+			   <td class="title" >价格:</td>
+			   <td><input type="text" name="price" class="price" value="${equipment.price}"></td>
+		   </tr>
 	   		<tr>
 	   		    <td class="title" >类别:</td>
 	   		   <td>

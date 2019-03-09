@@ -159,7 +159,7 @@ body{
 				</table>
 				<p style="padding-left:215px; color: red;">注：建议使用IE 11浏览器！</p>
 				<p style="padding-left:270px; color: red;">
-					<input type="button" class="btn" value="组件下载" onclick="location.href='downloadActiveDll.do'">
+					<input type="hidden" class="btn" value="组件下载" onclick="location.href='downloadActiveDll.do'">
 					
 					
 				</p>

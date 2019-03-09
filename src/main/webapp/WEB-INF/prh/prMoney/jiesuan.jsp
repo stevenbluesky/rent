@@ -398,7 +398,7 @@
 									</tr> --%>
 									</table>
 	</div>
-	<input type = "hidden" name="masterid" value="${prhMaster.id}"/ >
+	<input type = "hidden" name="masterid" value="${prhMaster.id}"/>
 	
 	<input  <c:if test="${prhMaster.sta eq '4' or prhMaster.src eq '1'}">disabled="disabled" </c:if> type="submit" id="repaireApply" class="btn" style="margin-right:10px;"   value="退租清账"/>
 	

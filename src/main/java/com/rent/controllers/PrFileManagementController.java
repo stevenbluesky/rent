@@ -231,8 +231,6 @@ public class PrFileManagementController {
 		
 		List<PrhMaster> prhMasters =prhMasterService.findAllByConditionAndPaged(condition, currpage, size);
 		
-
-		
 	
 		
 			 page = new NumPageUtil(

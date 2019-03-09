@@ -245,6 +245,7 @@ ul {
 					<tr >
 						<th ><input type="checkbox"  class="chkAll" style="position: relative;top: 2px;"/>选择 </th>
 						<th>设备名</th>
+						<th>价格</th>
 						<th>设备类型</th>
 					</tr>
 					<c:forEach var="b" items="${page.list}" varStatus="status">
@@ -252,7 +253,7 @@ ul {
 							style="text-align: center;<c:if test='${status.count%2==0 }'>background-color:ffffde </c:if>">
 							<td><input type="checkbox" name="chk" class="chk" value="${b.id}"/> </td>
 							<td>${b.name}</td>
-							
+							<td>${b.price}</td>
 							<c:set var="type"  value="${b.type }"></c:set> 
 							<td>
 							<%=MyConvertUtil.getEquipType(pageContext.getAttribute("type").toString().trim()) %>

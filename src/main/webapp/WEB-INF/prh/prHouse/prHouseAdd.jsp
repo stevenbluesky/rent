@@ -68,9 +68,15 @@
 	        url: 'prHouseAdd.do',
 	        data: $('#myForm').serialize(),
 	        success: function (result) {
-	       	 	if (result==="0") {
+	            if(result=="-1"){
+                    $>jBox.tip("门锁重复绑定！");
+                    $(".addBtn").removeAttr("disabled");
+				}else if (result==="0") {
 					$>jBox.tip("房源信息重复！");
 					$(".addBtn").removeAttr("disabled");
+				}else if(result=="-2"){
+                    $>jBox.tip("请求失败！");
+                    $(".addBtn").removeAttr("disabled");
 				}else{
 					var index = parent.layer.getFrameIndex(window.name);
 		            parent.layer.close(index);	
@@ -184,7 +190,16 @@
 					</select>
 				</td>
 			</tr>
-			
+			<tr>
+				<td class="title"><span style="color: red;"></span>门锁绑定:</td>
+				<td><select name="associatedlock" class="associatedlock" style="width: 240px;">
+					<option value="">暂不绑定</option>
+					<c:forEach var="b" items="${lockList }">
+						<option value="${b._deviceid}">${b._deviceid}</option>
+					</c:forEach>
+
+				</select></td>
+			</tr>
 			<tr>
 				<td class="title">备注:</td>
 				<td><input type="text" name="remark">

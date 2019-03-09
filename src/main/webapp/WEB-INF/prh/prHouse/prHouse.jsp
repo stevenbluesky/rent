@@ -193,7 +193,7 @@ ul {
 			    title: '修改房源信息',
 			    
 			    maxmin: false,
-			    area: ['494px', '546px'],
+			    area: ['510px', '580px'],
 			   
 			    content:'toPrHouseEdit.do?id='+id,
 			    
@@ -219,23 +219,19 @@ ul {
 	}
 	
 	function toAdd(){
-		layer.ready(function(){ 
-			  layer.open({
+		layer.ready(function(){
+            var currPage= layer.open({
 			    type: 2,
 			    title: '新增房源信息',
-			    
 			    maxmin: false,
-			    area: ['510px', '553px'],
-			    /* content: 'http://layer.layui.com/test/welcome.html', */
-			    /* content: '${ctx}/sys/checkRepaire.jsp', */
+			    area: ['510px', '580px'],
 			    content:'toPrHouseAdd.do?estateId=${estateId}',
-			    
 			    end: function(){
-			    	
 			    	 location.reload();
 			    }
 			  });
-			});
+            // layer.full(currPage);
+        });
 		
 		}
 	
@@ -309,7 +305,7 @@ ul {
 					<input type="hidden" value="${estateId}" class="estateIdVal" name="estateId">
 					<div class="row-fluid">
 						<div class="span2 search-input" style="width: 100%;height: 25px;margin-bottom: 10px;" >
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;
 								楼号:&nbsp;&nbsp; <select name="buildingId" class="floorId" 
 								style="width: 90px;">
 								<option value="-1">全部</option>
@@ -322,7 +318,7 @@ ul {
 										<option value="${f.name }">${f.name }号楼</option>
 									</c:if>
 								</c:forEach>
-							</select> &nbsp;&nbsp;&nbsp;&nbsp;
+							</select> &nbsp;&nbsp;&nbsp;
 									
 									
 									
@@ -342,7 +338,7 @@ ul {
 								</c:forEach>
 								
 								
-							</select> &nbsp;&nbsp;&nbsp;&nbsp;
+							</select> &nbsp;&nbsp;&nbsp;
 							
 						
 									
@@ -358,7 +354,7 @@ ul {
 										<option value="${f.id }">${f.name }</option>
 									</c:if>
 								</c:forEach>
-							</select> &nbsp;&nbsp;&nbsp;&nbsp;
+							</select> &nbsp;&nbsp;&nbsp;
 							房型 :&nbsp;&nbsp; <select name="typeId" class="floorId" 
 								style="width: 90px;">
 								<option value="-1">全部</option>
@@ -371,7 +367,7 @@ ul {
 										<option value="${f.id }">${f.name }</option>
 									</c:if>
 								</c:forEach>
-							</select> &nbsp;&nbsp;&nbsp;&nbsp;
+							</select> &nbsp;&nbsp;&nbsp;
 							
 							
 							房源类型 :&nbsp;&nbsp; <select name="houseNature" class="houseNature" 
@@ -413,6 +409,7 @@ ul {
 						<th>房间</th>
 						<th>月租金</th>
 						<th>房源状态</th>
+                        <th>门锁网关ID</th>
 						<th>备注</th>
 				</tr>							 
 				<c:if test="${fn:length(page.list)==0}">
@@ -443,6 +440,7 @@ ul {
 						<td ><input class="stateHidden" type="hidden" value="${stateId}"/>
 						<%=request.getAttribute("stateId")==null?null: MyConvertUtil.getHouseState(Integer.valueOf(request.getAttribute("stateId").toString())) %> 
 						 </td>
+                        <td>${b.associatedlock}</td>
 						<td>${b.remark}</td>
 						
 					</tr>
@@ -579,24 +577,8 @@ ul {
 					<input class="btn" value="解锁" type="button" onclick="lockHouse(0)" />&nbsp;&nbsp;
 			 </c:if></c:forEach></c:if></c:forEach>
 			 
-			 </script>			
-			
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			 <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-			 
-					<input class="btn" type="button" value="写设房号卡" onClick="WriteSetRoomNumberCard();">&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==71}">
-						
-					<input class="btn" type="button" value="写设房号卡" onClick="WriteSetRoomNumberCard();">&nbsp;&nbsp;
-			 </c:if></c:forEach></c:if></c:forEach>
-		
-			<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" type="button" value="写锁号设置卡" onClick="WriteSetRoomIdCard();">&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==72}">
-					<input class="btn" type="button" value="写锁号设置卡" onClick="WriteSetRoomIdCard();">&nbsp;&nbsp;
-			 </c:if></c:forEach></c:if></c:forEach>	 
-			 
-			 
+			 </script>
+
 			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			 <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 					<input class="btn" type="button" value="房源导出" onClick="exportHouse();">&nbsp;&nbsp;

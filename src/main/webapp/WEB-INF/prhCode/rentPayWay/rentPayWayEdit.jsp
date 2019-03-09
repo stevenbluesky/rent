@@ -6,7 +6,7 @@
 <html>
 <head>
 
-<title>修改电器设置</title>
+<title>修改支付方式设置</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
@@ -46,17 +46,27 @@
 				return false;
 			}
 			if (depositPay.length==0) {
-				$.jBox.tip("押金不能为空！");
+				$.jBox.tip("押金月数不能为空！");
 				return false;
 			}
+            if (depositPay>12) {
+                alert("请确保押金月数填写正确！")
+            }
+            if(rentPay>12){
+                alert("请确保租金月数填写正确！")
+            }
 			if (rentPay.length==0) {
-				$.jBox.tip("租金不能为空！");
+				$.jBox.tip("租金月数不能为空！");
 				return false;
 			}
 			if (dayOrMonth.length==0) {
-				$.jBox.tip("“日/月”不能为空！");
+				$.jBox.tip("“日”不能为空！");
 				return false;
 			}
+            if(dayOrMonth.match(/\D/)!=null||dayOrMonth>31){
+                $.jBox.tip("“日”为每月交房租的日期，请注意格式！");
+                return false;
+            }
 		});
 	});
 
@@ -69,7 +79,7 @@
 		<input type="hidden" value="${rentPayWay.id }" name="id"> 
 		<table id="contentTable" class="table table-striped table-bordered table-condensed addFloor"  border="1" bordercolor="#a0c6e5" >
 			<tr style="background-color: #008080;color: black;font-weight: bold;">
-				<td colspan="2">修改电器设置</td>
+				<td colspan="2">修改支付方式设置</td>
 
 			</tr>
 			<tr>
@@ -77,11 +87,11 @@
  				<td><input type="text" class="name" name="name" value="${rentPayWay.name }"></td> 
 			</tr>
 			<tr>
-				<td class="title"><span style="color: red;">* </span>押金:</td>
+				<td class="title"><span style="color: red;">* </span>押金月数:</td>
 				<td><input type="text" class="depositPay" name="depositPay" value="${rentPayWay.depositPay }"></td>
 			</tr>
 			<tr>
-				<td class="title"><span style="color: red;">* </span>租金:</td>
+				<td class="title"><span style="color: red;">* </span>租金月数:</td>
 				<td><input type="text" class="rentPay" name="rentPay" value="${rentPayWay.rentPay }"></td>
 			</tr>
 			
@@ -97,7 +107,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="title"><span style="color: red;">* </span>日/月:</td>
+				<td class="title"><span style="color: red;">* </span>日:</td>
 				<td><input type="text" class="dayOrMonth" name="dayOrMonth" value="${rentPayWay.dayOrMonth }"></td>
 			</tr>
 			<tr>

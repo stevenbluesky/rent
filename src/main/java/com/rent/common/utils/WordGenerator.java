@@ -19,17 +19,17 @@ public class WordGenerator {
         configuration = new Configuration();  
         configuration.setDefaultEncoding("utf-8");  
         configuration.setClassForTemplateLoading(WordGenerator.class, "/com/rent/common/utils");  
-        allTemplates = new HashMap<>();   // Java 7 ��ʯ�﷨  
+        allTemplates = new HashMap<>();
         try {  
-            allTemplates.put("approve", configuration.getTemplate("repairerApprove.tpl"));
-            allTemplates.put("accept", configuration.getTemplate("repairerAccept.tpl"));
-            allTemplates.put("register", configuration.getTemplate("repaireregister.tpl"));
-            allTemplates.put("contract", configuration.getTemplate("contract.ftl"));
-            allTemplates.put("leave", configuration.getTemplate("leave.ftl"));
+            allTemplates.put("approve", configuration.getTemplate("/repairerApprove.tpl"));
+            allTemplates.put("accept", configuration.getTemplate("/repairerAccept.tpl"));
+            allTemplates.put("register", configuration.getTemplate("/repaireregister.tpl"));
+            allTemplates.put("contract", configuration.getTemplate("/contract.ftl"));
+            allTemplates.put("leave", configuration.getTemplate("/leave.ftl"));
             
         } catch (IOException e) {  
             e.printStackTrace();  
-            throw new RuntimeException(e);  
+            throw new RuntimeException(e);
         }  
     }  
   

@@ -572,4 +572,14 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 		return master;
 	}
 
+	@Override
+	public List<PrhMaster> findMasterBySta(int id) {
+		return prhMasterMapper.findMasterBySta(id);
+	}
+
+	@Override
+	public List<PrhMaster> findOverdueMasterOfRenting() {
+		return prhMasterMapper.findOverdueMasterOfRenting();
+	}
+
 }

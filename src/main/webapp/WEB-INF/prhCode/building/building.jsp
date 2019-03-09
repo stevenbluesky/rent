@@ -321,7 +321,7 @@ a:hover {
 		     <input class="btn" value="删除" type="submit"
 				onclick="del()" />
 			
-			<input class="btn" value="开单元卡" type="button" onclick="openCard()" />
+			<%--<input class="btn" value="开单元卡" type="button" onclick="openCard()" />--%>
 			 </form>	  	
 		</div>
 	</div>

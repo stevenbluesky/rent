@@ -84,7 +84,7 @@
 								<w:sz w:val="36" />
 								<w:szCs w:val="36" />
 							</w:rPr>
-							<w:t>廊坊市公共住房实物配租补充协议</w:t>
+							<w:t>公共住房实物配租补充协议</w:t>
 						</w:r>
 					</w:p>
 					<w:p w:rsidR="007634D1" w:rsidRDefault="00BE2772">
@@ -103,7 +103,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>甲方（出租方）：廊坊市公共住房运营维护管理中心</w:t>
+							<w:t>甲方（出租方）：公共住房运营维护管理中心</w:t>
 						</w:r>
 					</w:p>
 					<w:p w:rsidR="007634D1" w:rsidRDefault="00BE2772">
@@ -169,7 +169,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>乙方已熟知并遵守公共住房相关政策。甲乙双方</w:t></w:r><w:r w:rsidR="002948EE"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr><w:t>在</w:t></w:r><w:r w:rsidR="00111CF5"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">    </w:t></w:r><w:r w:rsidR="007D3B7E"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">      </w:t></w:r><w:r w:rsidR="002948EE"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr><w:t>签订的《廊坊市公共住房实物配租协议</w:t>
+							<w:t>乙方已熟知并遵守公共住房相关政策。甲乙双方</w:t></w:r><w:r w:rsidR="002948EE"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr><w:t>在</w:t></w:r><w:r w:rsidR="00111CF5"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">    </w:t></w:r><w:r w:rsidR="007D3B7E"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">      </w:t></w:r><w:r w:rsidR="002948EE"><w:rPr><w:rFonts w:ascii="仿宋_GB2312" w:eastAsia="仿宋_GB2312" w:hAnsi="仿宋_GB2312" w:cs="仿宋_GB2312" w:hint="eastAsia"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr><w:t>签订的《公共住房实物配租协议</w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>
@@ -739,7 +739,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t>中未规定的事项，均遵照中华人民共和国有关法律、法规和政策执行。乙方已同意廊坊市公共住房实物配租</w:t>
+							<w:t>中未规定的事项，均遵照中华人民共和国有关法律、法规和政策执行。乙方已同意公共住房实物配租</w:t>
 						</w:r>
 						<w:r>
 							<w:rPr>

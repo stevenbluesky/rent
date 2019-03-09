@@ -5,47 +5,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Set;
+import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.rent.common.utils.*;
+import com.rent.dao.ProfileMapper;
+import com.rent.entity.*;
+import com.rent.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.rent.common.config.Global;
-import com.rent.common.utils.MyRentBiz;
-import com.rent.common.utils.NumPageUtil;
 import com.rent.condition.MasterReletCondition;
 import com.rent.dao.PrhTempLiveManMapper;
-import com.rent.entity.Building;
-import com.rent.entity.BuildingNo;
-import com.rent.entity.Card;
-import com.rent.entity.Estate;
-import com.rent.entity.HistoryIdenPwd;
-import com.rent.entity.PrHouse;
-import com.rent.entity.PrhLinkman;
-import com.rent.entity.PrhMaster;
-import com.rent.entity.PrhTempLiveMan;
-import com.rent.entity.Profile;
-import com.rent.entity.RentPayWay;
-import com.rent.entity.SubsidyType;
-import com.rent.entity.Users;
-import com.rent.services.BuildingNoService;
-import com.rent.services.BuildingService;
-import com.rent.services.CardService;
-import com.rent.services.EstateService;
-import com.rent.services.FileManagementService;
-import com.rent.services.PrHouseService;
-import com.rent.services.PrhLinkManService;
-import com.rent.services.PrhMasterService;
-import com.rent.services.PrhTempLiveManService;
-import com.rent.services.RentPayWayService;
-import com.rent.services.SubsidyTypeService;
 
-@Controller
+@Controller("codeController")
 public class CodeController {
 	
 	@Autowired
@@ -65,6 +45,11 @@ public class CodeController {
 	
 	@Autowired
 	private CardService cardService;
+	@Autowired
+	private ProfileMapper profileMapper;
+
+	@Autowired
+	private DoorlockUserService doorlockUserService;
 	public CardService getCardService() {
 		return cardService;
 	}
@@ -150,7 +135,7 @@ public class CodeController {
 	// 列表
 	@RequestMapping("findCode.do")
 	public String findCheckInRecord(Integer currpage, Integer estateId, String name, String roomNo,String buildingNoId,
-			String buildingId, MasterReletCondition condition, Integer hasCommonCard, HttpServletRequest request, HttpSession session, ModelMap map)
+			String buildingId, MasterReletCondition condition, HttpServletRequest request, HttpSession session, ModelMap map)
 			throws UnsupportedEncodingException {
 		if (request.getMethod().equals("GET")) {
 			name= request.getParameter("name");
@@ -171,8 +156,6 @@ public class CodeController {
 		if (roomNo !=null && roomNo.length()==0) {
 			roomNo =null;
 		}
-		
-		
 		
 		// 物业集合
 		List<Estate> estates = estateService.findAll();
@@ -206,7 +189,7 @@ public class CodeController {
 		condition = new MasterReletCondition(currpage, size, estateId, name, roomNo);
 		condition.setBuildingNoId(buildingNoId);
 		condition.setBuildingId(buildingId);
-		condition.setHasCommonCard(hasCommonCard);
+		condition.setHasCommonCard(-1);
 		List<PrhMaster> masters = prhMasterService.findCanGetCardPaged(condition);
 		condition.setEstateId(estateId);
 		
@@ -243,6 +226,121 @@ public class CodeController {
 		
 		return "renter/code/codeAdd.jsp";
 	}
+
+	@RequestMapping("toAddLockUserPage.do")
+	public String toAddPasswordPage(String idStr,ModelMap map,Integer usertype){
+		Integer masterId=null;
+		Integer linkId=null;
+		Integer personType=null;
+		String guestNo = "";
+		if (idStr.indexOf("-")!=-1) {
+			masterId=Integer.valueOf(idStr.substring(0,idStr.indexOf("-")));
+			linkId=Integer.valueOf(idStr.substring((idStr.indexOf("-")+1),idStr.indexOf("@")));
+		}else{
+			masterId=Integer.valueOf(idStr.substring(0,idStr.indexOf("@")));
+		}
+		personType = Integer.valueOf(idStr.substring(idStr.indexOf("@")+1));
+		PrhMaster master = prhMasterService.findById(masterId);
+		if(linkId==null){
+			guestNo = master.getGuestNo();
+		}else if(personType.intValue()==2){
+			guestNo = prhLinkManService.findById(linkId).getGuestno();
+		}else{
+			guestNo = prhTempLiveManMapper.selectByPrimaryKey(linkId).getGuestno();
+		}
+		Profile profile = profileMapper.findBygusetNo(guestNo);
+		map.put("master", master);
+		map.put("profile",profile);
+		if (usertype.intValue()==1){
+			return "renter/code/passwordAdd.jsp";
+		}else if(usertype.intValue()==3){
+			return "renter/code/mfCardAdd.jsp";
+		}else{
+			return "renter/code/idCardAdd.jsp";
+		}
+
+	}
+
+	@RequestMapping("toLockUserPage.do")
+	public String toLockUserPage(String idStr,ModelMap map){
+		Integer masterId=null;
+		Integer linkId=null;
+		Integer personType=null;
+		String guestNo = "";
+		if (idStr.indexOf("-")!=-1) {
+			masterId=Integer.valueOf(idStr.substring(0,idStr.indexOf("-")));
+			linkId=Integer.valueOf(idStr.substring((idStr.indexOf("-")+1),idStr.indexOf("@")));
+		}else{
+			masterId=Integer.valueOf(idStr.substring(0,idStr.indexOf("@")));
+		}
+		personType = Integer.valueOf(idStr.substring(idStr.indexOf("@")+1));
+		PrhMaster master = prhMasterService.findById(masterId);
+		if(linkId==null){
+			guestNo = master.getGuestNo();
+		}else if(personType.intValue()==2){
+			guestNo = prhLinkManService.findById(linkId).getGuestno();
+		}else{
+			guestNo = prhTempLiveManMapper.selectByPrimaryKey(linkId).getGuestno();
+		}
+		map.put("master", master);
+//		List<DoorlockUser> lockuserlist = doorlockUserService.findAllByMasterid(master.getId());
+		List<DoorlockUser> lockuserlist = doorlockUserService.findAllByGuestno(guestNo);
+		map.put("lockuserlist",lockuserlist);
+		return "renter/code/lockUser.jsp";
+	}
+	@RequestMapping("addPassword.do")
+	@ResponseBody
+	public String addPassword(Integer usertype , Integer masterId,String guestNo, String userName, String mobilePhone, String password, String validfrom, String validthrough){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String validfrom2 = validfrom + " 00:00";
+		String validthrough2 = validthrough + " 23:59";
+		Date begin = null;
+		Date end = null;
+		try {
+			begin = sdf.parse(validfrom2);
+			end = sdf.parse(validthrough2);
+		} catch (ParseException e) {
+			return "-1";
+		}
+		PrhMaster master = prhMasterService.findById(masterId);
+		PrHouse house = prHouseService.findById(master.getHouseId());
+		if(StringUtils.isBlank(house.getAssociatedlock())){
+			return "-2";
+		}
+		Set<Integer> usercodeset = new TreeSet<Integer>();
+		for(int i=10;i<230;i++){
+			usercodeset.add(i);
+		}
+		List<DoorlockUser> doorlockUserList = doorlockUserService.findAvailableByDeviceid(house.getAssociatedlock());
+		for(DoorlockUser d : doorlockUserList){
+			if((usertype==1&&d.getPassword().equals(AES.encrypt2Str(password)))||((usertype==3||usertype==4)&&d.getPassword().equals(password))){
+				return "-4";
+			}
+			if(usercodeset.contains(d.getUsercode())){
+				usercodeset.remove(d.getUsercode());
+			}
+		}
+		int usercode = (int)usercodeset.toArray()[0];
+		String params = "{\"method\": \"thing.service.AddUser\",\"async\":true,\"deviceid\": \""+house.getAssociatedlock()+"\",\"nodeid\": 1,\"params\": {\"UserType\": "+usertype+",\"UserLevel\": 2,\"UserID\": "+usercode+"," +
+				"\"UserPassword\": \""+password+"\",\"ValidBeginDateTime\": \""+validfrom2+"\",\"ValidEndDateTime\": \""+validthrough2+"\",\"ValidWeekDays\": 127,\"ValidWeekTime\": \"00:00~23:59\"}}";
+		String result = RestfulUtil.postHttps(params,"lock");
+		JSONObject resultMap = JSON.parseObject(result);
+		int resultcode = resultMap.getIntValue("resultcode");
+		String receipt = resultMap.getString("receipt");
+		if(usertype==1){
+			password = AES.encrypt2Str(password);
+		}
+		if(resultcode==1) {
+			DoorlockUser doorlockUser = new DoorlockUser(usertype, usercode, userName, mobilePhone, password, begin, end, new Date(),
+					master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, receipt,guestNo);
+
+			doorlockUserService.insert(doorlockUser);
+			return "3";
+		}else{
+			return "-1";
+		}
+	}
+
 	//身份证挂失
 	@RequestMapping("lossIdentity.do")
 	@ResponseBody

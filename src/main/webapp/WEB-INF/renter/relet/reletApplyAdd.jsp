@@ -383,7 +383,6 @@
 					
 					缴租至:<input name="rentdate_" type="date" class="input longTxt moneyToDate" style="height: 25px;width: 140px;" value="<fmt:formatDate value="${prhMaster.rentDate !=null ? prhMaster.rentDate:toMasterDate }" pattern="yyyy-MM-dd" />"
 					onFocus="WdatePicker({isShowClear:false,readOnly:true})">
-		
 					<br/><br/>
 					
 					<!-- 押金支付:

@@ -47,7 +47,6 @@
 				 $.jBox.tip("房源信息信息填写不完整！");
 				 return;
 			}
-			
 			//未完整输入房号
 			if (floor==roomNo) {
 				 $.jBox.tip("房号输入有误！");
@@ -70,7 +69,9 @@
                		 if (result=="success") {
                			 alert("修改成功");
                			parent.layer.close(parent.layer.getFrameIndex(window.name));	
-					 }else{
+					 }else if(result=="lockrepeat"){
+                         $.jBox.tip("门锁重复绑定！");
+                     }else{
 						$.jBox.tip("房源信息重复！");	
 					 }
                      
@@ -196,6 +197,18 @@
 						<option value="7" <c:if test="${prHouse.state==7}">selected="selected"</c:if>><%=MyConvertUtil.getHouseState(7) %></option>	
 					</select>
 				</td>
+			</tr>
+			<tr>
+				<td class="title"><span style="color: red;"></span>门锁绑定:</td>
+				<td><select name="associatedlock" class="associatedlock" style="width: 240px;">
+					<option value="">暂不绑定</option>
+					<c:forEach var="b" items="${lockstrlist }">
+
+						<c:if test="${prHouse.associatedlock==b}"><option value="${b}" selected="selected">${b}</option></c:if>
+						<c:if test="${prHouse.associatedlock!=b}"><option value="${b}">${b}</option></c:if>
+					</c:forEach>
+
+				</select></td>
 			</tr>
 			<tr>
 				<td class="title">备注:</td>

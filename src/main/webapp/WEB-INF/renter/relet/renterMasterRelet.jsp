@@ -287,7 +287,7 @@ a:hover {
 				    	location.reload();
 				    }
 				  });
-				 layer.full(currPage);  
+				 layer.full(currPage);
 								
 			}else{
 				$.jBox.tip("租户账务尚未结清，不能续租！");	
@@ -727,7 +727,7 @@ a:hover {
 				</table>
 
 				<br /><br />
-				<div class="pagination" id="numpage">${numpage}</div>\
+				<div class="pagination" id="numpage">${numpage}</div>
 				 <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 
 					<input class="btn"  value="打印合同" type="button" onclick="print()" />&nbsp;&nbsp;&nbsp;&nbsp;

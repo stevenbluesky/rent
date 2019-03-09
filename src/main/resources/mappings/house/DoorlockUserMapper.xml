@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.dao.DoorlockUserMapper">
+  
+  <resultMap id="BaseResultMap" type="com.rent.entity.DoorlockUser" >
+    <id column="DOORLOCKUSERID" jdbcType="DECIMAL" property="doorlockuserid" />
+    <result column="USERTYPE" jdbcType="DECIMAL" property="usertype" />
+    <result column="USERCODE" jdbcType="DECIMAL" property="usercode" />
+    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    <result column="PHONENUMBER" jdbcType="VARCHAR" property="phonenumber" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="VALIDFROM" property="validfrom" />
+    <result column="VALIDTHROUGH"  property="validthrough" />
+    <result column="CREATETIME" property="createtime" />
+    <result column="WEEKDAY" jdbcType="DECIMAL" property="weekday" />
+    <result column="STARTTIME" jdbcType="VARCHAR" property="starttime" />
+    <result column="ENDTIME" jdbcType="VARCHAR" property="endtime" />
+    <result column="HOUSEID" jdbcType="DECIMAL" property="houseid" />
+    <result column="MASTERID" jdbcType="DECIMAL" property="masterid" />
+    <result column="DEVICEID" jdbcType="VARCHAR" property="deviceid" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="SYNSTATUS" jdbcType="DECIMAL" property="synstatus" />
+    <result column="RECEIPT" jdbcType="VARCHAR" property="receipt" />
+    <result column="GUESTNO" jdbcType="VARCHAR" property="guestno" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+     DOORLOCKUSERID,USERTYPE,USERCODE,USERNAME,PHONENUMBER,PASSWORD,VALIDFROM,VALIDTHROUGH,
+     CREATETIME,WEEKDAY,STARTTIME,ENDTIME,HOUSEID,MASTERID,DEVICEID,STATUS,SYNSTATUS,RECEIPT,GUESTNO
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    select 
+    <include refid="Base_Column_List" />
+    from DOORLOCKUSER
+    where DOORLOCKUSERID = #{doorlockuserid,jdbcType=DECIMAL}
+  </select>
+
+  <select id="selectAvailableByDeviceid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from DOORLOCKUSER
+    where DEVICEID = #{associatedlock,jdbcType=VARCHAR} and VALIDTHROUGH >=sysdate
+  </select>
+  <select id="findAvailableAllByMasterid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from DOORLOCKUSER
+    where MASTERID = #{id,jdbcType=VARCHAR} and VALIDTHROUGH >=sysdate
+  </select>
+  <select id="selectByReceipt" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from DOORLOCKUSER
+    where RECEIPT = #{receipt,jdbcType=VARCHAR}
+  </select>
+
+    <select id="findAllByMasterid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from DOORLOCKUSER
+        where MASTERID = #{masterid,jdbcType=DECIMAL}
+    </select>
+
+  <select id="findAllByGuestno" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from DOORLOCKUSER
+    where GUESTNO = #{guestNo,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insert" parameterType="com.rent.entity.DoorlockUser">
+    insert into DOORLOCKUSER (DOORLOCKUSERID,USERTYPE,USERCODE,USERNAME,PHONENUMBER,PASSWORD,VALIDFROM,VALIDTHROUGH,
+     CREATETIME,WEEKDAY,STARTTIME,ENDTIME,HOUSEID,MASTERID,DEVICEID,STATUS,SYNSTATUS,RECEIPT,GUESTNO)
+    values (seq_doorlockuser.nextval,
+      #{usertype,jdbcType=DECIMAL},
+      #{usercode,jdbcType=DECIMAL},
+      #{username,jdbcType=VARCHAR},
+      #{phonenumber,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR},
+      #{validfrom},
+      #{validthrough},
+      #{createtime},
+      #{weekday,jdbcType=VARCHAR},
+      #{starttime,jdbcType=VARCHAR},
+      #{endtime,jdbcType=VARCHAR},
+      #{houseid,jdbcType=DECIMAL},
+      #{masterid,jdbcType=DECIMAL},
+      #{deviceid,jdbcType=VARCHAR},
+      #{status,jdbcType=DECIMAL},
+      #{synstatus,jdbcType=DECIMAL},
+      #{receipt,jdbcType=VARCHAR},
+      #{guestno,jdbcType=VARCHAR})
+  </insert>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from DOORLOCKUSER
+    where DOORLOCKUSERID = #{id,jdbcType=DECIMAL}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="com.rent.entity.DoorlockUser">
+    update DOORLOCKUSER
+    set
+      MASTERID = #{masterid,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      SYNSTATUS = #{synstatus,jdbcType=DECIMAL},
+      RECEIPT = #{receipt,jdbcType=VARCHAR},
+      VALIDTHROUGH=#{validthrough}
+    where DOORLOCKUSERID = #{doorlockuserid,jdbcType=DECIMAL}
+  </update>
+</mapper>

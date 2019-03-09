@@ -4,7 +4,6 @@
 
 <mapper namespace="com.rent.dao.PrHouseMapper">
   <resultMap id="BaseResultMap" type="com.rent.entity.PrHouse">
-   
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NO" jdbcType="VARCHAR" property="no" />
     <result column="ESTATE_ID" jdbcType="DECIMAL" property="estateId" />
@@ -34,16 +33,27 @@
     <result column="UPDATETIME" property="updatetime" jdbcType="DATE" />
     <result column="UPDATETIME" property="updatetime" jdbcType="DATE" />
     <result column="IS_TUI" property="isTui" jdbcType="DECIMAL" />
- 
-    
   </resultMap>
+
+    <resultMap id="resultMap" type="com.rent.door.HouseInfo">
+        <id column="ID" jdbcType="DECIMAL" property="id" />
+        <result column="DISTRICTNAME" jdbcType="VARCHAR" property="districtName" />
+        <result column="UNITNAME" jdbcType="VARCHAR" property="unitName" />
+        <result column="ROOMNO" jdbcType="DECIMAL" property="roomNo" />
+    </resultMap>
+
   <sql id="Base_Column_List">
   
     ID, NO, ESTATE_ID, BUILDING_NO_ID, ROOM_NO,ROOM_NO_ID,  BUILDING_FLOOR_ID, ROOM_TYPE_ID, AREA, 
     ROOM_NUM, PRICE, MONTH_PRICE, BACK_PRICE, CHEAP_PRICE, STATE, REMARK,master_id,house_Code,RENTMOD,MODDATE
-    ,DECDATE,DECMAN,REASON,createuser,createtime,updateuser,updatetime,is_Tui
+    ,DECDATE,DECMAN,REASON,createuser,createtime,updateuser,updatetime,is_Tui,associatedlock
   </sql>
-  
+
+    <select id="findRoomInfoById" parameterType="java.lang.Integer" resultMap="resultMap">
+        select h.id,h.room_no ROOMNO,e.name DISTRICTNAME,b.name UNITNAME
+        from pr_house  h left join estate  e on h.estate_id=e.id left join building_no b on h.building_no_id=b.id
+        where h.id=#{houseid}
+    </select>
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
    
@@ -52,6 +62,14 @@
     from PR_HOUSE
     where ID = #{id,jdbcType=DECIMAL}
   </select>
+    <select id="findMasterBySta" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List" />
+        from PR_HOUSE
+        where STA = #{id,jdbcType=DECIMAL}
+    </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
       WARNING - @mbggenerated
@@ -72,7 +90,7 @@
       ROOM_TYPE_ID, AREA, ROOM_NUM, 
       PRICE, MONTH_PRICE, BACK_PRICE, 
       CHEAP_PRICE, STATE, REMARK,master_id,house_Code,RENTMOD,MODDATE,decDate,decMan,REASON,
-      createuser,createtime,updateuser,updatetime,is_Tui)
+      createuser,createtime,updateuser,updatetime,is_Tui,associatedlock)
     values (#{id,jdbcType=DECIMAL}, #{no,jdbcType=VARCHAR}, #{estateId,jdbcType=DECIMAL}, 
       #{buildingNoId,jdbcType=VARCHAR}, #{roomNo,jdbcType=VARCHAR},#{roomNoId,jdbcType=DECIMAL},
       #{buildingFloorId,jdbcType=DECIMAL}, 
@@ -82,7 +100,7 @@
       #{masterId,jdbcType=DECIMAL},#{houseCode,jdbcType=VARCHAR},#{rentMod,jdbcType=DECIMAL},
       #{modDate,jdbcType=DATE},#{decDate,jdbcType=DATE},#{decMan,jdbcType=VARCHAR},
       #{reason,jdbcType=VARCHAR},#{createuser,jdbcType=VARCHAR},#{createtime,jdbcType=DATE},
-      #{updateuser,jdbcType=VARCHAR},#{updatetime,jdbcType=DATE},#{isTui}
+      #{updateuser,jdbcType=VARCHAR},#{updatetime,jdbcType=DATE},#{isTui},#{associatedlock}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.rent.entity.PrHouse">
@@ -281,7 +299,8 @@
       updateuser=#{updateuser,jdbcType=VARCHAR},
       updatetime=#{updatetime,jdbcType=DATE},
       ORIGINSTATE = #{originState,jdbcType=DECIMAL},
-      is_Tui=#{isTui}
+      is_Tui=#{isTui},
+      associatedlock=#{associatedlock}
   	  where ID = #{id,jdbcType=DECIMAL}
   </update>
 
@@ -349,7 +368,17 @@
     from PR_HOUSE
     where NO = #{no,jdbcType=DECIMAL}
   </select>
-  
+
+    <select id="findByLock" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from PR_HOUSE
+        where ASSOCIATEDLOCK = #{associatedlock,jdbcType=DECIMAL}
+    </select>
+
+    <select id="findAllLock" resultType="java.lang.String">
+        select associatedlock from PR_HOUSE where associatedlock is not null
+    </select>
   
   
   <select id="getHouseCountByConditionPaged" resultType="java.lang.Integer" parameterType="com.rent.condition.HouseCondition" >

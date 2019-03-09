@@ -230,5 +230,8 @@ public interface PrhMasterMapper {
 	List<String> findAllBatchs(@Param("batch")String batch,@Param("estateId")Integer estateId);
 
 	List<PrhMaster> findMastersByBatchs(@Param("batch")String batch,@Param("estateId")Integer estateId);
-	
+
+    List<PrhMaster> findMasterBySta(int id);
+
+    List<PrhMaster> findOverdueMasterOfRenting();
 }

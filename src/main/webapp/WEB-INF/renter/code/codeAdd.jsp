@@ -183,57 +183,6 @@ ul {
 		}
 	}
 
-	function toEdit() {
-		var chk = $(".chk");
-		var count = 0;
-		var id = null;
-		//循环
-
-		chk.each(function(e, q) {
-			var flag = $(q).is(":checked");
-			if (flag) {
-				id = $(q).val();
-				count++;
-			}
-		});
-		if (count == 0) {
-			$.jBox.tip("请选择要修改的单元！");
-
-			return;
-		} else if (count > 1) {
-			$.jBox.tip("请勿选择多个单元！");
-			return;
-		}
-
-		location.href = "toEditBuildingNo.do?id=" + id;
-
-	}
-
-	function del() {
-		var chk = $(".chk");
-		var ids = new Array();
-		var count = 0;
-		//循环
-		chk.each(function(e, q) {
-			var flag = $(q).is(":checked");
-			if (flag) {
-				id = $(q).val();
-				ids.push(id);
-				count++;
-			}
-		});
-
-		if (count == 0) {
-			$.jBox.tip("请选择要删除的单元!");
-			$("#myForm").submit(function() {
-				return false;
-			});
-			return;
-		}
-
-	}
-	
-	
 </script>
 <script type="text/javascript">
 	function WriteGuestOpenCard() {
@@ -289,8 +238,6 @@ ul {
 							<th width="10">证件号</th>
 							<th>手机</th>
 							<th>关系</th>
-							<th>白卡状态</th>
-							<th>身份证对码</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -300,7 +247,7 @@ ul {
 							<td><input type="hidden" class="cardId" name="cardId" /> <input
 								type="hidden" class="idenPwd" name="idenPwd" /> <input
 								type="radio" name="idStr" class="radioId" checked="checked"
-								value="${master.id}" /> <input type="hidden" class="oldCardId"
+								value="${master.id}@1" /> <input type="hidden" class="oldCardId"
 								name="oldCardId" /></td>
 							<td class="type">登记人</td>
 							<td class="linkNameTxt">${master.profile.name}</td>
@@ -312,17 +259,6 @@ ul {
 							<td class="linkMobileTxt">${master.profile.mobile}</td>
 							
 							<td class="linkLinkTxt"></td>
-
-							<td class="cardState"><c:if test="${master.card!=null}">已开卡</c:if>
-								<c:if test="${master.card==null}">未开卡</c:if></td>
-							<td class="identityCard">
-							
-							<c:if
-									test="${master.identityCard!=null }">
-								${master.identityCard.idenPwd}
-							</c:if> <c:if test="${master.identityCard==null }">
-								未设置
-							</c:if></td>
 							
 						</tr>
 
@@ -330,7 +266,7 @@ ul {
 							<c:if test="${l.del!=1 }">
 							<tr>
 								<td><input type="radio" name="idStr" class="radioId"
-									value="${master.id}-${l.id}" /></td>
+									value="${master.id}-${l.id}@2" /></td>
 								<td class="type">同住人</td>
 								<td class="linkNameTxt">${l.profile.name}</td>
 								<td class="linkSexTxt">${l.profile.sex==0?'女':'男'}</td>
@@ -341,15 +277,6 @@ ul {
 								<td class="linkMobileTxt">${l.profile.mobile}</td>
 								
 								<td class="linkLinkTxt">${l.link}</td>
-								<td class="cardState"><c:if test="${l.card!=null}">已开卡</c:if>
-									<c:if test="${l.card==null}">未开卡</c:if></td>
-
-								<td class="identityCard"><c:if
-										test="${l.identityCard!=null }">
-								${l.identityCard.idenPwd }
-							</c:if> <c:if test="${l.identityCard==null }">
-								未设置
-							</c:if></td>
 							
 							</tr>
 							</c:if>
@@ -359,7 +286,7 @@ ul {
 							<c:if test="${l.del!=1 }">
 							<tr>
 								<td><input type="radio" name="idStr" class="radioId"
-									value="${master.id}-${l.id}" /></td>
+									value="${master.id}-${l.id}@3" /></td>
 								<td class="type">临时居住人</td>
 								<td class="linkNameTxt">${l.profile.name}</td>
 								<td class="linkSexTxt">${l.profile.sex==0?'女':'男'}</td>
@@ -370,19 +297,6 @@ ul {
 								<td class="linkMobileTxt">${l.profile.mobile}</td>
 								
 								<td class="linkLinkTxt"></td>
-								<td class="cardState">
-								
-								</td>
-								<td class="identityCard">
-								
-									<c:if test="${l.idenPwd!=null }">
-										${l.idenPwd }
-									</c:if>
-									
-									 <c:if test="${l.idenPwd==null }">
-									未设置
-									</c:if>
-							</td>
 							
 							</tr>
 							</c:if>
@@ -395,349 +309,149 @@ ul {
 				
 				
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" value="开卡" type="button" onClick="createCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发密码" type="button" onClick="toAddPasswordPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==23}">
-					<input class="btn" value="开卡" type="button" onClick="createCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发密码" type="button" onClick="toAddPasswordPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 			 	</c:if></c:forEach></c:if></c:forEach>
 				
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" value="挂失卡" type="button" onclick="lossCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发MF卡" type="button" onclick="toAddMFCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==25}">
-					<input class="btn" value="挂失卡" type="button" onclick="lossCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发MF卡" type="button" onclick="toAddMFCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 			 	</c:if></c:forEach></c:if></c:forEach>
 				
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" value="生成身份证对码" type="button" onclick="createIdentityPwd()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发身份证" type="button" onclick="toAddIDCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==24}">
-					<input class="btn" value="生成身份证对码" type="button" onclick="createIdentityPwd()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn" value="下发身份证" type="button" onclick="toAddIDCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 			 	</c:if></c:forEach></c:if></c:forEach>
-			 	
-			 	
-			 	<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" value="身份证挂失确认" type="button" onclick="identityLoss()" />&nbsp;&nbsp;&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==74}">
-					<input class="btn" value="身份证挂失确认" type="button" onclick="identityLoss()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 	</c:if></c:forEach></c:if></c:forEach>
-			 	
-			 		<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn" value="历史身份证对码" type="button" onclick="historyIdenPwd()" />&nbsp;&nbsp;&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==75}">
-					<input class="btn" value="历史身份证对码" type="button" onclick="historyIdenPwd()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 	</c:if></c:forEach></c:if></c:forEach>
-				
-				
-				
-				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn"  value="打印对码" type="button" onclick="print()" />&nbsp;&nbsp;&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==108}">
-					<input class="btn"  value="打印对码" type="button" onclick="print()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 	</c:if></c:forEach></c:if></c:forEach>
-			 	
-			 	
-			 	
-		<script type="text/javascript">
-		
-		
-		function historyIdenPwd(){
-			var id = $('.radioId:checked').val();
-			
-			 layer.open({
-				    type: 2,
-				    title: '历史身份证对码',
-				    maxmin: false,
-				    area: ['700px', '376px'],
-				    content:'toHistoryIdenPwd.do?idStr='+id,
-				    end: function(){
-				    	location.reload();
-				    }
-				  });
-			
-		}
-		
-		
-		
-		function identityLoss(){
-			var id = $('.radioId:checked').val();
-			
-			
-		 var idenPwd= $.trim($('.radioId:checked').parents("tr").find(".identityCard").text());
-			if (idenPwd=="未设置") {
-				$.jBox.tip("租户尚未生成对码，不能挂失，请确认！");
-				return;	
-			}
-		 
-			if (!confirm("请确认身份证已经挂失!是否继续？")) {
-				return false;
-			}
-			
-			$.ajax({
-				url : 'lossIdentity.do?idStr='+ id+"&name="+new Date(),
-				success : function(result) {
-					
-				 	if (result==0) {
-						$.jBox.tip("未找到记录！");		
-					}else{
-						$('.radioId:checked').parents("tr").find(".identityCard").text("未设置");
-						$.jBox.tip("挂失确认成功！");
-					} 
-				}
-			});
-		}
-		
-		function lossCard() {
-			$(".cardId").val("");
-			$(".oldCardId").val("");
-			$(".idenPwd").val("");
-			$(".op").val("挂失卡");
-			
-			if ($('.radioId:checked').parents("tr").find(".cardState").text()=="未开卡") {
-				$.jBox.tip("租户尚未开卡，不能挂失，请确认！");
-				return;
-			}
-			
-			 if (!confirm("确认挂失吗？")) {
-				return false;
-				}
-			var id = $('.radioId:checked').val();
-			 
-			/*通过ajax获取信息  */
-			$.ajax({
-				url : 'lossCard.do?idStr='+ id+"&name="+new Date(),
-				success : function(results) {
-					
-					if (results==null||results.length==0) {
-						$.jBox.tip("租户尚未开卡，不能挂失，请确认！");
-					}
-					var cardId = results[0];
-					var authorCode=results[1];
-					var oldCardId=results[2];
-					
-					$(".cardId").val(cardId);
-					$(".oldCardId").val(oldCardId);
-					
-					lossResult= JSobj.WriteLossCard(cardId,authorCode,'0',oldCardId,'0');	
-					var resultStr = eval('(' + lossResult + ')');
-					var result = resultStr.Result;
-					
-					if (result==1) {
-						//提交表单
-						$.ajax({
-							type : "POST",
-							dataType : "Text",
-							url : 'writeCard.do',
-							data : $('#myForm').serialize(),
-							success : function(result) {
-								if (result == 1) {
-									$('.radioId:checked').parents("tr").find(".cardState").text("已挂失");
-									$.jBox.tip("挂失卡写入成功！");
 
-								} else if (result == 3) {
-									$.jBox.tip("该流水号已被占用！");
-								}
-
-							},
-							error : function(data) {
-							}
-						});
-
-						
-						
-					}else{
-						$.jBox.tip("操作失败，请重试！");
-					}
-					
-				},
-				error : function(data) {
-					alert("error:" + data.responseText);
-				}
-			});
-
-		}
-	</script>
+                <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
+                    <input class="btn" value="查看门锁用户" type="button" onclick="toLockUserPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
+                </c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==24}">
+                    <input class="btn" value="查看门锁用户" type="button" onclick="toLockUserPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
+                </c:if></c:forEach></c:if></c:forEach>
 				<br />
 			</form>
 		</div>
-
-
 	</div>
 	<div style="display: none;">
 		<input type="text" class="infoStr">
 	</div>
 	<br />
 	<script type="text/javascript">
-		function createIdentityPwd() {
-			var type= $(".radioId:checked").parents("tr").find(".type").text();
-			
-			$(".cardId").val("");
-			$(".oldCardId").val("");
-			$(".idenPwd").val("");
-			$(".op").val("生成身份证对码");
-			var id = $('.radioId:checked').val();
-			/*通过ajax获取信息  */
-			$.ajax({
-				url : 'getInfoForIdentity.do?idStr=' + id+"&name="+new Date(),
-				success : function(results) {
-					var cardId = results[0];
-					$(".cardId").val(cardId);
-					
-					var bDate = results[1];
-					var eDate = results[2];
-					var roomNoStr = results[3];
-					
-					
-					//读取身份证卡号
-					var strFolder = "c:\\test";
-					infoStr = JSobj.ReadIDBaseMsg(strFolder);
-					
-					 $(".infoStr").val(infoStr);
-					 infoStr= $(".infoStr").val();
-					
-					 var info = eval('(' + infoStr + ')');
-					
-					 
-					
-					var result= info.Result;
-					var identityStr;
-					if (result!=1) {
-						 $.jBox.tip("读取身份证失败！");
-					}else{
-						var item=info.Value;
-						var code=item.Code;
-						var realCode= $('.radioId:checked').parents("tr").find(".linkIdnoTxt").text();
-						if (realCode!=code) {
-							 $.jBox.tip("身份证与租户信息不符合！");
-							 return;
-						}else{
-							 identityStr = item.CardNo; //身份证物理卡号
-							
-						}
-						
-						//获取密码
-						
-						str1 = JSobj.GetPassword(identityStr, bDate, eDate,
-								roomNoStr, "0000000000");
-					
-						var q = eval('(' + str1 + ')');
-						var result = q.Result;
-						
-						if (result != 1) {
-							$.jBox.tip("获取密码失败！");
-						} else {
-							
-							$(".idenPwd").val(q.Value);
-							
-							//保存数据库
-							var urlData="";
-							if (type=="临时居住人") {
-								urlData="writeTempCard.do";
-							}else{
-								urlData="writeCard.do";
-							}
-							
-							//提交表单
-							$.ajax({
-								type : "POST",
-								dataType : "Text",
-								url : urlData,
-								data : $('#myForm').serialize(),
-								success : function(result) {
-									if (result == 1) {
-										/* var type= $('.radioId:checked').parents("td").next().text(); */
-										
-										$('.radioId:checked').parents("tr")
-										.find(".identityCard").text(
-												q.Value);
-										
-										$.jBox.tip("身份证对码生成成功！");
-
-									} else if (result == 2) {
-										$.jBox.tip("该租户已经已经生成过密码，请查看！");
-									} else if (result == 3) {
-										$.jBox.tip("该流水号已被占用！");
-									}
-
-								},
-								error : function(data) {
-								}
-							});
-						}
-					}
-					
-				},
-				error : function(data) {
-					alert("error:" + data.responseText);
-				}
-			});
-
-		}
-	</script>
-
-
-	<script type="text/javascript">
-		function createCard() {
-			
-			
-			$(".op").val("开卡");
-			$(".cardId").val("");
-			$(".oldCardId").val("");
-			$(".idenPwd").val("");
-			var id = $('.radioId:checked').val();
-			/*通过ajax获取信息  */
-			$.ajax({
-				url : "getInfoForCard.do?idStr=" + id+"&name="+new Date(),
-				success : function(results) {
-
-					var cardId = results[0];
-					$(".cardId").val(cardId);
-					
-					var authorCode = results[1];
-	
-					var bDate = results[2];
-					var eDate = results[3];
-					var unit = results[4];
-					var floor = results[5];
-					var roomId = results[6];
-									
-					var infoStr = JSobj.WriteGuestOpenCard(cardId, authorCode, '1',
-							bDate, eDate, unit, floor, roomId, '0');
-					
-					var info = eval('(' + infoStr + ')');
-
-					var result = info.Result;
-					if (result != 1) {
-						$.jBox.tip("开卡失败！");
-					} else {
-						//提交表单
-						$.ajax({
-							type : "POST",
-							dataType : "Text",
-							url : 'writeCard.do',
-							data : $('#myForm').serialize(),
-							success : function(result) {
-								if (result == 1) {
-									$('.radioId:checked').parents("tr").find(
-											".cardState").text("已开卡");
-									$.jBox.tip("开卡成功！");
-
-								} else if (result == 2) {
-									$.jBox.tip("该租户已经开过卡！");
-								} else if (result == 3) {
-									$.jBox.tip("该流水号已被占用！");
-								}
-
-							},
-							error : function(data) {
-							}
-						});
-
-					}
-
-				},
-				error : function(data) {
-					alert("error:" + data.responseText);
-				}
-			});
-		}
+		function toAddPasswordPage() {
+            var chk= $(".radioId");
+            var count=0;
+            var id=null;
+            chk.each(function(e,q){
+                var flag= $(q).is(":checked");
+                if(flag){
+                    id=$(q).val();
+                    count++;
+                }
+            });
+            if(count==0){
+                $.jBox.tip("请选择要下发的用户！");
+                return;
+            }
+            layer.ready(function(){
+                layer.open({
+                    type: 2,
+                    title: '下发密码用户',
+                    maxmin: false,
+                    area: ['400px', '240px'],
+                    content:'toAddLockUserPage.do?usertype=1&idStr='+id,
+                    end: function(){
+                        location.reload();
+                    }
+                });
+            });
+        }
+        function toAddMFCardPage() {
+            var chk= $(".radioId");
+            var count=0;
+            var id=null;
+            chk.each(function(e,q){
+                var flag= $(q).is(":checked");
+                if(flag){
+                    id=$(q).val();
+                    count++;
+                }
+            });
+            if(count==0){
+                $.jBox.tip("请选择要下发的用户！");
+                return;
+            }
+            layer.ready(function(){
+                layer.open({
+                    type: 2,
+                    title: '下发MF卡用户',
+                    maxmin: false,
+                    area: ['400px', '240px'],
+                    content:'toAddLockUserPage.do?idStr='+id+'&usertype=3',
+                    end: function(){
+                        location.reload();
+                    }
+                });
+            });
+        }
+        function toAddIDCardPage() {
+            var chk= $(".radioId");
+            var count=0;
+            var id=null;
+            chk.each(function(e,q){
+                var flag= $(q).is(":checked");
+                if(flag){
+                    id=$(q).val();
+                    count++;
+                }
+            });
+            if(count==0){
+                $.jBox.tip("请选择要下发的用户！");
+                return;
+            }
+            layer.ready(function(){
+                layer.open({
+                    type: 2,
+                    title: '下发身份证用户',
+                    maxmin: false,
+                    area: ['400px', '240px'],
+                    content:'toAddLockUserPage.do?usertype=4&idStr='+id,
+                    end: function(){
+                        location.reload();
+                    }
+                });
+            });
+        }
+        function toLockUserPage() {
+            var chk= $(".radioId");
+            var count=0;
+            var id=null;
+            chk.each(function(e,q){
+                var flag= $(q).is(":checked");
+                if(flag){
+                    id=$(q).val();
+                    count++;
+                }
+            });
+            if(count==0){
+                $.jBox.tip("请选择要查看的用户！");
+                return;
+            }
+            layer.ready(function(){
+                layer.open({
+                    type: 2,
+                    title: '查看门锁用户',
+                    maxmin: false,
+                    area: ['1000px', '400px'],
+                    content:'toLockUserPage.do?idStr='+id,
+                    end: function(){
+                        location.reload();
+                    }
+                });
+            });
+        }
 	</script>
 </body>
 </html>

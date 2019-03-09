@@ -123,7 +123,7 @@ a:hover {
 			class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>档案编号</th>
+					<%--<th>档案编号</th>--%>
 					<th>楼号</th>
 					<th>单元</th>
 					<th>房间</th>
@@ -150,9 +150,9 @@ a:hover {
 						<input  type="hidden" value="${b.id}" name="masterIds"/>
 						
 						
-						<td class="fileNoContainer"><input type="hidden"
+						<%--<td class="fileNoContainer"><input type="hidden"
 							value='${b.fileNo}' class='fileNo' name='fileNos'>
-							${b.fileNo}</td>
+							${b.fileNo}</td>--%>
 
 
 						<td>${b.prHouse.buildingNo.buildingId}号楼</td>
@@ -181,10 +181,10 @@ a:hover {
 		</table>
 		
 	<div class="pagination">${numpage}</div>
-		<c:if test="${roleUpdateNo==1}">
+		<%--<c:if test="${roleUpdateNo==1}">
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="submit" class="btn" value="批量更新档案编号" onclick="update()">
-		</c:if>
+		</c:if>--%>
 		
 		<input type="button" class="btn" value="租户导出" onclick="location.href='masterReport.do?estateId=${estateId}'">
 		

@@ -6,6 +6,7 @@ import com.rent.common.persistence.annotation.MyBatisDao;
 import com.rent.condition.HouseCondition;
 import com.rent.condition.HouseFileContion;
 import com.rent.condition.HouseRmdevCondition;
+import com.rent.door.HouseInfo;
 import com.rent.entity.PrHouse;
 
 @MyBatisDao
@@ -68,6 +69,8 @@ public interface PrHouseMapper {
      * @return
      */
     PrHouse findByNo(String no);
+
+    PrHouse findByLock(String associatedlock);
     //条件查询
     List<PrHouse> findByCondition(HouseCondition condition);
     List<PrHouse> findByFileCondition(HouseFileContion condition);
@@ -101,5 +104,8 @@ public interface PrHouseMapper {
 	
 	
 	List<PrHouse> findByBuildingNo(String buildingNoId);
-	
+
+    List<String> findAllLock();
+
+    HouseInfo findRoomInfoById(Integer houseid);
 }

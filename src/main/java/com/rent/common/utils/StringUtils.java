@@ -295,9 +295,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isNotBlank(remoteAddr)) {
         	remoteAddr = request.getHeader("X-Forwarded-For");
         }else if (isNotBlank(remoteAddr)) {
-        	remoteAddr = request.getHeader("Proxy-Client-IP");
+        	remoteAddr = request.getHeader("Proxy-MyWebSocketClient-IP");
         }else if (isNotBlank(remoteAddr)) {
-        	remoteAddr = request.getHeader("WL-Proxy-Client-IP");
+        	remoteAddr = request.getHeader("WL-Proxy-MyWebSocketClient-IP");
         }
         return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
 	}

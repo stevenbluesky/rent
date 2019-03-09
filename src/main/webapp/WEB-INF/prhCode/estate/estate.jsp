@@ -76,11 +76,11 @@
   
   <input class="btn" value="删   除"  type="button" onclick="del()"/>&nbsp;&nbsp;
   
-  <input class="btn" value="写授权卡"  type="button" onclick="WriteAuthorizeCard()"/>&nbsp;&nbsp;
+<%--  <input class="btn" value="写授权卡"  type="button" onclick="WriteAuthorizeCard()"/>&nbsp;&nbsp;
   
   <input class="btn" value="写时钟卡"  type="button" onclick="WriteSetClockCard()"/>&nbsp;&nbsp;
   
-  <input class="btn"  value="写总卡" type="button" onClick="WriteTotalControlCard()">
+  <input class="btn"  value="写总卡" type="button" onClick="WriteTotalControlCard()">--%>
   
   </body>
   

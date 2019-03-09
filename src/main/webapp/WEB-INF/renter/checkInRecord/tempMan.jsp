@@ -452,7 +452,7 @@ ul {
 					
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<input name="id" type="hidden" value="${link.id }"> 
-					<input type="button" class="btn" style="margin-right: 10px;" value="读身份证" onclick="ReadIDCardOthers();">
+					<input type="hidden" class="btn" style="margin-right: 10px;" value="读身份证" onclick="ReadIDCardOthers();">
 					
 					 <br /><br /> 
 				

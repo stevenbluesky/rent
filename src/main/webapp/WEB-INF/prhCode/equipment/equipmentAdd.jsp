@@ -65,6 +65,10 @@
 	   		    <td class="title" >名称:</td>
 	   		   <td><input type="text" class="name" name="name"></td>
 	   		</tr>
+		   <tr>
+			   <td class="title" >价格:</td>
+			   <td><input type="text" class="price" name="price"></td>
+		   </tr>
 	   		
 	   		<tr>
 	   		    <td class="title" >类别:</td>

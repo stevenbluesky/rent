@@ -103,7 +103,7 @@ public class UserController {
 		}
 
 		if (state == 1) {
-			map.put("tip", "请先登录");
+//			map.put("tip", "请先登录");
 		} else if (state == 2) {
 			session.removeAttribute(Global.USER);
 		}

@@ -66,11 +66,14 @@
 
 	<task:scheduled-tasks>
 		<!-- 这里表示的是每隔五秒执行一次 -->
-		<task:scheduled ref="doDataWork" method="test" cron="0 42 9 * * ?" />
+		<task:scheduled ref="doDataWork" method="test" cron="0 10 18 * * ?" />
 		<task:scheduled ref="doDataWork" method="updateRentPlan" cron="0 0 0 * * ?" />
 		<!-- <task:scheduled ref="doDataWork" method="checkArrears" cron="0 0 0 * * ?" /> -->
 		<task:scheduled ref="doDataWork" method="checkArrears" cron="0 0 0 * * ?" />
-		
+		<!--删除退房密码-->
+		<task:scheduled ref="doDataWork" method="deleteDoorlockUser" cron="0 0 0 * * ?" />
+		<!--删除过期未续租的未过期密码-->
+		<task:scheduled ref="doDataWork" method="deleteDoorlockUserWithOverdueMaster" cron="0 55 23 * * ?" />
 	</task:scheduled-tasks>
     
     

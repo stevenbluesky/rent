@@ -294,10 +294,7 @@ public class NumPageUtil {
 			pageStr="<span style='color:red;'>"+page+"</span>";
 			style="style='border-top:2px solid red;font-weight:bold;'";
 		}
-		
-		
-		
-		
+
 		if (currpage == page) {
 			if (url.lastIndexOf(".") >= 0 && url.substring(url.lastIndexOf("."), url.length()).equals(".do")) {
 				return "<li class='number' ><a "+style+" class='select' href='/rent/" + url + "?currpage=" + page + "'>" + pageStr

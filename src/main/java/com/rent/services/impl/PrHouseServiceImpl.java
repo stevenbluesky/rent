@@ -6,28 +6,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.rent.door.HouseInfo;
+import com.rent.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.org.apache.regexp.internal.recompile;
 import com.rent.condition.HouseCondition;
 import com.rent.condition.HouseFileContion;
 import com.rent.condition.HouseRmdevCondition;
 import com.rent.dao.PrHouseMapper;
 import com.rent.dao.PrhMasterMapper;
 import com.rent.dao.ProfileMapper;
-import com.rent.entity.BuildingFloor;
-import com.rent.entity.BuildingNo;
-import com.rent.entity.Estate;
-import com.rent.entity.PrHouse;
-import com.rent.entity.PrhLinkman;
-import com.rent.entity.PrhMaster;
-import com.rent.entity.PrhRental;
-import com.rent.entity.Profile;
-import com.rent.entity.RoomType;
-import com.rent.entity.Subsidy;
-import com.rent.entity.Users;
 import com.rent.services.BuildingFloorService;
 import com.rent.services.BuildingNoService;
 import com.rent.services.EstateService;
@@ -367,6 +357,20 @@ public class PrHouseServiceImpl implements PrHouseService{
 	//閿熸枻鎷烽敓鎹锋唻鎷锋尓閿熺獤锟�
 	public PrHouse findByNo(String no) {
 		return prHouseMapper.findByNo(no);
+	}
+
+	public PrHouse findByLock(String associatedlock){
+		return prHouseMapper.findByLock(associatedlock);
+	}
+
+	@Override
+	public List<String> findAllLock() {
+		return prHouseMapper.findAllLock();
+	}
+
+	@Override
+	public HouseInfo findRoomInfoById(Integer houseid) {
+		return prHouseMapper.findRoomInfoById(houseid);
 	}
 
 	//閺嶈宓侀弶鈥叉閺屻儴顕�

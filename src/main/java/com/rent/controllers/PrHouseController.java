@@ -5,16 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.rent.common.utils.*;
+import com.rent.door.HouseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,12 +36,10 @@ import com.rent.services.EstateService;
 import com.rent.services.PrHouseService;
 import com.rent.services.RoomTypeService;
 import com.rent.services.UserService;
-import com.rent.common.utils.ExcelOperate;
-import com.rent.common.utils.MyConvertUtil;
-import com.rent.common.utils.NumPageUtil;
 import com.rent.condition.HouseCondition;
 
 @Controller("prHouseController")
+@Transactional(rollbackFor = Exception.class)
 public class PrHouseController {
 
 	public BuildingFloorService getBuildingFloorService() {
@@ -244,13 +245,48 @@ public class PrHouseController {
 		List<Estate> estates = prHouseService.getAllEstate();
 		List<RoomType> roomTypes = prHouseService.getAllRoomType();
 
+		List<String> lockListInDB = prHouseService.findAllLock();
+        List<Lock> lockList = getAllLockList();
+
+		for(Iterator it =lockList.iterator();it.hasNext();){
+			Lock next = (Lock)it.next();
+			if (lockListInDB.contains(next.get_deviceid())){
+				it.remove();
+			}
+		}
 		map.put("buildingFloors", buildingFloors);
 		map.put("buildingNos", buildingNos);
 		map.put("estates", estates);
 		map.put("roomTypes", roomTypes);
+		map.put("lockList",lockList);
 		return "prh/prHouse/prHouseAdd.jsp";
 	}
 
+	private List<Lock> getAllLockList(){
+        String params = "{\"method\": \"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"lock\",\"_nodeid\":1}}}";
+        String result = RestfulUtil.postHttps(params,"app");
+        JSONArray pageArray = null;
+        int totalCount = 0;
+        List<Lock> lockList = new ArrayList<>();
+        // 处理数据
+        JSONObject resultMap = JSON.parseObject(result);
+        int resultcode = resultMap.getIntValue("resultcode");
+        if(!RestfulUtil.checkNull(resultMap.getJSONObject("data"))){
+            JSONObject data = resultMap.getJSONObject("data");
+            totalCount = data.getIntValue("TotalCount");
+            if(totalCount>0) {
+                pageArray = data.getJSONArray("PageList");
+                for (int i = 0; i < pageArray.size(); i++) {
+                    Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
+                    if (lock.getName() == null) {
+                        lock.setName("");
+                    }
+                    lockList.add(lock);
+                }
+            }
+        }
+        return lockList;
+    }
 	// 新增
 	@RequestMapping("prHouseAdd.do")
 	@ResponseBody
@@ -266,11 +302,34 @@ public class PrHouseController {
 		if (findByNo != null) {
 			return "0"; // 房号相同
 		}
+		PrHouse findByLock = prHouseService.findByLock(prHouse.getAssociatedlock());
+		if(findByLock != null){
+			return "-1";
+		}
 
 		prHouse.setUpdateuser(user.getId().toString());
 		prHouse.setUpdatetime(new Date());
-
-		prHouseService.addPrHouse(prHouse);
+		int i = prHouseService.addPrHouse(prHouse);
+		try {
+			Lock lock = null;
+			if (StringUtils.isNotBlank(prHouse.getAssociatedlock())) {
+				String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\"" + prHouse.getAssociatedlock() + "\"}}}";
+				String result = RestfulUtil.postHttps(params, "app");
+				JSONObject resultMap = JSON.parseObject(result);
+				int resultcode = resultMap.getIntValue("resultcode");
+				if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+					JSONObject data = resultMap.getJSONObject("data");
+					if (data.getIntValue("TotalCount") > 0) {
+						lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
+					}
+				}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":" + prHouse.getId() + ",\"IfBind\":true}}";
+			String result2 = RestfulUtil.postHttps(params1, "app");
+		}
+		}catch (Exception e){
+			prHouseService.delPrHouse(prHouse.getId());
+			return "-2";
+		}
 		return "";
 	}
 
@@ -300,9 +359,29 @@ public class PrHouseController {
 		List<BuildingNo> buildingNos = prHouseService.getAllBuildingNo(estateId);
 		List<RoomType> roomTypes = prHouseService.getAllRoomType();
 
-		map.put("buildingFloors", buildingFloors);
+
+		List<String> lockListInDB = prHouseService.findAllLock();
+		if(lockListInDB.contains(prHouse.getAssociatedlock())){
+			lockListInDB.remove(prHouse.getAssociatedlock());
+		}
+		List<Lock> lockList = getAllLockList();
+
+		for(Iterator it =lockList.iterator();it.hasNext();){
+			Lock next = (Lock)it.next();
+			if (lockListInDB.contains(next.get_deviceid())){
+				it.remove();
+			}
+		}
+        List<String> lockstrlist = new ArrayList<>();
+        for(Lock l:lockList){
+            lockstrlist.add(l.get_deviceid());
+        }
+
+        map.put("buildingFloors", buildingFloors);
 		map.put("buildingNos", buildingNos);
 		map.put("roomTypes", roomTypes);
+		map.put("lockList",lockList);
+		map.put("lockstrlist",lockstrlist);
 
 		return "prh/prHouse/prHouseEdit.jsp";
 	}
@@ -322,12 +401,77 @@ public class PrHouseController {
 		prHouse.setState(oldHouse.getState());
 		PrHouse findByNo = prHouseService.findByNo(prHouse.getNo());
 
+		PrHouse findByLock = prHouseService.findByLock(prHouse.getAssociatedlock());
+
 		prHouse.setUpdateuser(user.getId().toString());
 		prHouse.setUpdatetime(new Date());
 		if (findByNo != null && !findByNo.getNo().equals(oldHouse.getNo())) {
 			return "input";
 		}
+		if(findByLock != null && !findByLock.getNo().equals(oldHouse.getNo())){
+			return "lockrepeat";
+		}
 		prHouseService.updatePrHouse(prHouse);
+		if(StringUtils.isBlank(oldHouse.getAssociatedlock())&&StringUtils.isNotBlank(prHouse.getAssociatedlock())){
+			//新绑定门锁
+			Lock lock = null;
+			String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+ prHouse.getAssociatedlock() + "\"}}}";
+			String result = RestfulUtil.postHttps(params, "app");
+			JSONObject resultMap = JSON.parseObject(result);
+			int resultcode = resultMap.getIntValue("resultcode");
+			if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+				JSONObject data = resultMap.getJSONObject("data");
+				if (data.getIntValue("TotalCount") > 0) {
+					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
+				}
+			}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
+			String result2 = RestfulUtil.postHttps(params1, "app");
+		}else if(StringUtils.isBlank(prHouse.getAssociatedlock())&&StringUtils.isNotBlank(oldHouse.getAssociatedlock())){
+			//解绑门锁
+			Lock lock = null;
+			String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+ oldHouse.getAssociatedlock() + "\"}}}";
+			String result = RestfulUtil.postHttps(params, "app");
+			JSONObject resultMap = JSON.parseObject(result);
+			int resultcode = resultMap.getIntValue("resultcode");
+			if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+				JSONObject data = resultMap.getJSONObject("data");
+				if (data.getIntValue("TotalCount") > 0) {
+					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
+				}
+			}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + oldHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":0,\"IfBind\":false}}";
+			String result2 = RestfulUtil.postHttps(params1, "app");
+		}else if(StringUtils.isNotBlank(prHouse.getAssociatedlock())&&StringUtils.isNotBlank(oldHouse.getAssociatedlock())&&!oldHouse.getAssociatedlock().equals(prHouse.getAssociatedlock())){
+			//更换门锁
+			Lock lock = null;
+			String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+ oldHouse.getAssociatedlock() + "\"}}}";
+			String result = RestfulUtil.postHttps(params, "app");
+			JSONObject resultMap = JSON.parseObject(result);
+			int resultcode = resultMap.getIntValue("resultcode");
+			if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+				JSONObject data = resultMap.getJSONObject("data");
+				if (data.getIntValue("TotalCount") > 0) {
+					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
+				}
+			}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + oldHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":0,\"IfBind\":false}}";
+			String result2 = RestfulUtil.postHttps(params1, "app");
+
+			Lock lock2 = null;
+			String params2 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+ prHouse.getAssociatedlock() + "\"}}}";
+			String result3 = RestfulUtil.postHttps(params2, "app");
+			JSONObject resultMap2 = JSON.parseObject(result3);
+			int resultcode2 = resultMap2.getIntValue("resultcode");
+			if (resultcode2 == 1 && !RestfulUtil.checkNull(resultMap2.getJSONObject("data"))) {
+				JSONObject data = resultMap2.getJSONObject("data");
+				if (data.getIntValue("TotalCount") > 0) {
+					lock2 = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
+				}
+			}
+			String params3 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock2.getName() + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
+			String result4 = RestfulUtil.postHttps(params3, "app");
+		}
 
 		return "success";
 	}

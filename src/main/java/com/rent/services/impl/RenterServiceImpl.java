@@ -1,16 +1,18 @@
 package com.rent.services.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.rent.common.config.Global;
 import com.rent.common.utils.MyDateUtil;
+import com.rent.common.utils.RestfulUtil;
 import com.rent.condition.RenDaliyCondition;
 import com.rent.condition.RenterCondition;
 import com.rent.dao.PrHouseMapper;
 import com.rent.dao.PrhMasterMapper;
 import com.rent.dao.PrhPaymentMapper;
 import com.rent.dao.PrhRentalMapper;
-import com.rent.entity.PrHouse;
-import com.rent.entity.PrhMaster;
-import com.rent.entity.PrhPayment;
-import com.rent.entity.PrhRental;
+import com.rent.entity.*;
+import com.rent.services.DoorlockUserService;
 import com.rent.services.PrHouseService;
 import com.rent.services.PrhMasterService;
 import com.rent.services.RenterService;
@@ -41,6 +43,8 @@ public class RenterServiceImpl implements RenterService {
 
 	@Autowired
 	private PrhMasterService prhMasterService;
+	@Autowired
+	private DoorlockUserService doorlockUserService;
 
 	@Override
 	public boolean updateHousePrice(Integer[] chk, String[] caname, String reason, String decDate) {
@@ -294,6 +298,7 @@ public class RenterServiceImpl implements RenterService {
 						prHouseMapper.updateByPrimaryKey(house);
 					}
 					if (master.getSta().equals("5")) {
+						//续租成功
 						master.setSta("6");
 
 						PrhMaster oldMaster = prhMasterService.findById(master.getOldMasterId());
@@ -301,7 +306,38 @@ public class RenterServiceImpl implements RenterService {
 						master.setSrc(null);
 						oldMaster.setSta("9");
 						prhMasterService.updatePrhMaster(oldMaster);// 修改原主单
-
+						List<DoorlockUser> allByMasterid = doorlockUserService.findAllByMasterid(oldMaster.getId());
+						for(DoorlockUser d:allByMasterid){
+							d.setMasterid(master.getId());
+							doorlockUserService.updateByPrimaryKey(d);
+						}
+						List<DoorlockUser> availableAllByMasterid = doorlockUserService.findAvailableAllByMasterid(master.getId());
+						for(DoorlockUser d:availableAllByMasterid) {
+							if(d.getValidthrough().getTime()<=master.getEdate().getTime()) {
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+								String begin = sdf.format(d.getValidfrom());
+								String end = sdf.format(master.getEdate());
+								end = end.substring(0,10)+" 23:59";
+								String params = "{\"method\": \"thing.service.UpdateUserValidDateTime\",\"deviceid\": \"" + d.getDeviceid() + "\",\"async\":true,\"nodeid\":1,\"params\":{\"UserID\":" + d.getUsercode() + ",\"ValidBeginDateTime\":\""+begin+"\",\"ValidEndDateTime\":\""+end+"\"}}";
+								String result = RestfulUtil.postHttps(params, "lock");
+								JSONObject resultMap = JSON.parseObject(result);
+								int resultcode = resultMap.getIntValue("resultcode");
+								String receipt = resultMap.getString("receipt");
+								if(resultcode==1){
+									d.setStatus(Global.STATUS_UPDATING_TIME);
+									d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+									d.setReceipt(receipt);
+									try {
+										d.setValidthrough(sdf.parse(end));
+									} catch (ParseException e) {
+										e.printStackTrace();
+									}
+									doorlockUserService.updateByPrimaryKey(d);
+								}else{
+									System.out.println("更新有效期命令失败了");
+								}
+							}
+						}
 					}
 
 					master.setRefer1("");

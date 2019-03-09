@@ -2,6 +2,7 @@ package com.rent.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -78,13 +79,16 @@ public class HttpUtil {
 		return "";
 	}
 	
-	public static String httprequest(String url , String body) {
+	public static String httprequest(String url , String body,String authorization) {
 		HttpClient httpclient = createHttpClient(url);
 		log.info(url);
 		log.info(body);
 		
 		try {
 			HttpPost httpost = new HttpPost(url);
+			if(StringUtils.isNotBlank(authorization)){
+				httpost.setHeader("Authorization",authorization);
+			}
 			httpost.setEntity(new StringEntity(body , "UTF-8"));
 			HttpResponse response = httpclient.execute(httpost);
 			
@@ -109,25 +113,25 @@ public class HttpUtil {
 		JSONObject json = JSON.parseObject(JSON.toJSONString(pmap));
 		HttpClient httpclient = createHttpClient(url);
 		log.info(url);
-		
+
 		try {
 			if ( log.isInfoEnabled() ) {
 				log.info(json.toJSONString());
 			}
 			HttpPost httpost = new HttpPost(url);
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			
+
 			for ( String key : json.keySet()) {
 				nvps.add(new BasicNameValuePair(key, json.getString(key)));
 			}
 			httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 			HttpResponse response = httpclient.execute(httpost);
-						
+
 			HttpEntity entity = response.getEntity();
 
 			String rst = EntityUtils.toString(entity , "UTF-8");
 			log.info(rst);
-			
+
 			return rst;
 		}
 		catch(Throwable t) {

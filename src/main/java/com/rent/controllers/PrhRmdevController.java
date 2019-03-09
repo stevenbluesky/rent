@@ -229,7 +229,7 @@ public class PrhRmdevController {
 		}
 
 		map.put("houseid", prhRmdev.getRoomno());
-		map.put("message", "添加失败！");
+		map.put("message", "添加成功！");
 		return "prh/prFileManager/prhRmdev.jsp";
 
 	}

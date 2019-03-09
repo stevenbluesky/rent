@@ -132,17 +132,19 @@ a:hover {
 	}
 	function toCard(){
 		var id= $('.radioId:checked').val();
-		layer.open({
-		    type: 2,
-		    title: '门卡管理',
-		    maxmin: false,
-		    area: ['1000px', '500px'],
-		    
-		    content:'toCardAdd.do?masterId='+id,
-		    end: function(){
-		    	location.reload();
-		    }
-		  });
+		if(id!=undefined) {
+            layer.open({
+                type: 2,
+                title: '门锁用户管理',
+                maxmin: false,
+                area: ['1000px', '500px'],
+
+                content: 'toCardAdd.do?masterId=' + id,
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
 	}
 	
 	function print(){
@@ -234,12 +236,7 @@ a:hover {
 								 姓名:&nbsp;&nbsp;<input name="name"
 										value="${condition.name }" type="text"
 										class="searchTxt name1">&nbsp;&nbsp;&nbsp;&nbsp;
-							    是否开过白卡:&nbsp;&nbsp;
-							       全部<input type="radio" name="hasCommonCard" value="-1" checked="checked">&nbsp;
-								是<input type="radio" name="hasCommonCard" value="1">&nbsp;
-								否<input type="radio" name="hasCommonCard" value="0">
-								
-								&nbsp;&nbsp;
+
 							        <input
 										type="submit" id="checkRepaire" class="btn"
 										style="margin-right: 10px;margin-bottom: 13px;" value="条件搜索" >
@@ -340,24 +337,10 @@ a:hover {
 				
 								
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn"  value="门卡管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn"  value="门锁用户管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==22}">
-					<input class="btn"  value="门卡管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input class="btn"  value="门锁用户管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
 			 				</c:if></c:forEach></c:if></c:forEach>
-				
-				
-				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn"  value="白卡查询" type="button" onclick="cardSearch()" />&nbsp;&nbsp;&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==73}">
-					<input class="btn"  value="白卡查询" type="button" onclick="cardSearch()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 				</c:if></c:forEach></c:if></c:forEach>
-			 			
-			 	<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
-					<input class="btn"  value="打印对码" type="button" onclick="print()" />&nbsp;&nbsp;&nbsp;&nbsp;
-						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==108}">
-					<input class="btn"  value="打印对码" type="button" onclick="print()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 	</c:if></c:forEach></c:if></c:forEach>
-			 					
 				
 			</form>
 	   </div> 

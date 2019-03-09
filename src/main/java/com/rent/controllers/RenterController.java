@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.web.session.HttpServletSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -597,6 +598,7 @@ public class RenterController {
 			}
 		} else {
 			PrhMaster master = prhMasterService.findById(currMasterId);
+			prhMaster.setSta(master.getSta());
 			if (master.getProfile().getIdno() != null && !master.getProfile().getIdno().equals(profile.getIdno())
 					&& prhMasterService.getLiveInGuestCount(profile.getIdno()) > 0) {
 				map.put("tip", "该租户已经登记或入住其他房间,不能再次入住！");
@@ -611,7 +613,8 @@ public class RenterController {
 		prhMaster.setEdate(df.parse(edate_));
 		prhMaster.setRentDate(df.parse(rentdate_));
 		prhMaster.setSubsidyTypeId(subsidyTypeId);
-		prhMaster.setSta("7");
+//		prhMaster.setSta("7");
+		prhMaster.setSta(StringUtils.isBlank(prhMaster.getSta())?"7":prhMaster.getSta());
 		// 根据身份证判断租客档案是否存在
 		if (profile.getClass_().equals("G")) {
 
@@ -669,19 +672,19 @@ public class RenterController {
 		// 查询当前补贴信息(保障外和保障内) 一个人的补贴
 		SubsidyCal inSubsidyCal = null;
 		SubsidyCal outSubsidyCal = null;
-		if (subsidyTypeId != -1) {
+		if (subsidyTypeId !=null && subsidyTypeId.intValue()!= -1) {
 			inSubsidyCal = subsidyService.findSubsidyCal(house.getEstateId(), subsidyTypeId, 1, prhMaster.getBdate());
 			outSubsidyCal = subsidyService.findSubsidyCal(house.getEstateId(), subsidyTypeId, 2, prhMaster.getBdate());
 		}
 		// 查询到补贴信息或者不补贴
-		if ((inSubsidyCal != null && outSubsidyCal != null) || subsidyTypeId == -1) {
+		if ((inSubsidyCal != null && outSubsidyCal != null) || subsidyTypeId==null||subsidyTypeId == -1) {
 
 			int numbs = 1;
 			if (currMasterId != null) {
 				numbs = prhMaster.getNumbs();
 			}
 
-			if (subsidyTypeId != -1) {
+			if (subsidyTypeId !=null && subsidyTypeId != -1) {
 				inSubsidyCal.setArea(Double.valueOf(house.getArea().toString()));
 				inSubsidyCal.setPerNum(numbs);
 				outSubsidyCal.setArea(Double.valueOf(house.getArea().toString()));
@@ -705,7 +708,8 @@ public class RenterController {
 			// 保存租户主单
 
 			if (prhMaster.getDeposit() == null) {
-				prhMaster.setDeposit(BigDecimal.valueOf(0.0));
+				RentPayWay rentPayWay = rentPayWayService.findById(prhMaster.getRentCode());
+				prhMaster.setDeposit(BigDecimal.valueOf(rentPayWay.getDepositPay()*prhMaster.getRate().intValue()));
 			}
 
 			// 判断是新增还是修改

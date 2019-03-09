@@ -222,5 +222,8 @@ public interface PrhMasterService {
 	List<String> findAllBatchs(String batch,Integer estateId);
 	
 	List<PrhMaster> findMastersByBatchs(String batch,Integer estateId);
-	
+
+    List<PrhMaster> findMasterBySta(int i);
+
+	List<PrhMaster> findOverdueMasterOfRenting();
 }

@@ -2,6 +2,12 @@ package com.rent.controllers;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.rent.common.config.Global;
+import com.rent.common.utils.RestfulUtil;
+import com.rent.entity.DoorlockUser;
+import com.rent.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,18 +20,6 @@ import com.rent.condition.HouseFileContion;
 import com.rent.entity.PrHouse;
 import com.rent.entity.PrhMaster;
 import com.rent.entity.PrhRental;
-import com.rent.services.BuildingFloorService;
-import com.rent.services.BuildingNoService;
-import com.rent.services.BuildingService;
-import com.rent.services.EstateService;
-import com.rent.services.FileManagementService;
-import com.rent.services.PaymentCodeService;
-import com.rent.services.PrHouseService;
-import com.rent.services.PrhMasterService;
-import com.rent.services.PrhPayCodeService;
-import com.rent.services.PrhPayMentService;
-import com.rent.services.RenterService;
-import com.rent.services.RoomTypeService;
 
 //@Service
 //@Lazy(false)
@@ -57,6 +51,9 @@ public class DailyAction {
 	private PaymentCodeService paymentCodeService;
 	@Autowired
 	private PrhPayMentService prhPayMentService;
+
+	@Autowired
+	private DoorlockUserService doorlockUserService;
 
 	//@Scheduled(cron = "0 0 0 * * ?")
 	public void updateRentPlan() {
@@ -94,4 +91,59 @@ public class DailyAction {
 		}
 		
 	}
+
+	/*退租*/
+	public void deleteDoorlockUser() {
+		List<PrhMaster> masterlist = prhMasterService.findMasterBySta(4);
+		for(PrhMaster m : masterlist) {
+			List<DoorlockUser> doorlockuserlist = doorlockUserService.findAvailableAllByMasterid(m.getId());
+			for(DoorlockUser d: doorlockuserlist){
+				String params = "{\"method\": \"thing.service.DeleteUser\",\"deviceid\": \""+d.getDeviceid()+"\",\"async\":true,\"nodeid\":1,\"params\":{\"UserType\":"+d.getUsertype()+",\"UserID\":"+d.getUsercode()+"}}";
+				String result = RestfulUtil.postHttps(params,"lock");
+				JSONObject resultMap = JSON.parseObject(result);
+				int resultcode = resultMap.getIntValue("resultcode");
+				String receipt = resultMap.getString("receipt");
+				if(resultcode==1){
+					d.setStatus(Global.STATUS_DELETEING);
+					d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+					d.setReceipt(receipt);
+					doorlockUserService.updateByPrimaryKey(d);
+				}
+			}
+		}
+	}
+	/*到期未续租，在租状态（1、6）*/
+	public void deleteDoorlockUserWithOverdueMaster(){
+		List<PrhMaster> masterlist = prhMasterService.findOverdueMasterOfRenting();
+		for(PrhMaster m : masterlist) {
+			List<DoorlockUser> doorlockuserlist = doorlockUserService.findAvailableAllByMasterid(m.getId());
+			for(DoorlockUser d: doorlockuserlist){
+				String params = "{\"method\": \"thing.service.DeleteUser\",\"deviceid\": \""+d.getDeviceid()+"\",\"async\":true,\"nodeid\":1,\"params\":{\"UserType\":\""+d.getUsertype()+"\",\"UserID\":"+d.getUsercode()+"}}";
+				String result = RestfulUtil.postHttps(params,"lock");
+				JSONObject resultMap = JSON.parseObject(result);
+				int resultcode = resultMap.getIntValue("resultcode");
+				String receipt = resultMap.getString("receipt");
+				if(resultcode==1){
+					d.setStatus(Global.STATUS_DELETEING);
+					d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+					d.setReceipt(receipt);
+					doorlockUserService.updateByPrimaryKey(d);
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

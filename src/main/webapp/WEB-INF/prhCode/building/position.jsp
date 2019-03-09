@@ -20,12 +20,12 @@ body {
 
 .right {
 	margin-left:30px;
-	border: 11px solid #F00;
-	width: 600px; height : 400px; border : 11px solid #F00;
+	border: 5px solid #F00;
+	width: 600px; height : 400px; border : 5px solid #F00;
 	background-color : #eee; margin : 0px; padding : 0px; overflow : scroll;
 	float: left;
 	height: 400px;
-	border: 11px solid #F00;
+	border: 5px solid #F00;
 	background-color: #eee;
 	margin: 0px;
 	padding: 0px;
@@ -195,7 +195,7 @@ body {
 			</div>
 <input type="hidden" name="estateId" value="${estateId }">
 <div class="left">
-	<div id="consle" style="width:500px;height:510px;border:11px solid #F00;background-color:#eee;margin:0px;padding:0px;overflow-x: scroll;">
+	<div id="consle" style="width:500px;height:510px;border:5px solid #F00;background-color:#eee;margin:0px;padding:0px;overflow-x: scroll;">
 		<c:if test="${estate.mapPic!=null}">
 		
 			<img id="image" src="${ctxStatic}/image/building/${estate.mapPic}?timestemp='+new Date().getTime()" style="max-width:2000px !important;" >

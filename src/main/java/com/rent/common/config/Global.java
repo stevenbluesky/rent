@@ -14,15 +14,22 @@ import com.google.common.collect.Maps;
 import com.rent.common.utils.PropertiesLoader;
 import com.rent.common.utils.StringUtils;
 
-/**
- * 全局配置�?
- * @author ThinkGem
- * @version 2014-06-25
- */
 public class Global {
 
-	
 	public  static final String USER="user";
+
+	public static final int USERTYPE_PASSWORD = 1;
+	public static final int USETYPE_FINGERPRINT = 2;
+	public static final int USERTYPE_MFCARD = 3;
+	public static final int USERTYPE_IDCARD = 4;
+
+	public static final int SYN_STATUS_SYNCHRONIZED = 1;
+	public static final int SYN_STATUS_TO_BE_SYNCHRONIZED = 0;
+
+	public static final int STATUS_NORMAL = 1;
+	public static final int STATUS_SENDING = 0;//下发中
+	public static final int STATUS_DELETEING = 8;//删除中
+	public static final int STATUS_UPDATING_TIME =7;//更新有效期中
 	/**
 	 * 当前对象实例
 	 */

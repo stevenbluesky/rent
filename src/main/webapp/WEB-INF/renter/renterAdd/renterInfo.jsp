@@ -152,7 +152,7 @@
 					地址:<span class="houseInfoLabel">${currMaster.profile.street}</span>&nbsp;&nbsp;&nbsp;
 					email:<span class="houseInfoLabel">${currMaster.profile.email}</span>&nbsp;&nbsp;&nbsp;
 					
-					<div id="masterPhoto" style="border: 1px solid #ccc; width: 110px; height: 135px; float: right; margin-right: 200px; position: relative; left: -200px; top: -45px;padding: 0px;">
+					<%--<div id="masterPhoto" style="border: 1px solid #ccc; width: 110px; height: 135px; float: right; margin-right: 200px; position: relative; left: -200px; top: -45px;padding: 0px;">
 						
 						
 					<c:if test="${currMaster.picPhoto==null}">
@@ -162,7 +162,7 @@
 						<img  src="${ctxStatic}/photo/${currMaster.picPhoto}" style="" >
 					</c:if>
 					
-					</div>
+					</div>--%>
 					
 					
 					

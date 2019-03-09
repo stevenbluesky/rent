@@ -997,6 +997,20 @@
 			and STA= #{sta}
 		</if>
 	</select>
+
+	<select id="findOverdueMasterOfRenting" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from Prh_Master p
+		where (p.sta=1 or p.sta=6) and p.EDATE &lt;= sysdate
+	</select>
+
+	<select id="findMasterBySta" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from Prh_Master p
+		where p.sta=4
+	</select>
 	<!--可退租列表 -->
 	<!--可退租列表 -->
 	<select id="findByCondition" resultMap="BaseResultMap"
@@ -1114,6 +1128,7 @@
 		FROM (
 		SELECT * FROM prh_master
 		where (sta=1 or sta=6 or sta=2 ) and nvl(type,'xx')&lt;>'1'
+		and edate>=sysdate
 		and
 		house_id in (
 		select id from pr_house where 1=1

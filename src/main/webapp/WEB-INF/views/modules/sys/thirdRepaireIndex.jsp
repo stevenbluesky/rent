@@ -259,16 +259,16 @@ background-image: url(${ctxStatic}/images/expt.jpg);
 			<div class=""
 				style="display: flex; border-bottom: 2px solid #04498c;">
 				<div
-					style="width: 140px; height: 71px; display: inline-flex; font-size: xx-large; text-align: center; line-height: 71px; padding-left: 50px;">
+					style="width: 140px; height: 71px; display: inline-flex; font-size: xx-large; text-align: center; line-height: 71px; padding-left: 0px;">
 
 					<img src="${ctxStatic}/images/logo.png">
 				</div>
 				<div class="brand"
-					style="padding: 0 0; height: 71px; line-height: 71px; border-left: 2px solid #ccc; width: 640px;">
-					<span id="productName" style="margin-left: 30px; color: #cc0000;">公租房管理系统</span>&nbsp;&nbsp;
+					style="padding: 0 0; height: 71px; line-height: 71px; border-left: 2px solid #ccc; width: 30%;">
+					<span id="productName" style="margin-left: 30px; color: #cc0000;">iSurpass公租房管理系统</span>&nbsp;&nbsp;
 					
 				</div>
-
+				<div style="float: right;width:55%">
 				<ul id="userControl" class="nav pull-right" style="margin-left: 70px;" >
 				<li>
 						<div
@@ -343,7 +343,7 @@ background-image: url(${ctxStatic}/images/expt.jpg);
 							 }
 						</script>
 				</ul>
-			
+				</div>
 			
 			<div class="accordion" id="menu-1" 
 					style="position: absolute; top: 71px; left: 0;">

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -583,8 +582,27 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.6</version>
 		</dependency>
-
-		<!-- 自定义jar依赖包
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore-nio</artifactId>
+			<version>4.4.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient</artifactId>
+			<version>4.1.4</version>
+		</dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.29.Final</version>
+        </dependency>
+		<dependency>
+			<groupId>org.java-websocket</groupId>
+			<artifactId>Java-WebSocket</artifactId>
+			<version>1.3.5</version>
+		</dependency>
+        <!-- 自定义jar依赖包
         <dependency>
             <groupId>com.thinkgem.jeesite</groupId>
             <artifactId>test-core</artifactId>
@@ -627,6 +645,7 @@
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
+
 
 			<!-- JSP 预编译插件  jspweb.xml
 			<plugin>
@@ -850,6 +869,27 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-xmls</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/rent/WEB-INF/classes/com/rent/common/utils</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/java/com/rent/common/utils</directory>
+									<includes>
+										<include>**/*.ftl</include>
+										<include>**/*.tpl</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- install插件 -->

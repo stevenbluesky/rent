@@ -93,6 +93,16 @@ public class PrHouse {
 	private Date updatetime;
 	private Short originState;
 
+	private String associatedlock;
+
+	public String getAssociatedlock() {
+		return associatedlock;
+	}
+
+	public void setAssociatedlock(String associatedlock) {
+		this.associatedlock = associatedlock;
+	}
+
 	public String getCreateuser() {
 		return createuser;
 	}

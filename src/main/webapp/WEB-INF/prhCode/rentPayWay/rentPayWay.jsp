@@ -249,7 +249,7 @@ ul {
 						<th>押金</th>
 						<th>租金</th>
 						<th>模式</th>
-						<th>日/月</th>
+						<th>日</th>
 						<th>备注</th>
 						
 					</tr>

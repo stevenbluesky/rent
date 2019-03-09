@@ -503,11 +503,11 @@
 							<td>合同号:<input name="tag2" type="text" class="masterTag2 input longTxt" style="height: 25px;" value="${currMaster.tag2}"></td>
 							<td>准入编号:<input name="tag1" type="text" class="masterTag1 input longTxt" style="height: 25px;" value="${currMaster.tag1}">
 							&nbsp;&nbsp;&nbsp;
-							<input type="button" class="btn" style="margin-right: 10px;"value="读身份证" onclick="ReadIDCard();">
+							<input type="hidden" class="btn" style="margin-right: 10px;"value="读身份证" onclick="ReadIDCard();">
 							</td>
 							<td></td>
 							<td rowspan="2">
-								<input type="hidden" class="masterPhotoSrc"  value="${ctxStatic}/photo/"> 
+								<%--<input type="hidden" class="masterPhotoSrc"  value="${ctxStatic}/photo/">
 								
 								<c:if test="${currMaster.picPhoto!=null }">
 									<img id="masterPhotoImg" src="${ctxStatic}/photo/${currMaster.picPhoto}" style="border: 1px solid #ccc;width:80px;height:100px;">	
@@ -515,13 +515,13 @@
 							
 								<c:if test="${currMaster.picPhoto==null }">
 									<img id="masterPhotoImg" src="${ctxStatic}/photo/default.jpg" style="border: 1px solid #ccc;width:80px;height:100px;" >	
-								</c:if>
+								</c:if>--%>
 								
 								
 							</td>
 						</tr>
 						<tr>
-							<td>  	姓名:<input name="name"
+							<td>  	<span class="redFont">*&nbsp;</span> 姓名:<input name="name"
 						type="text" class="masterName input middleTxt"
 						style="height: 25px;" value="${currMaster.profile.name}">
 							
@@ -543,8 +543,8 @@
 				 证件: <select name="idcls" class="input middleTxt " >
 						<option value="1">身份证</option>
 					</select>
-					
-				证件号:<input name="idno"
+						<span class="redFont">*&nbsp;</span>
+						证件号:<input name="idno"
 						type="text" class="masterIdno input longTxt" style="height: 25px;" 
 						value="${currMaster.profile.idno }">
 						
@@ -839,7 +839,7 @@
 				<input type="hidden" class="haslinkInlive" value="0">
 					<input name="masterId" type="hidden" value="${currMaster.id}">
 					<input name="id" type="hidden" value="${link.id }"> <input
-						type="button" class="btn" style="margin-right: 10px;" value="读身份证"
+						type="hidden" class="btn" style="margin-right: 10px;" value="读身份证"
 						onclick="ReadIDCardOthers();"> <br />
 					<br /> <span class="redFont">*&nbsp;</span> 姓名:<input name="name"
 						value="${link.profile.name }" type="text"
@@ -865,13 +865,13 @@
 						
 						 
 								
-						<c:if test="${link.photo!=null }">
+						<%--<c:if test="${link.photo!=null }">
 							<img id="linkPhotoImg" src="${ctxStatic}/photo/${link.photo}" style="border: 1px solid #ccc;width:80px;height:100px;">	
 						</c:if>
 							
 						<c:if test="${link.photo==null }">
 							<img id="linkPhotoImg" src="${ctxStatic}/photo/default.jpg" style="border: 1px solid #ccc;width:80px;height:100px;" >	
-						</c:if>
+						</c:if>--%>
 						
 						
 						
