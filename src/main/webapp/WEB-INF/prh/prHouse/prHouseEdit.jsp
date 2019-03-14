@@ -78,7 +78,7 @@
 				 }
                 },
                 error: function(data) {
-                    alert("error:"+data.responseText);
+                    alert("操作失败！");
                  }
             });
 		}

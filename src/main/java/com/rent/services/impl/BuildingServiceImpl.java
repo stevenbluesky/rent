@@ -20,7 +20,7 @@ import com.rent.services.BuildingService;
 import com.rent.services.EstateService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
@@ -191,12 +191,13 @@ public class BuildingServiceImpl implements BuildingService {
 	/**
 	 * 分页查询
 	 */
+	@Override
 	public List<Building> findByEstatePaged(Integer estateId, Integer currage,
-			Integer size) {
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+											Integer size) {
+		int begin = (currage - 1) * size;
+		int end = begin + size;
 		List<Building> buildings = buildingMapper.findByEstatePaged(estateId,
-				(currage - 1) * size + 1, end);
+				(currage - 1) * size, end);
 			setGuideProperty(buildings) ;
 		return buildings;
 	}

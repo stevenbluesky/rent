@@ -152,13 +152,8 @@
  
 	
 	<select id="findByEstatePaged" resultMap="BaseResultMap">
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
-		SELECT * FROM building where estate_id=#{0} order by name
-		) A
-		) WHERE RN BETWEEN #{1} AND #{2}
+		SELECT * FROM BUILDING where estate_id=#{0} order by name
+		limit #{1} , #{2}
 	</select>
 
 
@@ -172,7 +167,7 @@
 <select id="findByEstatePositioned" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		 <include refid="Base_Column_List" />
-		 from building where estate_id=#{0} and position_x is not null
+		 from BUILDING where estate_id=#{0} and position_x is not null
 </select>
 
 

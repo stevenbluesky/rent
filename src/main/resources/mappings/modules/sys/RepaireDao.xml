@@ -60,10 +60,10 @@
 <sql id="queryRepaire">
 select 
 	<include refid="repaireColumns"/>
-from repaire rep inner join pr_house h on rep.houseID = h.id
-inner join building_no n on h.building_no_id = n.id
-inner join estate e on h.estate_id = e.id
-inner join room_type r on h.ROOM_TYPE_ID = r.id
+from REPAIRE rep inner join PR_HOUSE h on rep.houseID = h.id
+inner join BUILDING_NO n on h.building_no_id = n.id
+inner join ESTATE e on h.estate_id = e.id
+inner join ROOM_TYPE r on h.ROOM_TYPE_ID = r.id
 </sql>
 
 <select id="get" resultType="Repaire">
@@ -119,7 +119,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 		and h.room_no = #{roomNum}
 	</if>
 	<if test="building != null and building != ''">
-		and substr(n.name, length(n.name )-2,1) = #{building}
+		and substr(n.name, length(n.name )-6,1) = #{building}
 	</if>
 	<if test="floor != null and floor != ''">
 		and n.building_id =#{floor}
@@ -151,7 +151,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </select>
 
 <update id="updateStatus">
-	update repaire set
+	update REPAIRE set
 		<if test="repairer != null and repairer != ''">
 			repairer= #{repairer},
 		</if>
@@ -193,19 +193,19 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </update>
 
 <update id="addApprover">
-	update repaire set
+	update REPAIRE set
 	  checker = #{checker}
 	where id = #{id}
 </update>
 
 <update id="updateRepaireStatus">
-	update repaire set
+	update REPAIRE set
 	  status = #{status}
 	where id = #{id}
 </update>
 
 <update id="submitThird">
-	update repaire set
+	update REPAIRE set
 		<if test="thirdCom != null">
 			third_com = #{thirdCom},
 		</if>
@@ -225,7 +225,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </update>
 
 <update id="validateUpdate">
-	update repaire set
+	update REPAIRE set
 		<if test="status != null">
 			status = #{status},
 		</if>
@@ -234,7 +234,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </update>
 
 <update id="update">
-	UPDATE repaire SET 
+	UPDATE REPAIRE SET
 		repairer= #{repairer},
 		repairer_phone=#{repairerPhone}, 
 		repairer_time=#{repairerTime},
@@ -245,7 +245,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </update>
 
 <insert id="insert">
- INSERT INTO repaire(
+ INSERT INTO REPAIRE(
     id,
 	repairer,
 	repairer_phone,
@@ -273,7 +273,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 </insert>
 
 <update id="delete">
-	UPDATE repaire SET 
+	UPDATE REPAIRE SET
 		isDelete = 'true'
 	WHERE id = #{id}
 </update>
@@ -281,7 +281,7 @@ inner join room_type r on h.ROOM_TYPE_ID = r.id
 <select id="findByMaster" resultType="com.rent.modules.sys.entity.Repaire" parameterType="java.lang.Integer">
 		SELECT
 			<include refid="repaireMasterCol"/>
-		FROM repaire 
+		FROM REPAIRE
 		where	masterid=#{0}
 		and isDelete = 'false'
 </select>

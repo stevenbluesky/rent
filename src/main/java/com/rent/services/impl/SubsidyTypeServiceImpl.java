@@ -13,7 +13,7 @@ import com.rent.entity.SubsidyType;
 
 import com.rent.services.SubsidyTypeService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubsidyTypeServiceImpl implements SubsidyTypeService{
 
 	@Autowired
@@ -64,8 +64,8 @@ public class SubsidyTypeServiceImpl implements SubsidyTypeService{
 	//分页查询
 	public List<SubsidyType> findAllPaged(Integer currpage, Integer size) {
 
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return subsidyTypeMapper.findAllByPaged(begin, end);
 
 	}

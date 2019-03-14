@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BuildingFloorServiceImpl implements BuildingFloorService {
 	@Autowired
 	private BuildingFloorMapper buildingFloorMapper;
@@ -25,6 +25,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	/**
 	 * 查询全部
 	 */
+	@Override
 	public List<BuildingFloor> findAll() {
 		return buildingFloorMapper.findAll();
 	}
@@ -32,6 +33,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	/**
 	 * 新增
 	 */
+	@Override
 	public int addBuildingFloor(BuildingFloor buildingFloor) {
 		if (buildingFloor.getId() != null) {
 			BuildingFloor floor = this.findById(buildingFloor.getId());
@@ -47,6 +49,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	/**
 	 * 根据id查询
 	 */
+	@Override
 	public BuildingFloor findById(Integer id) {
 		return buildingFloorMapper.selectByPrimaryKey(id);
 	}
@@ -54,6 +57,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	 * 修改楼层
 	 */
 
+	@Override
 	public int updateBuildingFloor(BuildingFloor buildingFloor) {
 		if (buildingFloor.getId() != null) {
 			return buildingFloorMapper.updateByPrimaryKey(buildingFloor);
@@ -63,6 +67,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	/**
 	 * 根据id删除
 	 */
+	@Override
 	public int delBuildingFloor(Integer id) {
 		return buildingFloorMapper.deleteByPrimaryKey(id);
 	}
@@ -70,6 +75,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 	/**
 	 * 删除（根据数组）
 	 */
+	@Override
 	public int delBuildingFloor(Integer[] ids) {
 		int result =0;
 		for (Integer id : ids) {
@@ -82,19 +88,22 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 
 	}
 
+	@Override
 	public int getTotalCount() {
 		return buildingFloorMapper.selectTotalCount();
 
 	}
 
+	@Override
 	public List<BuildingFloor> findAllPaged(Integer currpage, Integer size) {
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return buildingFloorMapper.getAllPaged((currpage-1)*size, end);
 	}
 	/**
 	 * 根据区间新增楼层
 	 */
+	@Override
 	public int autoAddBuildingFloors(Integer begin, Integer end) {
 
 		try {

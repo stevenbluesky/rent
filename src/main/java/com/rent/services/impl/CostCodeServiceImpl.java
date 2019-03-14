@@ -16,7 +16,7 @@ import com.rent.entity.CostCode;
 import com.rent.entity.RoomFeature;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class CostCodeServiceImpl implements CostCodeService{
 
 	@Autowired
@@ -80,8 +80,8 @@ public class CostCodeServiceImpl implements CostCodeService{
 	 * @return 房屋类型集合
 	 */
 	public List<CostCode> findAllPaged(Integer currpage,Integer size){
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return costCodeMapper.findAllPaged(begin, end);
 	}
 

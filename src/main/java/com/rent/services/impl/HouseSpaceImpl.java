@@ -10,7 +10,7 @@ import com.rent.dao.HouseSpaceMapper;
 import com.rent.entity.HouseSpace;
 import com.rent.services.HouseSpaceService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class HouseSpaceImpl implements HouseSpaceService{
 
 	@Autowired

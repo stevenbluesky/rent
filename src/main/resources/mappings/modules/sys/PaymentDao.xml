@@ -13,13 +13,13 @@
 	<select id="getRepaireItems" resultType="Payment">
 		select
 		<include refid="items"></include>
-		from repaire_payment
+		from REPAIRE_PAYMENT
 		where 1=1
 		and repaireID = #{repaireID}
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO repaire_payment(
+		INSERT INTO REPAIRE_PAYMENT(
 			id, 
 			project, 
 			count, 
@@ -35,15 +35,15 @@
 	</insert>
 	
 	<update id="delete">
-		delete from repaire_payment where id = #{paymentID}
+		delete from REPAIRE_PAYMENT where id = #{paymentID}
 	</update>
 	
 	<update id="deleteByRepaireID">
-		delete from repaire_payment where repaireID = #{repaireID}
+		delete from REPAIRE_PAYMENT where repaireID = #{repaireID}
 	</update>
 	
 	<update id="update">
-		update repaire_payment set
+		update REPAIRE_PAYMENT set
 			project = #{project},
 			count = #{count},
 			price = #{price},

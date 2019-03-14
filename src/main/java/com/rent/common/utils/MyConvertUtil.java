@@ -378,8 +378,8 @@ public class MyConvertUtil {
 	 */
 	public static Integer[] toPagedBeginEnd(int currpage, int size) {
 
-		Integer begin = (currpage - 1) * size + 1;
-		Integer end = begin + size - 1;
+		Integer begin = (currpage - 1) * size ;
+		Integer end = begin + size ;
 		Integer[] beginEnd = { begin, end };
 		return beginEnd;
 	}

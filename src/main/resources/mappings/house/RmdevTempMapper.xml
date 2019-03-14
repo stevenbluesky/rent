@@ -96,18 +96,11 @@
   
   
   <select id="findByRoidAndPaged" resultType="com.rent.entity.RmdevTemp" >
-	
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
+
 		  select 
 		   	 *
 		    from RMDEV_TEMP
-		    where ROOMTYPE = #{roid,jdbcType=DECIMAL}
-          
-			) A
-		) WHERE RN BETWEEN #{begin} AND #{end}	  
+		    where ROOMTYPE = #{roid,jdbcType=DECIMAL} limit #{begin} , #{end}
           
 	</select>
 
@@ -149,7 +142,7 @@
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   <delete id="delByRoomType" parameterType="java.lang.Integer" >
- 		delete from rmdev_temp where roomtype = #{typeId,jdbcType=DECIMAL}
+ 		delete from RMDEV_TEMP where roomtype = #{typeId,jdbcType=DECIMAL}
   </delete>
   
 </mapper>

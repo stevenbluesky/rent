@@ -43,11 +43,11 @@
     e.id as tenementID,
     n.id as buildingID,
     h.originState originHouseStatus  
-    from pr_house h left join prh_master m on m.id = h.master_id
-left join profile p on m.guest_no = p.guestno
-left join building_no n on h.building_no_id = n.id
-left join estate e on h.estate_id = e.id
-left join room_type r on h.ROOM_TYPE_ID = r.id ) tmp where 1=1
+    from PR_HOUSE h left join PRH_MASTER m on m.id = h.master_id
+	left join PROFILE p on m.guest_no = p.guestno
+	left join BUILDING_NO n on h.building_no_id = n.id
+	left join ESTATE e on h.estate_id = e.id
+	left join ROOM_TYPE r on h.ROOM_TYPE_ID = r.id ) tmp where 1=1
 </sql>
 
 <select id="get" resultType="Rent">

@@ -14,8 +14,6 @@ import com.rent.services.FileManagementService;
 import com.rent.services.PrhMasterService;
 import com.rent.services.PrhTempLiveManService;
 
-
-
 @Service
 public class PrhTempLiveManServiceImpl implements PrhTempLiveManService{
 

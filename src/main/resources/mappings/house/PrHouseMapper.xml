@@ -51,7 +51,7 @@
 
     <select id="findRoomInfoById" parameterType="java.lang.Integer" resultMap="resultMap">
         select h.id,h.room_no ROOMNO,e.name DISTRICTNAME,b.name UNITNAME
-        from pr_house  h left join estate  e on h.estate_id=e.id left join building_no b on h.building_no_id=b.id
+        from PR_HOUSE  h left join ESTATE  e on h.estate_id=e.id left join BUILDING_NO b on h.building_no_id=b.id
         where h.id=#{houseid}
     </select>
   
@@ -306,15 +306,7 @@
 
   
     <select id="findByEstatePaged" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-		    FROM 
-			( 
-		    	SELECT A.*, ROWNUM RN 
-				FROM (
-		       		SELECT * FROM pr_house where estate_id=#{0} order by id 
-		     		  ) A
-			) WHERE RN BETWEEN #{1} AND #{2}
+        SELECT * FROM PR_HOUSE where estate_id=#{0} order by id limit #{1} , #{2}
   </select>
   
   
@@ -322,18 +314,12 @@
     
     select 
      count(*)
-    from pr_house where estate_id=#{0}
+    from PR_HOUSE where estate_id=#{0}
     
   </select>
   	
   	 <select id="findByConditionPaged" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-		    FROM 
-			( 
-		    	SELECT A.*, ROWNUM RN 
-				FROM (
-		       		SELECT * FROM pr_house where 1=1
+		       		SELECT * FROM PR_HOUSE where 1=1
 		       		<if test="estateId!=null">
 		       			<if test="estateId!=''">
 		       				and estate_id=#{estateId} 
@@ -357,8 +343,7 @@
 		       			</if>	
 		       		</if>		       		
 		       		order by id 
-		     		  ) A
-			) WHERE RN BETWEEN #{begin} AND #{end}
+		     		  limit #{begin} , #{end}
   </select>
   	
   	
@@ -382,7 +367,7 @@
   
   
   <select id="getHouseCountByConditionPaged" resultType="java.lang.Integer" parameterType="com.rent.condition.HouseCondition" >
-    			select count(*) from pr_house where 1=1
+    			select count(*) from PR_HOUSE where 1=1
 		       		 <if test="estateId!=null">
          			    	and estate_id=#{estateId}
          			 </if>
@@ -397,7 +382,7 @@
            			  </if>
            			  <if test="buildingId!=null">
            			  		and building_no_id in(
-           			    		select b.id from building_no b where building_Id=#{buildingId}
+           			    		select b.id from BUILDING_NO b where building_Id=#{buildingId}
 	                 		)
            			  </if>
            			  
@@ -405,7 +390,7 @@
            				<if test="houseNature==1">
            					and
 							   id not in(
-       							  select house_id from prh_master
+       							  select house_id from PRH_MASTER
 							   )
            				</if>
            				<if test="houseNature==2">
@@ -418,13 +403,7 @@
   
    <!--房源管理 -崔少岩  -->
    <select id="findHouseByConditionPaged" parameterType="com.rent.condition.HouseCondition" resultMap="BaseResultMap">
-   			 select 
-  				  <include refid="Base_Column_List" />
-		    FROM 
-			( 
-		    	SELECT A.*, ROWNUM RN 
-				FROM (
-		       		    select * from pr_house where 1=1
+		       		    select * from PR_HOUSE where 1=1
 		       		 <if test="estateId!=null">
          			    	and estate_id=#{estateId}
          			 </if>
@@ -440,14 +419,14 @@
            			  </if>
            			  <if test="buildingId!=null">
            			  		and building_no_id in(
-           			    		select b.id from building_no b where building_Id=#{buildingId}
+           			    		select b.id from BUILDING_NO b where building_Id=#{buildingId}
 	                 		)
            			  </if>
            			<if test="houseNature!=null">
            				<if test="houseNature==1">
            					and
 							   id not in(
-       							  select house_id from prh_master
+       							  select house_id from PRH_MASTER
 							   )
            				</if>
            				<if test="houseNature==2">
@@ -456,8 +435,7 @@
            				
            			</if>   
            					
-          	) A
-			) WHERE RN BETWEEN #{begin} AND #{end}
+          	limit #{begin} , #{end}
    			
    </select>
    
@@ -482,7 +460,7 @@
      
        <if test="buildingId!=null">
           	and building_no_id in(
-          		select b.id from building_no b where building_Id=#{buildingId}
+          		select b.id from BUILDING_NO b where building_Id=#{buildingId}
             )
        </if>
       
@@ -507,7 +485,7 @@
 			<if test="houseNature==1">
 				and
 				id not in(
-				select house_id from prh_master
+				select house_id from PRH_MASTER
 				)
 			</if>
 			<if test="houseNature==2"></if>
@@ -521,7 +499,7 @@
   
   
    <select id="findByFileCondition"  resultMap="BaseResultMap">
-    SELECT * FROM pr_house where 1=1
+    SELECT * FROM PR_HOUSE where 1=1
 		       		<if test="estateId!=null">
 		       			<if test="estateId!=''">
 		       				and estate_id=#{estateId} 
@@ -540,7 +518,7 @@
 		       			</if>	
 		       		</if>
 		       		and building_no_id  in
-		       		(select id from building_no 
+		       		(select id from BUILDING_NO 
 		       		where 1=1
 		       		<if test="no!=null">
 		      		   	<if test="no!=''">
@@ -557,13 +535,7 @@
 		       		order by id 
   </select>
    <select id="findByFileConditionAndPaged"  resultMap="BaseResultMap">
-    select 
-  				  <include refid="Base_Column_List" />
-		    FROM 
-			( 
-		    	SELECT A.*, ROWNUM RN 
-				FROM (
-				   SELECT * FROM pr_house where 1=1
+				   SELECT * FROM PR_HOUSE where 1=1
 		       		<if test="estateId!=null">
 		       			<if test="estateId!=-1">
 		       				and estate_id=#{estateId} 
@@ -582,7 +554,7 @@
 		       			</if>	
 		       		</if>
 		       		and building_no_id  in
-		       		(select id from building_no 
+		       		(select id from BUILDING_NO 
 		       		where 1=1
 		       		<if test="no!=null">
 		      		   	<if test="no!=''">
@@ -597,8 +569,7 @@
 		      		   	</if>    	
 		      		   </if>	   		
 		       		order by id 
-				 	) A
-			) WHERE RN BETWEEN #{begin} AND #{end}
+				 	limit #{begin} , #{end}
    </select>
   
   <select id="getStateById" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -609,7 +580,7 @@
   </select>
   
    <select id="getCountByEach" resultType="java.lang.Integer" parameterType="com.rent.condition.HouseCondition">
-  	select count(*) from pr_house where state=#{state}
+  	select count(*) from PR_HOUSE where state=#{state}
   		<if test="estateId!=null">
   			and estate_id=#{estateId}
   		</if>
@@ -618,17 +589,18 @@
   		</if>
   		<if test="buildingId!=null">
   		and building_no_id in(
-      		select b.id from building_no b where building_Id=#{buildingId}
+      		select b.id from BUILDING_NO b where building_Id=#{buildingId}
   		)
   		</if>  
   </select>
   <select id="getCurrId" resultType="java.lang.Integer">
-  	select seq_pr_house.nextval from dual
+  	/*select seq_pr_house.nextval from dual*/
+  	SELECT id  FROM PR_HOUSE ORDER BY id DESC LIMIT 1
   </select>
   
       <select id="findByHouseRmdevCondition" parameterType="com.rent.condition.HouseRmdevCondition" resultMap="BaseResultMap">
   		select * from
-  		pr_house
+  		PR_HOUSE
   		where 1=1
   		<if test="danyuanid!=null">
   			<if test="danyuanid!=''">
@@ -649,13 +621,13 @@
   		 
   </select>
    <select id="findPlanHouse"  resultMap="BaseResultMap">
-  	 	select * from pr_house  where decdate is not null
+  	 	select * from PR_HOUSE  where decdate is not null
    </select>
 
 
  <select id="findByFileCondition2" resultMap="BaseResultMap"
 	parameterType="com.rent.condition.HouseFileContion">
-	select * from pr_house where 1=1
+	select * from PR_HOUSE where 1=1
 	<if test="roomtypeId!=null">
 		<if test="roomtypeId!=-1">
 			and room_type_id=#{roomtypeId}
@@ -667,7 +639,7 @@
 			and substr(building_no_id, length(building_no_id ),1) = #{danyuanid}
 		</if>
 	</if>
-	and building_no_id in (select id from building_no where
+	and building_no_id in (select id from BUILDING_NO where
 	1=1
 	<if test="no!=null">
 		<if test="no!=''">
@@ -690,13 +662,7 @@
   
    
      <select id="findByFileConditionAndPaged2"  resultMap="BaseResultMap">
-       select 
-  				  *
-		    FROM 
-			( 
-		    	SELECT A.*, ROWNUM RN 
-				FROM (
-   select * from pr_house where 1=1
+   select * from PR_HOUSE where 1=1
   		<if test="roomtypeId!=null">
   			<if test="roomtypeId!=-1">
    				and  room_type_id=#{roomtypeId}
@@ -709,7 +675,7 @@
    
    		</if>
   		</if>
-  		and building_no_id in (select id from building_no where 
+  		and building_no_id in (select id from BUILDING_NO where 
   		1=1
   		<if test="no!=null">
   			<if test="no!=''">
@@ -727,13 +693,12 @@
   			<if test="estateId!=''">
   			and estate_id=#{estateId}
   		</if>
-  		</if> order by id asc) A
-			) WHERE RN BETWEEN #{begin} AND #{end}
+  		</if> order by id asc limit #{begin} , #{end}
   </select>
   
   
   <select id="findByBuildingNo"  resultMap="BaseResultMap" parameterType="java.lang.String">
-  	 	select *　from pr_house where building_no_id=#{buildingNoId}
+  	 	select *　from PR_HOUSE where building_no_id=#{buildingNoId}
    </select>
  
 </mapper>

@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RenterServiceImpl implements RenterService {
 
 	@Autowired
@@ -86,9 +86,7 @@ public class RenterServiceImpl implements RenterService {
 		}
 	}
 
-	// 闁跨喐鏋婚幏鐤棅闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹风兘鏁撻弬銈嗗
 	private void setGuideProperty(PrhRental prhRental) {
-		// 闁跨喐鏋婚幏铚傜瑹闁跨喐鏋婚幏鐑芥晸閺傘倖瀚�
 		PrhMaster type = prhMasterService.findById(prhRental.getAccnt());
 
 		prhRental.setAccnts(type);
@@ -98,8 +96,8 @@ public class RenterServiceImpl implements RenterService {
 	@Override
 	public List<PrhRental> findByConditionAndPaged(RenterCondition condition, Integer currage, Integer size) {
 
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currage - 1) * size ;
+		int end = begin + size ;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrhRental> prhRental = prhRentalMapper.findByConditionAndPaged(condition);
@@ -268,7 +266,6 @@ public class RenterServiceImpl implements RenterService {
 	public Integer payMoneyAndUpdateAndInsert(Integer[] chk, String ino, String pay, Integer payType,String batch) {
 		Integer count = 0;
 		Integer flag = 0;
-		// 淇敼 娆犺垂鐘舵��
 		for (int i = 0; i < chk.length; i++) {
 
 			PrhRental rental = this.findById(chk[i]);
@@ -279,10 +276,10 @@ public class RenterServiceImpl implements RenterService {
 
 			boolean flagRent = prhMasterService.checkBeforeRental(master);
 			if (!flagRent) {
-				houses.setState(Short.valueOf("3")); // 淇敼鎴� 娆犺垂
+				houses.setState(Short.valueOf("3"));
 				prHouseMapper.updateByPrimaryKey(houses);
 			}
-			if (rental.getSta().equals("T")) {// 宸茬粨娓�
+			if (rental.getSta().equals("T")) {
 
 				return 4;
 			} else {
@@ -575,7 +572,6 @@ public class RenterServiceImpl implements RenterService {
 	public Integer checkRefer(Integer accntid2) {
 		Integer flag = 0;
 		Integer flag2 = 0;
-		// 鏍规嵁id 鏌ヨ鎵�鏈夎处鍔′俊鎭槸鍚︿綍鏃�
 		List<PrhRental> rentals = prhRentalMapper.findByAccnt(accntid2);
 
 		for (PrhRental prhRental : rentals) {
@@ -583,21 +579,19 @@ public class RenterServiceImpl implements RenterService {
 				flag2++;
 			}
 			if (prhRental.getAudit1() != null) {
-				if (prhRental.getAudit1().equals("T")) {//
-					flag++;// 涓哄凡浠樻竻鐨�
+				if (prhRental.getAudit1().equals("T")) {
+					flag++;
 				}
 			}
 		}
-		if (flag == flag2) {
+		if (flag.intValue() == flag2.intValue()) {
 			PrhMaster master = prhMasterService.findById(accntid2);
 			master.setRefer1("1");
 			prhMasterService.updatePrhMaster(master);
-			System.out.println("鍏ㄩ儴鏍哥畻");
 			return 1;
 		}
 
 		else {
-			System.out.println("娌″叏閮ㄦ牳绠�");
 			return 2;
 
 		}
@@ -606,7 +600,6 @@ public class RenterServiceImpl implements RenterService {
 
 	@Override
 	public List<PrhRental> findArrears() {
-		// TODO Auto-generated method stub
 		Date date = new Date();
 		return prhRentalMapper.findArrears(date);
 	}
@@ -620,9 +613,8 @@ public class RenterServiceImpl implements RenterService {
 	@Override
 	public List<PrhRental> findCountByExpiringConditionAndPaged(RenDaliyCondition condition, Integer currpage,
 			Integer size) {
-		System.out.println("娴嬭瘯3");
-		int begin = (currpage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currpage - 1) * size ;
+		int end = begin + size ;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrhRental> rentals = prhRentalMapper.findCountByExpiringConditionAndPaged(condition);
@@ -631,15 +623,12 @@ public class RenterServiceImpl implements RenterService {
 		return rentals;
 	}
 
-	// 閫�绉熺粨绠�
 	@Override
 	public boolean updateTui(List<PrhRental> rentals) {
 
-		System.out.println("璐﹀崟鎬绘暟" + rentals.size());
 		try {
 
 			for (PrhRental rental : rentals) {
-				// 鏌ヨ鏈�澶d
 				Integer maxid = prhPaymentMapper.findMaxId();
 				if (maxid == null) {
 					maxid = 1;

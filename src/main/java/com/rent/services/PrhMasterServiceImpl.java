@@ -347,8 +347,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	@Override
 	public List<PrhMaster> findByRenDaliyConditionAndPaged(RenDaliyCondition condition, Integer currage, Integer size) {
 		
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		
@@ -361,8 +361,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	@Override
 	public List<PrhMaster> findByRenDaliyConditionAndPagedTui(RenDaliyCondition condition, Integer currage,
 			Integer size) {
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		
@@ -380,8 +380,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	@Override
 	public List<PrhMaster> findMasterByrentAccountAndPaged(renAcountCondition condition, Integer currage,
 			Integer size) {
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrhMaster> prhmasters = prhMasterMapper.findMasterByrentAccountAndPaged(condition);
@@ -417,8 +417,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 
 	@Override
 	public List<PrhMaster> findAllByConditionAndPaged(MasterCondition condition, Integer currage, Integer size) {
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrhMaster> prhmasters = prhMasterMapper.findAllByConditionAndPaged(condition);
@@ -466,8 +466,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	public List<PrhMaster> findCountByRenDaliyConditionTaiAndPaged(RenDaliyCondition condition, Integer currpage,
 			Integer size) {
 		
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrhMaster> prhmasters = prhMasterMapper.findCountByRenDaliyConditionTaiAndPaged(condition);
@@ -479,8 +479,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	@Override
 	public List<PrhMaster> findByRenDaliyConditionAndPagedHe(RenDaliyCondition condition, Integer currpage,
 			Integer size) {
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		

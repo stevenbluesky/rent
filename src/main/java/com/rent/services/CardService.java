@@ -10,7 +10,7 @@ public interface CardService {
 	void editCard(Card card);
 	void delCard(Integer id);
 	Card getById(Integer id);
-	List<Card> findByMasterAndLink(Integer masterId,Integer linkId,Integer type,Integer state);
+	List<Card> findByMasterAndLink(Integer masterId, Integer linkId, Integer type, Integer state);
 
 	Integer getNextId();
 	
@@ -24,5 +24,5 @@ public interface CardService {
 	   
 	   List<HistoryIdenPwd> findAllHistoryIdenPwd();
 	   
-	   List<HistoryIdenPwd> findHistoryIdenPwdByPerson(Integer master,Integer linkId);
+	   List<HistoryIdenPwd> findHistoryIdenPwdByPerson(Integer master, Integer linkId);
 }

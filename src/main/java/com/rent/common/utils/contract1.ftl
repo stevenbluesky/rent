@@ -9,11 +9,11 @@
 	<div>
 		<p
 			style="font-size: 18pt; line-height: 115%; margin: 0pt 0pt 10pt; orphans: 0; text-align: center; widows: 0">
-			<span style="font-family: 黑体; font-size: 18pt">廊坊市公共住房实物配租合同</span>
+			<span style="font-family: 黑体; font-size: 18pt">公共住房实物配租合同</span>
 		</p>
 		<p
 			style="font-size: 14pt; line-height: 115%; margin: 0pt 0pt 10pt; orphans: 0; text-align: justify; widows: 0">
-			<span style="font-family: 仿宋_GB2312; font-size: 14pt">甲方（出租方）：廊坊市公共住房运营维护管理中心</span>
+			<span style="font-family: 仿宋_GB2312; font-size: 14pt">甲方（出租方）：公共住房运营维护管理中心</span>
 		</p>
 		<p
 			style="font-size: 14pt; line-height: 115%; margin: 0pt 0pt 10pt; orphans: 0; text-align: justify; widows: 0">
@@ -23,7 +23,7 @@
 			style="font-size: 14pt; line-height: 115%; margin: 0pt 0pt 10pt; orphans: 0; text-align: justify; text-indent: 21pt; widows: 0">
 			<span style="font-family: 仿宋_GB2312; font-size: 14pt">乙方已熟知并遵守公共住房相关政策</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">且已签署承诺书。</span><span
-				style="font-family: 仿宋_GB2312; font-size: 14pt">经甲乙双方协商签订《廊坊市公共住房实物配租合同》</span><span
+				style="font-family: 仿宋_GB2312; font-size: 14pt">经甲乙双方协商签订《公共住房实物配租合同》</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">。</span>
 		</p>
 		<p
@@ -100,7 +100,7 @@
 			style="font-size: 14pt; line-height: 115%; margin: 0pt 0pt 10pt; orphans: 0; text-align: justify; text-indent: 21pt; widows: 0">
 			<span style="font-family: 仿宋_GB2312; font-size: 14pt">本管理和合同中未规定的事项，均遵照中华人民共和国有关法律、法规和政策执行。</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">乙方已同意</span><span
-				style="font-family: 仿宋_GB2312; font-size: 14pt">廊坊市公共住房实物配租</span><span
+				style="font-family: 仿宋_GB2312; font-size: 14pt">公共住房实物配租</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">管理</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">及</span><span
 				style="font-family: 仿宋_GB2312; font-size: 14pt">本合同上述所有条款，双方签字盖章后本合同生效，本合同一式两份，甲乙双方各执一份。</span>
@@ -120,11 +120,11 @@
 		</p>
 		<p style="line-height: 26pt; margin: 0pt; text-indent: 30pt">
 			<span style="font-family: 仿宋_GB2312; font-size: 15pt">政策咨询、业务办理联系电话：</span><span
-				style="font-family: 仿宋_GB2312; font-size: 15pt">0316-2250669</span>
+				style="font-family: 仿宋_GB2312; font-size: 15pt"></span>
 		</p>
 		<p style="line-height: 26pt; margin: 0pt; text-indent: 30pt">
 			<span style="font-family: 仿宋_GB2312; font-size: 15pt">报修联系电话：</span><span
-				style="font-family: 仿宋_GB2312; font-size: 15pt">0316-2229013</span>
+				style="font-family: 仿宋_GB2312; font-size: 15pt"></span>
 		</p>
 		<p style="line-height: 26pt; margin: 0pt; text-indent: 30pt">
 			<span style="font-family: 仿宋_GB2312; font-size: 15pt">&#xa0;</span>

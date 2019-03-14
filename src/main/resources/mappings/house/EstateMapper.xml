@@ -40,11 +40,11 @@
     delete from ESTATE
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  <insert id="insert" parameterType="com.rent.entity.Estate" >
-   
-    insert into ESTATE (ID, NAME, TYPE_ID, 
+  <insert id="insert" parameterType="com.rent.entity.Estate">
+
+    insert into ESTATE (NAME, TYPE_ID,
       ADDRESS, REMARK,price,author_Code,phone,map_Pic)
-    values (seq_estate.nextval, #{name,jdbcType=VARCHAR}, #{typeId,jdbcType=DECIMAL}, 
+    values (#{name,jdbcType=VARCHAR}, #{typeId,jdbcType=DECIMAL},
       #{address,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{authorCode,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR},#{mapPic,jdbcType=VARCHAR})
   </insert>
@@ -136,7 +136,8 @@
   </select>
   
   <select id="getCurrId" resultType="java.lang.Integer">
-  	select seq_estate.currval from dual
+  	/*select seq_estate.currval from dual*/
+  	select id from ESTATE order by id desc limit 1
   </select>
   
   

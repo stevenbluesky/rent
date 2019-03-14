@@ -825,7 +825,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t xml:space="preserve">    签约联系电话：0316-2250999         乙方代理人（签字）：</w:t>
+							<w:t xml:space="preserve">    签约联系电话：         乙方代理人（签字）：</w:t>
 						</w:r>
 					</w:p>
 					<w:p w:rsidR="007634D1" w:rsidRDefault="00BE2772">
@@ -844,7 +844,7 @@
 								<w:sz w:val="28" />
 								<w:szCs w:val="28" />
 							</w:rPr>
-							<w:t xml:space="preserve">    报修联系电话：0316-2229013         联系电话：</w:t>
+							<w:t xml:space="preserve">    报修联系电话：         联系电话：</w:t>
 						</w:r>
 					</w:p>
 					<w:sectPr w:rsidR="007634D1" w:rsidSect="007634D1">

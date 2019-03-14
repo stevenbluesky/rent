@@ -23,13 +23,13 @@
 	</sql>
 	
 	<sql id="menuJoins">
-		LEFT JOIN rent_menu p ON p.id = a.parent_id
+		LEFT JOIN RENT_MENU p ON p.id = a.parent_id
     </sql>
 	
 	<select id="get" resultType="Menu">
 		SELECT
 			<include refid="menuColumns"/>
-		FROM rent_menu a
+		FROM RENT_MENU a
 		<include refid="menuJoins"/>
 		WHERE a.id = #{id}
 	</select>
@@ -37,7 +37,7 @@
 	<select id="findAllList" resultType="Menu">
 		SELECT
 			<include refid="menuColumns"/>
-		FROM rent_menu a
+		FROM RENT_MENU a
 		<include refid="menuJoins"/>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		ORDER BY a.sort
@@ -48,13 +48,13 @@
 			a.id,
 			a.parent_id AS "parent.id",
 			a.parent_ids
-		FROM rent_menu a
+		FROM RENT_MENU a
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}
 		ORDER BY a.sort
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO rent_menu(
+		INSERT INTO RENT_MENU(
 			id, 
 			parent_id, 
 			parent_ids, 
@@ -92,7 +92,7 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE rent_menu SET 
+		UPDATE RENT_MENU SET
 			parent_id = #{parent.id}, 
 			parent_ids = #{parentIds}, 
 			name = #{name}, 
@@ -109,20 +109,20 @@
 	</update>
 	
 	<update id="updateParentIds">
-		UPDATE rent_menu SET 
+		UPDATE RENT_MENU SET
 			parent_id = #{parent.id}, 
 			parent_ids = #{parentIds}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="updateSort">
-		UPDATE rent_menu SET 
+		UPDATE RENT_MENU SET
 			sort = #{sort}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE rent_menu SET 
+		UPDATE RENT_MENU SET
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id} OR parent_ids LIKE 
 					<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>

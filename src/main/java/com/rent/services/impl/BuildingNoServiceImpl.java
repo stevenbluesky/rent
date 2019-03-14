@@ -17,7 +17,7 @@ import com.rent.services.BuildingService;
 import com.rent.services.EstateService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BuildingNoServiceImpl implements BuildingNoService {
 
 	@Autowired
@@ -137,8 +137,8 @@ public class BuildingNoServiceImpl implements BuildingNoService {
 	public List<BuildingNo> findByEstatePaged(Integer estateId,
 											  Integer currage, Integer size) {
 
-		Integer begin = (currage - 1) * size + 1;
-		Integer end = begin + size - 1;
+		Integer begin = (currage - 1) * size;
+		Integer end = begin + size ;
 
 		List<BuildingNo> buildingNos = buildingNoMapper.findByEstatePaged(
 				estateId, begin, end);

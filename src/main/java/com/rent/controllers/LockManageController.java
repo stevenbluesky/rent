@@ -144,10 +144,9 @@ public class LockManageController {
 
     }
 
-
     @RequestMapping("lockNameEdit.do")
     @ResponseBody
-    public String lockNameEdit(String deviceid,String houseid,String lockName, ModelMap map) {
+    public String lockNameEdit(String deviceid,String houseid,String lockName) {
         JSONArray pageArray0 = null;
         boolean ifBind = false;
         String params0 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\"}}}";
@@ -165,6 +164,7 @@ public class LockManageController {
                 }
             }
         }
+
         String params = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \""+deviceid+"\",\"nodeid\":1,\"params\":{\"Name\":\""+lockName+"\",\"Houseid\":"+houseid+",\"IfBind\":"+ifBind+"}}";
         String result = RestfulUtil.postHttps(params,"app");
         JSONObject resultMap = JSON.parseObject(result);

@@ -13,7 +13,7 @@ import com.rent.entity.PrhRmdev;
 import com.rent.services.PrhRmdevService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PrhRmdevServiceImpl implements PrhRmdevService {
 	@Autowired
 	private PrhRmdevMapper prhRmdevMapper;
@@ -26,8 +26,8 @@ public class PrhRmdevServiceImpl implements PrhRmdevService {
 		
 	@Override
 	public List<PrhRmdev> findByConditionPaged(RmdevCondition condition, Integer currage, Integer size) {
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currage - 1) * size;
+		int end = begin + size ;
 		condition.setEnd(end);
 		condition.setBegin(begin);
 		List<PrhRmdev> PrhRmdev = prhRmdevMapper.findByConditionPaged(condition);

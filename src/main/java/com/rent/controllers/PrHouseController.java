@@ -1,129 +1,93 @@
 package com.rent.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.rent.common.config.Global;
 import com.rent.common.utils.*;
-import com.rent.door.HouseInfo;
+import com.rent.condition.HouseCondition;
+import com.rent.entity.*;
+import com.rent.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
-import com.rent.common.*;
-import com.rent.common.config.Global;
-import com.rent.entity.*;
-
-import com.rent.services.BuildingFloorService;
-import com.rent.services.BuildingNoService;
-import com.rent.services.BuildingService;
-import com.rent.services.EstateService;
-import com.rent.services.PrHouseService;
-import com.rent.services.RoomTypeService;
-import com.rent.services.UserService;
-import com.rent.condition.HouseCondition;
-
+/**
+ * @author landwind
+ */
 @Controller("prHouseController")
 @Transactional(rollbackFor = Exception.class)
 public class PrHouseController {
 
-	public BuildingFloorService getBuildingFloorService() {
-		return buildingFloorService;
-	}
+	private PrHouseService prHouseService;
 
+	private BuildingService buildingService;
+
+	private BuildingNoService buildingNoService;
+
+	private BuildingFloorService buildingFloorService;
+
+	private RoomTypeService roomTypeService;
+
+	private UserService userService;
+
+	private EstateService estateService;
+
+	@Autowired
 	public void setBuildingFloorService(BuildingFloorService buildingFloorService) {
 		this.buildingFloorService = buildingFloorService;
 	}
 
-	public BuildingService getBuildingService() {
-		return buildingService;
-	}
-
+	@Autowired
 	public void setBuildingService(BuildingService buildingService) {
 		this.buildingService = buildingService;
 	}
 
-	public EstateService getEstateService() {
-		return estateService;
-	}
-
+	@Autowired
 	public void setEstateService(EstateService estateService) {
 		this.estateService = estateService;
 	}
 
-	public BuildingNoService getBuildingNoService() {
-		return buildingNoService;
-	}
-
+	@Autowired
 	public void setBuildingNoService(BuildingNoService buildingNoService) {
 		this.buildingNoService = buildingNoService;
 	}
 
-	public RoomTypeService getRoomTypeService() {
-		return roomTypeService;
-	}
-
+	@Autowired
 	public void setRoomTypeService(RoomTypeService roomTypeService) {
 		this.roomTypeService = roomTypeService;
 	}
 
-	public PrHouseService getPrHouseService() {
-		return prHouseService;
-	}
-
+	@Autowired
 	public void setPrHouseService(PrHouseService prHouseService) {
 		this.prHouseService = prHouseService;
 	}
 
 	@Autowired
-	private PrHouseService prHouseService;
-	@Autowired
-	private BuildingService buildingService;
-	@Autowired
-	private BuildingNoService buildingNoService;
-	@Autowired
-	private BuildingFloorService buildingFloorService;
-	@Autowired
-	private RoomTypeService roomTypeService;
-
-	@Autowired
-	private UserService userService;
-
-	public UserService getUserService() {
-		return userService;
-	}
-
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
-	@Autowired
-	private EstateService estateService;
+
 
 	@RequestMapping("findHouseByConditionPaged.do")
-	public String findHouseByCondition(Integer estateId, Integer buildingId, Integer buildingNoId, Integer floorId,
-									   Integer typeId, Integer currpage, ModelMap map, HttpSession session, HttpServletRequest request) {
+	public String findHouseByCondition(Integer estateId,ModelMap map) {
 
-		// 处理当前页
-		if (currpage == null || currpage <= 0) {
-			currpage = 1;
-		}
-		Integer size = 10; // 页大小
 		// 查询物业集合
 		List<Estate> estates = prHouseService.getAllEstate();
 		if (estateId == null) {
@@ -136,7 +100,7 @@ public class PrHouseController {
 		map.put("buildings", buildings);
 
 		// 单元集合
-		List<BuildingNo> buildingNos = buildingNoService.findByEstate(estateId);
+		List<BuildingNo> buildingNos = estateId!=null?buildingNoService.findByEstate(estateId):null;
 		map.put("buildingNos", buildingNos);
 
 		// 房型
@@ -149,18 +113,18 @@ public class PrHouseController {
 		return "";
 	}
 
-	// 分页查询
 	@RequestMapping("findPrHouseByEstatePaged.do")
 	public String findPrHouseByEstatePaged(Integer estateId, String buildingId, String buildingNoId, Integer floorId,
 										   Integer typeId,Integer houseNature, Integer currpage, ModelMap map, HttpSession session, HttpServletRequest request) {
+		String nullValue = "-1";
 		// 处理数据
-		if ("-1".equals(buildingId)) {
+		if (nullValue.equals(buildingId)) {
 			buildingId = null;
 		}
-		if ("-1".equals(buildingNoId)) {
+		if (nullValue.equals(buildingNoId)) {
 			buildingNoId = null;
 		}
-		if ("-1".equals(houseNature)) {
+		if (houseNature!=null && -1 == houseNature) {
 			houseNature = null;
 		}
 
@@ -174,7 +138,7 @@ public class PrHouseController {
 		if (currpage == null || currpage <= 0) {
 			currpage = 1;
 		}
-		Integer size = 10; // 页大小
+		Integer size = 10;
 		// 查询物业集合
 		List<Estate> estates = prHouseService.getAllEstate();
 		if (estateId == null) {
@@ -209,8 +173,8 @@ public class PrHouseController {
 		int total = prHouseService.getHouseCountByConditionPaged(condition);
 		// 分页工具类
 		String url = "findPrHouseByEstatePaged.do?estateId=" + (estateId != null ? estateId.toString() : "-1")
-				+ "&buildingId=" + (buildingId != null ? buildingId.toString() : "-1") + "&buildingNoId="
-				+ (buildingNoId != null ? buildingNoId.toString() : "-1") + "&floorId="
+				+ "&buildingId=" + (buildingId != null ? buildingId: "-1") + "&buildingNoId="
+				+ (buildingNoId != null ? buildingNoId: "-1") + "&floorId="
 				+ (floorId != null ? floorId.toString() : "-1") + "&typeId="
 				+ (typeId != null ? typeId.toString() : "-1");
 
@@ -236,7 +200,12 @@ public class PrHouseController {
 		return "prh/prHouse/prHouse.jsp";
 	}
 
-	// 转到新增
+	/**
+	 * 	转到新增
+	 * @param estateId 物业id
+	 * @param map map
+	 * @return 页面
+	 */
 	@RequestMapping("toPrHouseAdd.do")
 	public String toPrHouseAdd(Integer estateId, ModelMap map) {
 
@@ -265,32 +234,31 @@ public class PrHouseController {
 	private List<Lock> getAllLockList(){
         String params = "{\"method\": \"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"lock\",\"_nodeid\":1}}}";
         String result = RestfulUtil.postHttps(params,"app");
-        JSONArray pageArray = null;
-        int totalCount = 0;
+        JSONArray pageArray ;
+        int totalCount ;
         List<Lock> lockList = new ArrayList<>();
         // 处理数据
         JSONObject resultMap = JSON.parseObject(result);
-        int resultcode = resultMap.getIntValue("resultcode");
+
         if(!RestfulUtil.checkNull(resultMap.getJSONObject("data"))){
             JSONObject data = resultMap.getJSONObject("data");
             totalCount = data.getIntValue("TotalCount");
             if(totalCount>0) {
                 pageArray = data.getJSONArray("PageList");
-                for (int i = 0; i < pageArray.size(); i++) {
-                    Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
-                    if (lock.getName() == null) {
-                        lock.setName("");
-                    }
-                    lockList.add(lock);
-                }
+				pageArray.stream().map(aPageArray -> JSON.parseObject(aPageArray.toString(), Lock.class)).forEach(lock -> {
+					if (lock.getName() == null) {
+						lock.setName("");
+					}
+					lockList.add(lock);
+				});
             }
         }
         return lockList;
     }
-	// 新增
+
 	@RequestMapping("prHouseAdd.do")
 	@ResponseBody
-	public String prHouseAdd(PrHouse prHouse, ModelMap map, HttpSession session) {
+	public String prHouseAdd(PrHouse prHouse,HttpSession session) throws Exception {
 		Users user = (Users) session.getAttribute(Global.USER);
 
 		Integer roomNoId = Integer
@@ -300,36 +268,40 @@ public class PrHouseController {
 
 		PrHouse findByNo = prHouseService.findByNo(prHouse.getNo());
 		if (findByNo != null) {
-			return "0"; // 房号相同
+			// 房号相同
+			return "0";
 		}
-		PrHouse findByLock = prHouseService.findByLock(prHouse.getAssociatedlock());
+		PrHouse findByLock = StringUtils.isNotBlank(prHouse.getAssociatedlock())?prHouseService.findByLock(prHouse.getAssociatedlock()):null;
 		if(findByLock != null){
 			return "-1";
 		}
 
 		prHouse.setUpdateuser(user.getId().toString());
 		prHouse.setUpdatetime(new Date());
-		int i = prHouseService.addPrHouse(prHouse);
-		try {
-			Lock lock = null;
-			if (StringUtils.isNotBlank(prHouse.getAssociatedlock())) {
-				String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\"" + prHouse.getAssociatedlock() + "\"}}}";
-				String result = RestfulUtil.postHttps(params, "app");
-				JSONObject resultMap = JSON.parseObject(result);
-				int resultcode = resultMap.getIntValue("resultcode");
-				if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
-					JSONObject data = resultMap.getJSONObject("data");
-					if (data.getIntValue("TotalCount") > 0) {
-						lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
-					}
+		prHouseService.addPrHouse(prHouse);
+
+		Lock lock = null;
+		if (StringUtils.isNotBlank(prHouse.getAssociatedlock())) {
+			String params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\"" + prHouse.getAssociatedlock() + "\"}}}";
+			String result = RestfulUtil.postHttps(params, "app");
+			JSONObject resultMap = JSON.parseObject(result);
+			int resultcode = resultMap.getIntValue("resultcode");
+			if (resultcode == 1 && !RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+				JSONObject data = resultMap.getJSONObject("data");
+				if (data.getIntValue("TotalCount") > 0) {
+					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
 				}
-			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":" + prHouse.getId() + ",\"IfBind\":true}}";
+			}
+			String empty = "";
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + (lock!=null?lock.getName():empty) + "\",\"Houseid\":" + prHouse.getId() + ",\"IfBind\":true}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
+			JSONObject resultMap2 = JSON.parseObject(result2);
+			int resultcode2 = resultMap2.getIntValue("resultcode");
+			if(resultcode2!=1){
+				throw new Exception("绑定门锁错误");
+			}
 		}
-		}catch (Exception e){
-			prHouseService.delPrHouse(prHouse.getId());
-			return "-2";
-		}
+
 		return "";
 	}
 
@@ -389,7 +361,7 @@ public class PrHouseController {
 	// 修 改
 	@RequestMapping("prHouseEdit.do")
 	@ResponseBody
-	public String prHouseEdit(PrHouse prHouse, ModelMap map, HttpSession session) {
+	public String prHouseEdit(PrHouse prHouse, ModelMap map, HttpSession session) throws Exception {
 		Users user = (Users) session.getAttribute(Global.USER);
 		PrHouse oldHouse = prHouseService.findById(prHouse.getId());
 		Integer roomNoId = Integer
@@ -401,7 +373,7 @@ public class PrHouseController {
 		prHouse.setState(oldHouse.getState());
 		PrHouse findByNo = prHouseService.findByNo(prHouse.getNo());
 
-		PrHouse findByLock = prHouseService.findByLock(prHouse.getAssociatedlock());
+		PrHouse findByLock = StringUtils.isNotBlank(prHouse.getAssociatedlock())?prHouseService.findByLock(prHouse.getAssociatedlock()):null;
 
 		prHouse.setUpdateuser(user.getId().toString());
 		prHouse.setUpdatetime(new Date());
@@ -427,6 +399,11 @@ public class PrHouseController {
 			}
 			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
+			JSONObject resultMap2 = JSON.parseObject(result2);
+			int resultcode2 = resultMap2.getIntValue("resultcode");
+			if(resultcode2!=1){
+				throw new Exception("绑定门锁错误");
+			}
 		}else if(StringUtils.isBlank(prHouse.getAssociatedlock())&&StringUtils.isNotBlank(oldHouse.getAssociatedlock())){
 			//解绑门锁
 			Lock lock = null;
@@ -442,6 +419,11 @@ public class PrHouseController {
 			}
 			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + oldHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":0,\"IfBind\":false}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
+			JSONObject resultMap2 = JSON.parseObject(result2);
+			int resultcode2 = resultMap2.getIntValue("resultcode");
+			if(resultcode2!=1){
+				throw new Exception("解绑门锁错误");
+			}
 		}else if(StringUtils.isNotBlank(prHouse.getAssociatedlock())&&StringUtils.isNotBlank(oldHouse.getAssociatedlock())&&!oldHouse.getAssociatedlock().equals(prHouse.getAssociatedlock())){
 			//更换门锁
 			Lock lock = null;
@@ -457,20 +439,30 @@ public class PrHouseController {
 			}
 			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + oldHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":0,\"IfBind\":false}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
+			JSONObject resultMap2 = JSON.parseObject(result2);
+			int resultcode2 = resultMap2.getIntValue("resultcode");
+			if(resultcode2!=1){
+				throw new Exception("解绑门锁错误");
+			}
 
 			Lock lock2 = null;
 			String params2 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+ prHouse.getAssociatedlock() + "\"}}}";
 			String result3 = RestfulUtil.postHttps(params2, "app");
-			JSONObject resultMap2 = JSON.parseObject(result3);
-			int resultcode2 = resultMap2.getIntValue("resultcode");
-			if (resultcode2 == 1 && !RestfulUtil.checkNull(resultMap2.getJSONObject("data"))) {
-				JSONObject data = resultMap2.getJSONObject("data");
+			JSONObject resultMap3 = JSON.parseObject(result3);
+			int resultcode3= resultMap3.getIntValue("resultcode");
+			if (resultcode3 == 1 && !RestfulUtil.checkNull(resultMap3.getJSONObject("data"))) {
+				JSONObject data = resultMap3.getJSONObject("data");
 				if (data.getIntValue("TotalCount") > 0) {
 					lock2 = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
 				}
 			}
 			String params3 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock2.getName() + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
 			String result4 = RestfulUtil.postHttps(params3, "app");
+			JSONObject resultMap4 = JSON.parseObject(result4);
+			int resultcode4 = resultMap4.getIntValue("resultcode");
+			if(resultcode4!=1){
+				throw new Exception("绑定门锁错误");
+			}
 		}
 
 		return "success";
@@ -728,15 +720,6 @@ public class PrHouseController {
 
 	@RequestMapping("updateCode")
 	public String updateCode() {
-
-		/*
-		 * List<PrHouse> houses = prHouseService.findByCondition(new
-		 * HouseCondition()); for (PrHouse house: houses) { String id =
-		 * house.getId().toString(); int length=10-id.length(); String
-		 * before=""; for (int i = 0; i < length; i++) { before+="0"; }
-		 * house.setHouseCode(before+id); prHouseService.updatePrHouse(house);
-		 */
-
 		List<Estate> all = estateService.findAll();
 		for (Estate estate : all) {
 			String id = estate.getId().toString();
@@ -747,9 +730,7 @@ public class PrHouseController {
 			}
 			estate.setAuthorCode(before + id);
 			estateService.updateEstate(estate);
-			System.out.println("更新成功");
 		}
-
 		return "";
 	}
 

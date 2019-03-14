@@ -709,7 +709,7 @@ public class RenterController {
 
 			if (prhMaster.getDeposit() == null) {
 				RentPayWay rentPayWay = rentPayWayService.findById(prhMaster.getRentCode());
-				prhMaster.setDeposit(BigDecimal.valueOf(rentPayWay.getDepositPay()*prhMaster.getRate().intValue()));
+				prhMaster.setDeposit(BigDecimal.valueOf(rentPayWay.getDepositPay()*(prhMaster.getRate().intValue()+prhMaster.getSetrate().intValue())));
 			}
 
 			// 判断是新增还是修改
@@ -998,8 +998,8 @@ public class RenterController {
 		condition.setRoomNo(roomNo);
 		condition.setBuildingId(buildingId);
 		condition.setLeaveDate(null);
-		condition.setBegin((currpage - 1) * size + 1);
-		condition.setEnd(condition.getBegin() + size - 1);
+		condition.setBegin((currpage - 1) * size );
+		condition.setEnd(condition.getBegin() + size );
 		condition.setSta(sta);
 		condition.setLeaveDate(leaveDate);
 		// 主单信息

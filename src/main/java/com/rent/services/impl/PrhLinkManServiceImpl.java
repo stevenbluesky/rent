@@ -15,7 +15,7 @@ import com.rent.services.FileManagementService;
 import com.rent.services.PrhLinkManService;
 import com.rent.services.PrhMasterService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PrhLinkManServiceImpl implements PrhLinkManService{
 
 

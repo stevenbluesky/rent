@@ -269,10 +269,10 @@
 						$.jBox.tip("请选择单位！");
 						return false;
 					}
-					if (deposit.length != 0 && isNaN(deposit)) {
+					/*if (deposit.length != 0 && isNaN(deposit)) {
 						$.jBox.tip("押金格式不正确！");
 						return false;
-					}
+					}*/
 					
 					if (tag4.length != 0 && tag4.length != 11) {
 						$.jBox.tip("联系方式不正确！");

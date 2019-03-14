@@ -105,7 +105,7 @@
 
 				<div id="ico3" style="display:inline;">
       
-	       <a href="/rent/toParamIndex"> <img  src="${ctxStatic}/image/sysManagerIco.png"></a> 
+	       <a href="/rent/toParamIndex"> <img  src="${ctxStatic}/image/sysManagerIco.png"></a>
 	     		 <span class="chooseTitle chooseTitle3" ><a href="/rent/toParamIndex">系统管理</a></span>
     	 		</div>
 			</c:if>

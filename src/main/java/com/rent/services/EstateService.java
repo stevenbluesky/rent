@@ -7,41 +7,41 @@ import com.rent.entity.EstateType;
 
 public interface EstateService {
 	/**
-	 * ²éÑ¯È«²¿
-	 * @return ÎïÒµ¼¯ºÏ
+	 * ï¿½ï¿½Ñ¯È«ï¿½ï¿½
+	 * @return ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½
 	 */
 	List<Estate> findAll();
 	
 	/**
-	 * ÐÂÔö
-	 * @return Ö´ÐÐ½á¹û1»ò-1
+	 * ï¿½ï¿½ï¿½ï¿½
+	 * @return Ö´ï¿½Ð½ï¿½ï¿½1ï¿½ï¿½-1
 	 */
-	int addEstate(Estate estate);
+	int insertEstate(Estate estate);
 	/**
-	 * ÐÞ¸Ä
-	 * @return Ö´ÐÐ½á¹û1»ò-1
+	 * ï¿½Þ¸ï¿½
+	 * @return Ö´ï¿½Ð½ï¿½ï¿½1ï¿½ï¿½-1
 	 */
 	int updateEstate(Estate estate);
 	
 	/**
-	 * É¾³ý
-	 * @return Ö´ÐÐ½á¹û1»ò-1
+	 * É¾ï¿½ï¿½
+	 * @return Ö´ï¿½Ð½ï¿½ï¿½1ï¿½ï¿½-1
 	 */
 	int delEstate(Integer id);
 	/**
-	 * ¸ù¾ÝÖ÷¼ü²éÑ¯
-	 * @return Ö´ÐÐ½á¹û1»ò-1
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯
+	 * @return Ö´ï¿½Ð½ï¿½ï¿½1ï¿½ï¿½-1
 	 */
 	Estate findById(Integer id);
 	/**
-	 * ²éÑ¯È«²¿
-	 * @return »ñÈ¡ËùÓÐÎïÒµÀàÐÍ
+	 * ï¿½ï¿½Ñ¯È«ï¿½ï¿½
+	 * @return ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½
 	 */
 	List<EstateType> findAllEstateTypes();
 	/**
-	 * ¸ù¾ÝÃû³Æ²éÕÒ
-	 * @param Ãû³Æ
-	 * @return ¶ÔÏó
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ²ï¿½ï¿½ï¿½
+	 * @param ï¿½ï¿½ï¿½ï¿½
+	 * @return ï¿½ï¿½ï¿½ï¿½
 	 */
 	Estate findByName(String name);
 }

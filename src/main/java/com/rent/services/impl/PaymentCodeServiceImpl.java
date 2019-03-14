@@ -12,7 +12,7 @@ import com.rent.dao.PaymentCodeMapper;
 
 import com.rent.entity.PaymentCode;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PaymentCodeServiceImpl implements PaymentCodeService{
 	@Autowired
 	private PaymentCodeMapper paymentCodeMapper;
@@ -78,8 +78,8 @@ public class PaymentCodeServiceImpl implements PaymentCodeService{
 	 * @return 房屋类型集合
 	 */
 	public List<PaymentCode> findAllPaged(Integer currpage,Integer size){
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return paymentCodeMapper.findAllPaged(begin, end);
 	}
 

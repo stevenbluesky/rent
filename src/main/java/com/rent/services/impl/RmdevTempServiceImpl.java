@@ -20,7 +20,7 @@ import com.rent.services.RmdevTempService;
 import com.rent.services.RoomTypeService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RmdevTempServiceImpl implements RmdevTempService {
 
 	@Autowired
@@ -41,8 +41,8 @@ public class RmdevTempServiceImpl implements RmdevTempService {
 
 	@Override
 	public List<RmdevTemp> findByRoidAndPaged(TempCondition condition, Integer currage, Integer size) {
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currage - 1) * size ;
+		int end = begin + size ;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<RmdevTemp> rmdevTemp = rmdevTempMapper.findByRoidAndPaged(condition);

@@ -41,12 +41,12 @@
  
   <insert id="insert" parameterType="com.rent.entity.Users" >
     
-    insert into USERS (ID, NAME, PWD, 
+    insert into USERS (NAME, PWD,
       SEX, PHONE, ADDRESS, 
       ESTATE_ID, ROLES, CREATEUSER, 
       CREATETIME, UPDATEUSER, UPDATETIME,del
       )
-    values (seq_users.nextval, #{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values ( #{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{sex,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{estateId,jdbcType=DECIMAL}, #{roles,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=DATE}, #{updateuser,jdbcType=VARCHAR}, #{updatetime,jdbcType=DATE},
@@ -242,7 +242,7 @@
   <select id="findThirdUsers" resultMap="BaseResultMap">
   	select
   		<include refid="Base_Column_List"/>
-  	from USERS where instr(roles,'8',1,1)> 0
+  	from USERS where locate('8',roles)> 0
   	and del = 0
   	order by id
   </select>

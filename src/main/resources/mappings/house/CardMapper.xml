@@ -187,23 +187,11 @@
   </select>
  
   <select id="getNextId" resultType="java.lang.Integer" >
-  	 select seq_card.nextval from dual
+  	 /*select seq_card.nextval from dual*/
+  	 select id from CARD order by id desc limit 1;
   </select>
   
-  <!-- 授权码序列 -->
-  <select id="getAuthorizeIdSeq" resultType="java.lang.Integer">
-  	select seq_authorize.nextval from dual 
-  </select>
-  
-  <!-- 房号序列  -->
-  <select id="getRoomNumSeq" resultType="java.lang.Integer">
-  	 select seq_room_num.nextval from dual
-  </select>
 
-  <!--房间编号序列  -->
-  <select id="getRoomIdSeq" resultType="java.lang.Integer">
-		select seq_room_id.nextval from dual
-  </select>
 
 
 </mapper>

@@ -316,8 +316,8 @@ a:hover {
 			 <input class="btn" value="新 增" type="button"
 				onclick="location.href='toBuildingAdd?estateId=${estateId}';" />
 				
-		      <input class="btn" value="修 改" type="button"
-				onclick="toEdit()" />
+		      <%--<input class="btn" value="修 改" type="button"
+				onclick="toEdit()" />--%>
 		     <input class="btn" value="删除" type="submit"
 				onclick="del()" />
 			

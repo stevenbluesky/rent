@@ -331,7 +331,7 @@
   
     select 
 	<include refid="Base_Column_List" />
-    from prh_rmdev p
+    from PRH_RMDEV p
         where roomno = #{houseid}
         and sta =1
   </select>
@@ -339,11 +339,7 @@
   	<select id="findByConditionPaged" resultMap="BaseResultMap">
 		SELECT
       <include refid="Base_Column_List" />
-      FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
-			SELECT * FROM prh_rmdev where  1=1
+     FROM PRH_RMDEV where  1=1
 			<if test="houseid!=null">
 		       			<if test="houseid!=''">
 		       	and	 	roomno = #{houseid}
@@ -355,8 +351,7 @@
 		       	</if>	
 		    </if>	
 			order by devclass
-		) A
-		) WHERE RN BETWEEN #{begin} AND #{end}
+		limit #{begin} , #{end}
 	</select>
 
     <update id="updateStateByid"  >

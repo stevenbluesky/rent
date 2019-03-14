@@ -35,7 +35,7 @@
       This element was generated on Mon Apr 24 14:56:49 CST 2017.
     -->
     ID, ACCNT, INUMBER, ORGID, PRTNO, PAYCODE, REF, CREDIT, REF1, REF2, LOGID, LOGSHIFT, 
-    LOGNAME, LOGDATE, "sysdate", ROOMNO, OROOMNO, CREDIT1, TAG, LOGUPDATE
+    LOGNAME, LOGDATE, `sysdate`, ROOMNO, OROOMNO, CREDIT1, TAG, LOGUPDATE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     <!--
@@ -67,7 +67,7 @@
       ORGID, PRTNO, PAYCODE, 
       REF, CREDIT, REF1, 
       REF2, LOGID, LOGSHIFT, 
-      LOGNAME, LOGDATE, "sysdate", 
+      LOGNAME, LOGDATE, `sysdate`,
       ROOMNO, OROOMNO, CREDIT1, 
       TAG, LOGUPDATE)
     values (#{id,jdbcType=DECIMAL}, #{accnt,jdbcType=VARCHAR}, #{inumber,jdbcType=DECIMAL}, 
@@ -129,7 +129,7 @@
         LOGDATE,
       </if>
       <if test="sysdate != null" >
-        "sysdate",
+        `sysdate`,
       </if>
       <if test="roomno != null" >
         ROOMNO,
@@ -258,7 +258,7 @@
         LOGDATE = #{logdate,jdbcType=DATE},
       </if>
       <if test="sysdate != null" >
-        "sysdate" = #{sysdate,jdbcType=DATE},
+        `sysdate` = #{sysdate,jdbcType=DATE},
       </if>
       <if test="roomno != null" >
         ROOMNO = #{roomno,jdbcType=VARCHAR},
@@ -298,7 +298,7 @@
       LOGSHIFT = #{logshift,jdbcType=VARCHAR},
       LOGNAME = #{logname,jdbcType=VARCHAR},
       LOGDATE = #{logdate,jdbcType=DATE},
-      "sysdate" = #{sysdate,jdbcType=DATE},
+      `sysdate` = #{sysdate,jdbcType=DATE},
       ROOMNO = #{roomno,jdbcType=VARCHAR},
       OROOMNO = #{oroomno,jdbcType=VARCHAR},
       CREDIT1 = #{credit1,jdbcType=DECIMAL},
@@ -311,7 +311,7 @@
 			select max(id) from PRH_PAYMENT
 	</select>
 	<select id ="findByAccntId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-		select * from Prh_Payment where prtno in (select id from Prh_Rental where accnt =#{accntId} and sta ='T')
+		select * from PRH_PAYMENT where prtno in (select id from PRH_RENTAL where accnt =#{accntId} and sta ='T')
 		
 		and logshift is null and ref2 is null
 		 
@@ -320,11 +320,11 @@
 		
 	</select>
 	<select id ="findByPrtNo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-			select * from Prh_Payment where prtno =#{id}  and logshift is null and ref2 is null
+			select * from PRH_PAYMENT where prtno =#{id}  and logshift is null and ref2 is null
 	</select>
 
 	<select id ="findByMasterIdAndHistory" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-		select * from Prh_Payment where prtno in (select id from Prh_Rental where accnt =#{accntId} and sta ='T')
+		select * from PRH_PAYMENT where prtno in (select id from PRH_RENTAL where accnt =#{accntId} and sta ='T')
 		
 		and logshift is null and ref2 is null
 		

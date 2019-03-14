@@ -25,7 +25,7 @@ import com.rent.services.PrHouseService;
 import com.rent.services.PrhLinkManService;
 import com.rent.services.PrhMasterService;
 import com.rent.services.RoomTypeService;
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class PrHouseServiceImpl implements PrHouseService{
 	@Autowired
@@ -153,17 +153,19 @@ public class PrHouseServiceImpl implements PrHouseService{
 		}
 		
 	}
-	//閿熸枻鎷烽敓鏂ゆ嫹
 	public int addPrHouse(PrHouse prHouse) {
 		Integer currId = prHouseMapper.getCurrId();
+		if(currId==null){
+			currId=1;
+		}else{
+			currId +=1;
+		}
 		String houseCode = getHouseCode(currId);
 		prHouse.setHouseCode(houseCode);
 		prHouse.setId(currId);
 		return prHouseMapper.insert(prHouse);
 	}
-	//閿熺潾闈╂嫹
-	
-	@Transactional(readOnly=false)
+
 	public int updatePrHouse(PrHouse prHouse) {
 		PrHouse findByNo = prHouseMapper.selectByPrimaryKey(prHouse.getId());
 		prHouse.setId(findByNo.getId());
@@ -185,7 +187,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 		
 		return prHouseMapper.updateByPrimaryKey(prHouse);
 	}
-	//閫氶敓鏂ゆ嫹id閿熸枻鎷烽敓鏂ゆ嫹
 	public PrHouse findById(Integer id) {
 		PrHouse prHouse = prHouseMapper.selectByPrimaryKey(id);
 		setGuideProperty(prHouse);
@@ -196,7 +197,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 		return prHouseMapper.deleteByPrimaryKey(id);
 		
 	}
-	//閿熸枻鎷烽敓鏂ゆ嫹鍒犻敓鏂ゆ嫹
 	public int delPrHouse(Integer[] ids) {
 		int result=0;
 		if (ids.length!=0) {
@@ -211,27 +211,22 @@ public class PrHouseServiceImpl implements PrHouseService{
 		
 	}
 	
-	//閿熸枻鎷疯閿熸枻鎷蜂笟閿熷彨鎲嬫嫹
 	public List<Estate> getAllEstate() {
 		return estateService.findAll();
 	}
-	//閿熸枻鎷疯妤奸敓鏂ゆ嫹閿熷彨鎲嬫嫹	
 	public List<BuildingNo> getAllBuildingNo(int estateId){
 		return buildingNoService.findByEstate(estateId);
 	}
-	//閿熸枻鎷疯妤奸敓鏂ゆ嫹閿熷彨鎲嬫嫹
 	public List<BuildingFloor> getAllBuildingFloor(){
 		return buildingFloorService.findAll();
 	}
-	//閿熸枻鎷疯閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹閿熷彨鎲嬫嫹
 	public List<RoomType> getAllRoomType(){
 		return roomTypeService.findAll();
 	}
-	//閿熸枻鎷烽〉
 	public List<PrHouse> findByEstatePaged(Integer estateId, Integer currage,
 			Integer size) {
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		List<PrHouse> prHouses = prHouseMapper.findByEstatePaged(estateId, begin, end);
 		setGuideProperty(prHouses);
 		return prHouses;
@@ -305,7 +300,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 		return prHouses;
 	}
 
-	//閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹
 	public int addAuto(List<PrHouse> prHouses) {
 		int result=0;
 		for (PrHouse prHouse : prHouses) {
@@ -354,7 +348,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 	}
 	
 	
-	//閿熸枻鎷烽敓鎹锋唻鎷锋尓閿熺獤锟�
 	public PrHouse findByNo(String no) {
 		return prHouseMapper.findByNo(no);
 	}
@@ -373,7 +366,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 		return prHouseMapper.findRoomInfoById(houseid);
 	}
 
-	//閺嶈宓侀弶鈥叉閺屻儴顕�
 	@Override
 	public List<PrHouse> findByCondition(HouseCondition condition) {
 		 List<PrHouse> houses = prHouseMapper.findByCondition(condition);
@@ -386,8 +378,8 @@ public class PrHouseServiceImpl implements PrHouseService{
 	@Override
 	public List<PrHouse> findByConditionPaged(HouseFileContion condition,Integer currage,Integer size) {
 		
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrHouse> prHouses = prHouseMapper.findByConditionPaged(condition);
@@ -430,8 +422,8 @@ public class PrHouseServiceImpl implements PrHouseService{
 
 	@Override
 	public List<PrHouse> findByFileConditionAndPaged(HouseFileContion condition, Integer currage, Integer size) {
-		Integer begin=(currage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrHouse> houses = prHouseMapper.findByFileConditionAndPaged(condition);
@@ -511,20 +503,18 @@ public class PrHouseServiceImpl implements PrHouseService{
 
 	@Override
 	public Integer findCountByFileCondition(HouseFileContion condition) {
-		// TODO Auto-generated method stub
 		return prHouseMapper.findCountByFileCondition(condition);
 	}
 
 	@Override
 	public List<PrHouse> findByFileCondition2(HouseFileContion condition) {
-		// TODO Auto-generated method stub
 		 return prHouseMapper.findByFileCondition2(condition);
 	}
 
 	@Override
 	public List<PrHouse> findByFileCondition2Paged(HouseFileContion condition, Integer currpage, Integer size) {
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<PrHouse> houses = prHouseMapper.findByFileConditionAndPaged2(condition);
@@ -532,8 +522,6 @@ public class PrHouseServiceImpl implements PrHouseService{
 		return houses;
 	}
 
-	
-	
 	
 	@Override
 	public void test() {
@@ -553,8 +541,5 @@ public class PrHouseServiceImpl implements PrHouseService{
 	public List<PrHouse> findByBuildingNo(String buildingNoId) {
 		return prHouseMapper.findByBuildingNo(buildingNoId);
 	}
-
-
-
 
 }

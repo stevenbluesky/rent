@@ -27,7 +27,7 @@ import com.rent.services.EstateService;
 import com.rent.services.RoomTypeService;
 import com.rent.services.SubsidyService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubsidyServiceImpl implements SubsidyService{
 	@Autowired
 	private EstateMapper estateMapper;
@@ -188,8 +188,8 @@ public class SubsidyServiceImpl implements SubsidyService{
 	}
 
 	public List<Subsidy> findByEstatePaged(Integer estateId, Integer currpage, Integer size) {
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 
 		List<Subsidy> subsidies =null;
 		if (estateId!=null) {
@@ -219,6 +219,8 @@ public class SubsidyServiceImpl implements SubsidyService{
 	public int updateSubsidyPercent(SubsidyPercent subsidyPercent) {
 		return subsidyPercentMapper.insert(subsidyPercent);
 	}
+
+	@Override
 	public Integer getCurrId() {
 		return subsidyMapper.getCurrId();
 	}

@@ -96,13 +96,7 @@
     where ID = #{id,jdbcType=DECIMAL}
   </update>
    <select id="findAllPaged" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-			SELECT * FROM
-		  (
-		SELECT A.*, ROWNUM RN
-		FROM (
-		    SELECT * FROM repaire_reason order by id
-		 ) A
-		) WHERE RN BETWEEN #{0} AND #{1}
+        SELECT * FROM REPAIRE_REASON order by id	limit #{0} , #{1}
 	</select>
   
   
@@ -110,7 +104,7 @@
    <select id="getTotalCount" resultType="java.lang.Integer" >
     select 
     	count(*)
-    from repaire_reason
+    from REPAIRE_REASON
   </select>
   
 </mapper>

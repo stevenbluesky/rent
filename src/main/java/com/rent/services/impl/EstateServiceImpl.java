@@ -16,7 +16,7 @@ import com.rent.entity.EstateType;
 import com.rent.services.EstateService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class EstateServiceImpl implements EstateService {
 
 	@Autowired
@@ -67,7 +67,7 @@ public class EstateServiceImpl implements EstateService {
 	}
 
 	// 新增
-	public int addEstate(Estate estate) {
+	public int insertEstate(Estate estate) {
 		Estate e = this.findById(estate.getId());
 		if (e != null) {
 			return -1;

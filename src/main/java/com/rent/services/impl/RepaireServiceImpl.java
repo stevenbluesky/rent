@@ -10,7 +10,7 @@ import com.rent.modules.sys.dao.RepaireDao;
 import com.rent.modules.sys.entity.Repaire;
 import com.rent.services.RepaireService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RepaireServiceImpl implements RepaireService{
 	@Autowired
 	private RepaireDao repaireDao;

@@ -41,14 +41,16 @@
     select
     <include refid="Base_Column_List" />
     from DOORLOCKUSER
-    where DEVICEID = #{associatedlock,jdbcType=VARCHAR} and VALIDTHROUGH >=sysdate
+    where DEVICEID = #{associatedlock,jdbcType=VARCHAR} and VALIDTHROUGH >=now()
   </select>
+
   <select id="findAvailableAllByMasterid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from DOORLOCKUSER
-    where MASTERID = #{id,jdbcType=VARCHAR} and VALIDTHROUGH >=sysdate
+    where MASTERID = #{id,jdbcType=VARCHAR} and VALIDTHROUGH >=now()
   </select>
+
   <select id="selectByReceipt" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -71,9 +73,9 @@
   </select>
 
   <insert id="insert" parameterType="com.rent.entity.DoorlockUser">
-    insert into DOORLOCKUSER (DOORLOCKUSERID,USERTYPE,USERCODE,USERNAME,PHONENUMBER,PASSWORD,VALIDFROM,VALIDTHROUGH,
+    insert into DOORLOCKUSER (USERTYPE,USERCODE,USERNAME,PHONENUMBER,PASSWORD,VALIDFROM,VALIDTHROUGH,
      CREATETIME,WEEKDAY,STARTTIME,ENDTIME,HOUSEID,MASTERID,DEVICEID,STATUS,SYNSTATUS,RECEIPT,GUESTNO)
-    values (seq_doorlockuser.nextval,
+    values (
       #{usertype,jdbcType=DECIMAL},
       #{usercode,jdbcType=DECIMAL},
       #{username,jdbcType=VARCHAR},

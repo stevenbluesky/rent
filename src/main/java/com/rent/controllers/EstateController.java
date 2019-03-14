@@ -2,12 +2,11 @@ package com.rent.controllers;
 
 import java.util.List;
 
+import com.rent.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import com.rent.entity.Estate;
 import com.rent.entity.EstateType;
@@ -27,6 +26,8 @@ public class EstateController {
 	public void setEstateService(EstateService estateService) {
 		this.estateService = estateService;
 	}
+	@Autowired
+	private CardService cardService;
 	//ת��������ҵҳ��
 	@RequestMapping("toAddEstate.do")
 	public String toAddEstate(ModelMap map) {
@@ -47,9 +48,8 @@ public class EstateController {
 	//����
 	@RequestMapping("addEstate.do")
 	public String addEstate(Estate estate, ModelMap map){
-		System.out.println(estate.getName());
 		if (estateService.findByName(estate.getName())==null) {
-			int result = estateService.addEstate(estate);
+			int result = estateService.insertEstate(estate);
 			 if (result==-1) {
 				return "prhCode/estate/estateAdd.jsp";
 			}	

@@ -101,6 +101,12 @@ background-image: url(${ctxStatic}/images/expt.jpg);
 	padding-left: 22px;
 }
 
+.nav>li>a:hover{
+	color:#fff;
+	text-decoration:none;
+	background-color: #1684c2;
+}
+
 .menu-li a:hover {
 	background-color: #ff0000;
 }

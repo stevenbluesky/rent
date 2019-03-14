@@ -30,8 +30,8 @@
 			var printSubmitReport = document.querySelector("#printSubmitReport");
 			var printAcceptReport = document.querySelector("#printAcceptReport");
 			if(event.checked) {
-				printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=rent&type=approve";
-				printAcceptReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=rent&type=accept";
+				printSubmitReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=审批表&type=approve";
+				printAcceptReport.href = "${ctx}/exportDoc/export?id="+event.value+"&name=验收单&type=accept";
 			}else{
 				printSubmitReport.href = "javascript:void(0)";
 				printAcceptReport.href = "javascript:void(0)";
@@ -346,10 +346,10 @@
 			 
 			  <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 			 
-					<a href="javascript:void(0)" id="printSubmitReport" class="btn" style="margin-right:10px;" value="打印交办单">打印交办单</a>
+					<a href="javascript:void(0)" id="printSubmitReport" class="btn" style="margin-right:10px;" value="打印审批表">打印审批表</a>
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==58}">
 						
-					<a href="javascript:void(0)" id="printSubmitReport" class="btn" style="margin-right:10px;" value="打印交办单">打印交办单</a>
+					<a href="javascript:void(0)" id="printSubmitReport" class="btn" style="margin-right:10px;" value="打印审批表">打印审批表</a>
 			 </c:if></c:forEach></c:if></c:forEach>
 			 
 			 
@@ -365,10 +365,10 @@
 			 
 			  <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 			 
-					<a href="javascript:void(0)" id="printAcceptReport" class="btn" style="margin-right:10px;" value="打印验收单">打印单据</a>
+					<a href="javascript:void(0)" id="printAcceptReport" class="btn" style="margin-right:10px;" value="打印验收单">打印验收单</a>
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==60}">
 						
-					<a href="javascript:void(0)" id="printAcceptReport" class="btn" style="margin-right:10px;" value="打印验收单">打印单据</a>
+					<a href="javascript:void(0)" id="printAcceptReport" class="btn" style="margin-right:10px;" value="打印验收单">打印验收单</a>
 			 </c:if></c:forEach></c:if></c:forEach>
 	</div>
 	

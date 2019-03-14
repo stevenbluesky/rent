@@ -12,7 +12,7 @@ import com.rent.dao.RentPayWayMapper;
 
 import com.rent.entity.RentPayWay;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RentPayWayServiceImpl implements RentPayWayService{
 	@Autowired
 	private RentPayWayMapper rentPayWayMapper;
@@ -71,22 +71,15 @@ public class RentPayWayServiceImpl implements RentPayWayService{
 		return rentPayWayMapper.selectByPrimaryKey(id);
 	}
 	
-	/**
-	 * 锟斤拷页锟斤拷询全锟斤拷
-	 * @param 锟斤拷前页
-	 * @param 页锟斤拷小
-	 * @return 锟斤拷锟斤拷锟斤拷锟酵硷拷锟斤拷
-	 */
+
 	public List<RentPayWay> findAllPaged(Integer currpage,Integer size){
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return rentPayWayMapper.findAllPaged(begin, end);
 	}
 	
-	/**
-	 * 锟斤拷询锟斤拷锟斤拷
-	 * @return 锟斤拷锟斤拷
-	 */
+
+	@Override
 	public Integer getTotalCount(){
 		return rentPayWayMapper.getTotalCount();
 	}

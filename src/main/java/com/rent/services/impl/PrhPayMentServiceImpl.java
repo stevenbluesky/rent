@@ -14,7 +14,7 @@ import com.rent.entity.PrhRental;
 import com.rent.services.PrhPayMentService;
 import com.rent.services.RenterService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PrhPayMentServiceImpl implements PrhPayMentService {
 
 	@Autowired
@@ -69,13 +69,11 @@ public class PrhPayMentServiceImpl implements PrhPayMentService {
 	@Override
 	public List<PrhPayment> findByAccntId(Integer accntId) {
 		 List<PrhPayment>  PrhPayments = prhPaymentMapper.findByAccntId(accntId);
-		 System.out.println("???unknown???"+PrhPayments.size());
 		this.setGuideProperty(PrhPayments);
 		return PrhPayments;
 	}
 	@Override
 	public List<PrhPayment> findByMasterIdAndHistory(Integer id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

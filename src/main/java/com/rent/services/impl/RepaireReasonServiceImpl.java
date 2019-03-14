@@ -13,7 +13,7 @@ import com.rent.dao.RepaireReasonMapper;
 import com.rent.entity.RepaireReason;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RepaireReasonServiceImpl implements RepaireReasonService{
 	@Autowired
 	private RepaireReasonMapper repaireReasonMapper;
@@ -80,8 +80,8 @@ public class RepaireReasonServiceImpl implements RepaireReasonService{
 	 * @return 房屋类型集合
 	 */
 	public List<RepaireReason> findAllPaged(Integer currpage,Integer size){
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return repaireReasonMapper.findAllPaged(begin, end);
 	}
 

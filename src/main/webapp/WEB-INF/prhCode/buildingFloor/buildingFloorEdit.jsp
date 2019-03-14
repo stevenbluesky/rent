@@ -37,6 +37,7 @@
 
 <body>
 	<form action="editBuildingFloor.do" method="post">
+		<input type="hidden" name="id" value="${buildingFloor.id}"/>
 		<table id="contentTable" class="table table-striped table-bordered table-condensed addFloor"  border="1" bordercolor="#a0c6e5" >
 			<tr style="background-color: #008080;color: black;font-weight: bold;">
 				<td colspan="2">修改楼层信息</td>

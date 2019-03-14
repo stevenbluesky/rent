@@ -20,6 +20,10 @@
 	<listener>
 		<listener-class>com.rent.listener.SysListener</listener-class>
 	</listener>
+	<!-- 在Spring框架中是如何解决从页面传来的字符串的编码问题的呢？
+    下面我们来看看Spring框架给我们提供过滤器CharacterEncodingFilter
+     这个过滤器就是针对于每次浏览器请求进行过滤的，然后再其之上添加了父类没有的功能即处理字符编码。
+      其中encoding用来设置编码格式，forceEncoding用来设置是否理会 request.getCharacterEncoding()方法，设置为true则强制覆盖之前的编码格式。-->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -36,38 +40,6 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	<!-- Apache Shiro -->
-	<!-- <filter>
-		<filter-name>shiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>shiroFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>  -->
-
-	<!-- PageCache, cache .html suffix.
-	<filter>
-		<filter-name>PageCacheFilter</filter-name>
-		<filter-class>com.thinkgem.jeesite.common.filter.PageCachingFilter</filter-class>
-		<init-param>
-			<param-name>cacheName</param-name>
-			<param-value>pageCachingFilter</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>PageCacheFilter</filter-name>
-		<url-pattern>/</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>PageCacheFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>-->
 
 	<!-- SiteMesh -->
 	<filter>
@@ -98,16 +70,6 @@
 		<url-pattern>/</url-pattern>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
-
-	<!-- Activiti diagram-view callback filter
-	<filter>
-		<filter-name>JSONPFilter</filter-name>
-		<filter-class>com.thinkgem.jeesite.modules.act.rest.servlet.JsonpCallbackFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>JSONPFilter</filter-name>
-		<url-pattern>/act/service/*</url-pattern>
-	</filter-mapping> -->
 
 	<!-- DruidStatView -->
 	<servlet>
@@ -161,10 +123,6 @@
 		<filter-name>FileUploadFilter</filter-name>
 		<url-pattern>/static/ckfinder/core/connector/java/connector.java</url-pattern>
 	</filter-mapping>
-
-
-	
-	
 	
 	<welcome-file-list>
 		<welcome-file>/rent/toLogin</welcome-file>

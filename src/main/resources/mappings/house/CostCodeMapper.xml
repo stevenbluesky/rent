@@ -98,13 +98,7 @@
   
   	<!--分页查询  -->
   <select id="findAllPaged" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-			SELECT * FROM
-		  (
-		SELECT A.*, ROWNUM RN
-		FROM (
-		    SELECT * FROM cost_code order by id
-		 ) A
-		) WHERE RN BETWEEN #{0} AND #{1}
+	  SELECT * FROM COST_CODE order by id limit #{0} , #{1}
 	</select>
   
   
@@ -112,7 +106,7 @@
    <select id="getTotalCount" resultType="java.lang.Integer" >
     select 
     	count(*)
-    from cost_code
+    from COST_CODE
   </select>
   
   

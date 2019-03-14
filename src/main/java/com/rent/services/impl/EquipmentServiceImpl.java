@@ -14,7 +14,7 @@ import com.rent.dao.EquipmentMapper;
 import com.rent.entity.Building;
 import com.rent.entity.Equipment;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class EquipmentServiceImpl implements EquipmentService{
 	@Autowired
 	private EquipmentMapper equipmentMapper;
@@ -75,10 +75,10 @@ public class EquipmentServiceImpl implements EquipmentService{
 	@Override
 	public List<Equipment> findAllPaged(Integer currpage, Integer size) {
 
-		int begin = (currpage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currpage - 1) * size ;
+		int end = begin + size ;
 		List<Equipment> Equipment = equipmentMapper.findAllPaged(
-				(currpage - 1) * size + 1, end);
+				(currpage - 1) * size , end);
 
 		return Equipment;
 	}

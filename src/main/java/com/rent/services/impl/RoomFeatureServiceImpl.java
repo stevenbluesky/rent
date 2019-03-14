@@ -11,7 +11,7 @@ import com.rent.dao.RoomFeatureMapper;
 import com.rent.entity.RoomFeature;
 import com.rent.services.RoomFeatureService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RoomFeatureServiceImpl implements RoomFeatureService{
 
 	@Autowired
@@ -72,8 +72,8 @@ public class RoomFeatureServiceImpl implements RoomFeatureService{
 	 */
 	public List<RoomFeature> findAllPaged(Integer currpage, Integer size) {
 
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return roomFeatureMapper.findAllPaged(begin, end);
 	}
 

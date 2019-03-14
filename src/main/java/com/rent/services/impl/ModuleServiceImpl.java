@@ -10,7 +10,7 @@ import com.rent.dao.ModuleMapper;
 import com.rent.entity.Module;
 import com.rent.services.ModuleService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ModuleServiceImpl implements ModuleService{
 
 	@Autowired

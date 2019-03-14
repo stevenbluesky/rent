@@ -12,7 +12,7 @@ import com.rent.entity.SubsidyType;
 import com.rent.entity.SubsidyWithType;
 import com.rent.services.SubsidyWithTypeService;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubsidyWithTypeServiceImpl implements SubsidyWithTypeService{
 
 	@Autowired

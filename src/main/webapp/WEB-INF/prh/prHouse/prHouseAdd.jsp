@@ -85,7 +85,7 @@
 	        },
 	        error: function(data) {
 	        	$(".addBtn").removeAttr("disabled");
-	            $.jBox.tip("信息填写不正确！");
+	            $.jBox.tip("操作失败！");
 	         }
    	 });
 }

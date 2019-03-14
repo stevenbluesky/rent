@@ -1,53 +1,39 @@
 package com.rent.controllers;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.rent.common.utils.NumPageUtil;
+import com.rent.entity.Equipment;
+import com.rent.services.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.rent.entity.Electric;
-import com.rent.entity.Equipment;
-import com.rent.entity.RepaireReason;
-
-import com.rent.services.EquipmentService;
-import com.rent.common.utils.NumPageUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller("equipmentController")
 public class EquipmentController {
-	@Autowired
+
 	private EquipmentService equipmentService;
 
-	public EquipmentService getEquipmentService() {
-		return equipmentService;
-	}
-
+	@Autowired
 	public void setEquipmentService(EquipmentService equipmentService) {
 		this.equipmentService = equipmentService;
 	}
 
-	// ��ҳ��ѯ
 	@RequestMapping("findAllEquipmentPaged.do")
 	public String findAllEquipmentPaged(Integer currpage, ModelMap map,
 			HttpSession session, HttpServletRequest request) {
-		// ����ǰҳ
 		if (currpage == null || currpage <= 0) {
 			currpage = 1;
 		}
-		Integer size = 10; // ҳ��С
+		Integer size = 10;
 
-		// ��ҳ��ѯ
 		List<Equipment> roomTypes = equipmentService.findAllPaged(currpage,
 				size);
 
-		// ��ѯ����
 		int total = equipmentService.getTotalCount();
 		
-		// ��ҳ������
 		NumPageUtil page = new NumPageUtil("findAllEquipmentPaged.do",
 				total, currpage, size);
 
@@ -55,7 +41,6 @@ public class EquipmentController {
 		String numpage = page.showNumPage();
 		currpage = page.getCurrpage();
 
-		// ��������
 		page.setList(roomTypes);
 		session.setAttribute("currpage", currpage);
 		request.setAttribute("numpage", numpage);

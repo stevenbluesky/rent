@@ -11,7 +11,7 @@
 <select id="get" resultType="Tenement">
 	SELECT
 			<include refid="tenColumns"/>
-	FROM tenement a
+	FROM TENEMENT a
 	WHERE 1=1
 	and id = #{id}
 </select>
@@ -19,14 +19,14 @@
 <select id="findList" resultType="Tenement">
 		SELECT
 			<include refid="tenColumns"/>
-		FROM tenement a
+		FROM TENEMENT a
 		WHERE 1=1
 </select>
 
 <select id="listAll" resultType="Tenement">
 		SELECT
 			<include refid="tenColumns"/>
-		FROM tenement a
+		FROM TENEMENT a
 		WHERE 1=1
 </select>
 

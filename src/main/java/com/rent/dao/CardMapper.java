@@ -63,7 +63,7 @@ public interface CardMapper {
      * @param state
      * @return
      */
-    List<Card> findByMasterAndLink(@Param("masterId") Integer masterId,@Param("linkId")Integer linkId,@Param("type")Integer type,@Param("state")Integer state);
+    List<Card> findByMasterAndLink(@Param("masterId") Integer masterId, @Param("linkId") Integer linkId, @Param("type") Integer type, @Param("state") Integer state);
     
     Integer getNextId();
     

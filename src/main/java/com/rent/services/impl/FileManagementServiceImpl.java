@@ -14,7 +14,7 @@ import com.rent.entity.Profile;
 import com.rent.services.FileManagementService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class FileManagementServiceImpl  implements FileManagementService{
 	@Autowired
 	private ProfileMapper profileMapper;
@@ -98,8 +98,8 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	//分页查询
 	public List<Profile> findProfileByConditionAndPage(String cla, String sta, String name, Integer currage,
 													   Integer size) {
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currage - 1) * size;
+		int end = begin + size ;
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage(cla, sta, name, begin, end);
 		System.out.println(cla);
 		return profile;
@@ -116,8 +116,8 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	}
 	@Override
 	public List<Profile> findProfileByConditionAndPage1(FileCondition condition, Integer currage, Integer size) {
-		int begin = (currage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currage - 1) * size ;
+		int end = begin + size ;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage1(condition);
@@ -145,8 +145,8 @@ public class FileManagementServiceImpl  implements FileManagementService{
 	}
 	@Override
 	public List<Profile> findProfileByConditionAndPage2(FileCondition condition, Integer currpage, Integer size) {
-		int begin = (currpage - 1) * size + 1;
-		int end = begin + size - 1;
+		int begin = (currpage - 1) * size ;
+		int end = begin + size ;
 		condition.setBegin(begin);
 		condition.setEnd(end);
 		List<Profile> profile = profileMapper.findProfileByConditionAndPage2(condition);

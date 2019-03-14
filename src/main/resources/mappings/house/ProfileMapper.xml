@@ -1236,11 +1236,11 @@
 	<select id="findProfileByCondition1" resultType="com.rent.entity.Profile" >
 		
 		 select <include refid="Base_Column_List"/>
-		  from profile where sta!='A'
+		  from PROFILE where sta!='A'
 		   and (sta !='N'  or sta  is null)
 		 and guestno  in 
-		 (select guestno from prh_master where house_id in 
-		 (select id from pr_house where estate_id=#{sta} ))
+		 (select guestno from PRH_MASTER where house_id in
+		 (select id from PR_HOUSE where estate_id=#{sta} ))
 		 <if test="cla != null">
 			<if test="cla!=''">
          	 	and CLASS= #{cla,jdbcType=CHAR}	
@@ -1263,11 +1263,11 @@
 	<select id="findCompanyPaged" resultType="com.rent.entity.Profile" >
 		
 		 select <include refid="Base_Column_List"/>
-		  from profile where sta!='A'
+		  from PROFILE where sta!='A'
 		   and (sta !='N'  or sta  is null)
 		 and guestno  in 
-		 (select guestno from prh_master where house_id in 
-		 (select id from pr_house where estate_id=#{sta} ))
+		 (select guestno from PRH_MASTER where house_id in
+		 (select id from PR_HOUSE where estate_id=#{sta} ))
 		 <if test="cla != null">
 			<if test="cla!=''">
          	 	and CLASS= #{cla,jdbcType=CHAR}	
@@ -1297,7 +1297,7 @@
 	<select id="findProfileByCondition2" resultType="com.rent.entity.Profile" >
 		
 		 select <include refid="Base_Column_List"/>
-		  from profile where sta!='A'
+		  from PROFILE where sta!='A'
 		   and (sta !='N'  or sta  is null)
 		
 		 <if test="cla != null">
@@ -1319,11 +1319,7 @@
 	</select>
 	<!-- 多条件分页查询 --> 
 	<select id="findProfileByConditionAndPage" resultType="com.rent.entity.Profile" >
-	
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
+
 		 SELECT
 			<include refid="Base_Column_List"/>
 			FROM PROFILE A where sta!='A'
@@ -1347,24 +1343,19 @@
          		 and name LIKE concat(concat('%',#{name,jdbcType=VARCHAR}),'%')	
           	</if>
           </if>
-		) A
-		) WHERE RN BETWEEN #{begin} AND #{end}
+		limit #{begin} , #{end}
 	
 		  
           
 	</select>
 	<select id="findProfileByConditionAndPage1" resultType="com.rent.entity.Profile" >
-	
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
+
 		 select <include refid="Base_Column_List"/>
-		  from profile where sta!='A'
+		  from PROFILE where sta!='A'
 		   and (sta !='N'  or sta  is null)
 		 and guestno  in 
-		 (select guestno from prh_master where house_id in 
-		 (select id from pr_house where estate_id=#{sta} ))
+		 (select guestno from PRH_MASTER where house_id in
+		 (select id from PR_HOUSE where estate_id=#{sta} ))
 		 <if test="cla != null">
 			<if test="cla!=''">
          	 	and CLASS= #{cla,jdbcType=CHAR}	
@@ -1383,20 +1374,15 @@
 		 	</if>
 		 </if>
 	
-		) A
-		) WHERE RN BETWEEN #{begin} AND #{end}
+		limit #{begin} , #{end}
 	
 		  
           
 	</select>
 	<select id="findProfileByConditionAndPage2" resultType="com.rent.entity.Profile" >
-	
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
+
 		 select <include refid="Base_Column_List"/>
-		  from profile where sta!='A'
+		  from PROFILE where sta!='A'
 			 and (sta !='N'  or sta  is null)
 		 <if test="cla != null">
 			<if test="cla!=''">
@@ -1416,8 +1402,7 @@
 		 	</if>
 		 </if>
 	
-		) A
-		) WHERE RN BETWEEN #{begin} AND #{end}
+		limit #{begin} , #{end}
 	
 		  
           
@@ -1460,27 +1445,23 @@
   </select>
   <select id="findNameByHouseId" resultType="java.lang.String" parameterType="java.lang.Integer">
   
-  	select p.name from profile p where p.guestno in (
-  	select guest_no from prh_master 
+  	select p.name from PROFILE p where p.guestno in (
+  	select guest_no from PRH_MASTER
   	where house_id =#{houseid} and sta !=4 and sta !=9 and sta!=3)
   </select>
  
  <!-- 通过物业查询单位  （分页）-->
   <select id="findCompanyByEstatePaged" resultMap="BaseResultMap" >
-		SELECT * FROM
-		(
-		SELECT A.*, ROWNUM RN
-		FROM (
-			select * from profile where class='C' and sta='I'  
+
+			select * from PROFILE where class='C' and sta='I'
 			and estate_id=#{estateId}
 			<if test="company!=null">
 				and company =#{company}
 			</if> 
-		) A
-		) WHERE RN BETWEEN #{begin} AND #{end}
+		limit #{begin} , #{end}
 	</select>
    
     <select id="findCompanyByEstateCount" resultType="java.lang.Integer" >
-		select count(*) from profile where class='C' and sta='I'  and estate_id=#{estateId} 
+		select count(*) from PROFILE where class='C' and sta='I'  and estate_id=#{estateId}
 	</select>
 </mapper>

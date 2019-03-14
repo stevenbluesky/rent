@@ -12,7 +12,7 @@ import com.rent.dao.ElectricMapper;
 
 import com.rent.entity.Electric;
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ElectricServiceImpl implements ElectricService{
 
 	@Autowired
@@ -80,8 +80,8 @@ public class ElectricServiceImpl implements ElectricService{
 	 * @return 房屋类型集合
 	 */
 	public List<Electric> findAllPaged(Integer currpage,Integer size){
-		Integer begin=(currpage-1)*size+1;
-		Integer end=begin+size-1;
+		Integer begin=(currpage-1)*size;
+		Integer end=begin+size;
 		return electricMapper.findAllPaged(begin, end);
 	}
 

@@ -21,7 +21,7 @@ import com.rent.services.RoleService;
 import com.rent.services.UserService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
 	@Autowired

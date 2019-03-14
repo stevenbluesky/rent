@@ -20,24 +20,24 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from prh_temp_live_man
+    from PRH_TEMP_LIVE_MAN
     where id = #{id,jdbcType=INTEGER}
   </select>
   
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from prh_temp_live_man
+    delete from PRH_TEMP_LIVE_MAN
     where id = #{id,jdbcType=INTEGER}
   </delete>
   
   <insert id="insert" parameterType="com.rent.entity.PrhTempLiveMan" >
-    insert into prh_temp_live_man (id, master_id, guestno, 
+    insert into PRH_TEMP_LIVE_MAN (master_id, guestno,
       bdate, edate, del,iden_Pwd)
-    values (seq_prh_temp_live_man.nextval, #{masterId,jdbcType=INTEGER}, #{guestno,jdbcType=VARCHAR}, 
+    values (#{masterId,jdbcType=INTEGER}, #{guestno,jdbcType=VARCHAR},
       #{bdate,jdbcType=DATE}, #{edate,jdbcType=DATE}, #{del,jdbcType=INTEGER},#{idenPwd})
   </insert>
   <insert id="insertSelective" parameterType="com.rent.entity.PrhTempLiveMan" >
-    insert into prh_temp_live_man
+    insert into PRH_TEMP_LIVE_MAN
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -80,7 +80,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.rent.entity.PrhTempLiveMan" >
-    update prh_temp_live_man
+    update PRH_TEMP_LIVE_MAN
     <set >
       <if test="masterId != null" >
         master_id = #{masterId,jdbcType=INTEGER},
@@ -101,7 +101,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.rent.entity.PrhTempLiveMan" >
-    update prh_temp_live_man
+    update PRH_TEMP_LIVE_MAN
     set master_id = #{masterId,jdbcType=INTEGER},
       guestno = #{guestno,jdbcType=VARCHAR},
       bdate = #{bdate,jdbcType=DATE},
@@ -114,7 +114,7 @@
   <select id="findByMaster" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from prh_temp_live_man
+    from PRH_TEMP_LIVE_MAN
     where master_id = #{masterId,jdbcType=INTEGER}
   </select>
   
