@@ -327,7 +327,7 @@ public class BuildingController {
 			String houzui = fileName.substring(z + 1);
 			// 新文件名
 
-			String str = new Date().getTime() + "" + new Random().nextInt();
+			String str = System.currentTimeMillis() + "" + new Random().nextInt();
 			String newfilename = "map" + str + "." + houzui;
 			estate.setMapPic(newfilename);
 			String path = request.getSession().getServletContext().getRealPath("static/image/building");

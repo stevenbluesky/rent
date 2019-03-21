@@ -81,4 +81,5 @@
       number = #{number,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
 </mapper>

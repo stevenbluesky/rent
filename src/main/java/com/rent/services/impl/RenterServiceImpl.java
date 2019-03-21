@@ -380,7 +380,7 @@ public class RenterServiceImpl implements RenterService {
 						flag = flag + 1;
 						count = count + 1;
 					}
-				} else {// 闄や簡绗竴涓湀鐨� 鎵�鏈変氦閽辫处鍗曢兘鍦ㄨ繖鍒ゆ柇 淇敼
+				} else {
 
 					// 濡傛灉鎴垮瓙鏄瑺璐规敼鎴愪箣鍓嶇殑鐘舵��
 					if (houses.getState() == 3 && houses.getCheapPrice() != null) {

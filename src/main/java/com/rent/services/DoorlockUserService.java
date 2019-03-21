@@ -22,4 +22,8 @@ public interface DoorlockUserService {
     List<DoorlockUser> findAllByGuestno(String guestNo);
 
 	List<DoorlockUser> findAvailableAllByMasterid(Integer id);
+
+	List<DoorlockUser> findAllByGuestNo(String guestno);
+
+	List<DoorlockUser> findInUseByMasterid(Integer masterId);
 }

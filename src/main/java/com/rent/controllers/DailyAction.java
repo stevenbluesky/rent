@@ -1,57 +1,29 @@
 package com.rent.controllers;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rent.common.config.Global;
 import com.rent.common.utils.RestfulUtil;
 import com.rent.entity.DoorlockUser;
-import com.rent.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.rent.condition.HouseFileContion;
-import com.rent.entity.PrHouse;
 import com.rent.entity.PrhMaster;
 import com.rent.entity.PrhRental;
+import com.rent.services.DoorlockUserService;
+import com.rent.services.PrHouseService;
+import com.rent.services.PrhMasterService;
+import com.rent.services.RenterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 //@Service
 //@Lazy(false)
 public class DailyAction {
 
 	@Autowired
-	private FileManagementService fileManagementService;
-	@Autowired
 	private PrHouseService prHouseService;
-	@Autowired
-	private BuildingService buildingService;
-	@Autowired
-	private BuildingNoService buildingNoService;
-	@Autowired
-	private BuildingFloorService buildingFloorService;
-	@Autowired
-	private RoomTypeService roomTypeService;
-	@Autowired
-	private RenterService enterService;
-	@Autowired
-	private PrhPayCodeService prhPayCodeService;
-	@Autowired
-	private EstateService estateService;
 	@Autowired
 	private PrhMasterService prhMasterService;
 	@Autowired
 	private RenterService renterService;
-	@Autowired
-	private PaymentCodeService paymentCodeService;
-	@Autowired
-	private PrhPayMentService prhPayMentService;
-
 	@Autowired
 	private DoorlockUserService doorlockUserService;
 
@@ -107,6 +79,7 @@ public class DailyAction {
 					d.setStatus(Global.STATUS_DELETEING);
 					d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
 					d.setReceipt(receipt);
+					d.setReason("退租自动删除");
 					doorlockUserService.updateByPrimaryKey(d);
 				}
 			}
@@ -127,6 +100,7 @@ public class DailyAction {
 					d.setStatus(Global.STATUS_DELETEING);
 					d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
 					d.setReceipt(receipt);
+					d.setReason("合同到期未续租删除");
 					doorlockUserService.updateByPrimaryKey(d);
 				}
 			}

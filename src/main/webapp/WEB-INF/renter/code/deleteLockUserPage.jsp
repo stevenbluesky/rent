@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" />
-    <title>下发密码</title>
+    <title>删除</title>
     <style type="text/css">
         .active>a{
             border-top: 2px solid #cc0000 !important;
@@ -154,79 +154,56 @@
 </head>
 <body>
 <form id="myForm" method="post">
-    <input type="hidden" name="masterId" value="${master.id}">
-    <input type="hidden" name="guestNo" value="${profile.guestno}"/>
-    <input type="hidden" name="userName" class="userName" value="${profile.name}"/>
-    <input type="hidden" name="mobilePhone" class="mobilePhone" value="${profile.mobile}"/>
+    <input type="hidden" name="doorlockuserid" value="${doorlockuserid}">
+
     <table id="contentTable" class="table table-striped table-bordered table-condensed addFloor"  border="1" bordercolor="#a0c6e5" >
 
         <tr>
-            <td class="title">身份证对码*:</td>
-            <td><input type="text" id="password" name="password" class="password" value=""></td>
+            <td class="title">删除原因*:</td>
+            <td><input type="text" id="reason" name="reason" class="reason" value=""></td>
         </tr>
-        <tr>
-            <td class="title">开始时间*:</td>
-            <td><input id="validfrom" name="validfrom" type="text"
-                       readonly="readonly" maxlength="20" class="Wdate required" value="<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>"
-                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
-        </tr>
-        <tr>
-            <td class="title">结束时间*:</td>
-            <td><input id="validthrough" name="validthrough" type="text"
-                       readonly="readonly" maxlength="20" class="Wdate required"
-                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
-        </tr>
+
 
         <tr style="text-align: center;">
 
             <td colspan="2" style="padding-left:80px;" >
                   <input type="button" style="width: 70px;" value="返回" class="btn"
                     onclick="javascript: parent.layer.close(parent.layer.getFrameIndex(window.name));">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="btn"  type="button" value="确定" onclick="addPassword()"  style="width: 70px;"></td>
+                <input class="btn"  type="button" value="确定" onclick="deletePassword()"  style="width: 70px;"></td>
         </tr>
     </table>
 </form>
 </body>
 
 <script type="text/javascript">
-    function addPassword() {
-        var cardno = $("#password").val();
-        if (cardno==""||cardno.length!=16) {
-            $.jBox.tip("ID卡需要16位对码!");
+    function deletePassword() {
+        if ($("#reason").val()=="") {
+            $.jBox.tip("删除原因必填!");
             return;
         }
-        if($("#validfrom").val()==""||$("#validthrough").val()==""){
-            $.jBox.tip("有效期不能为空!");
-            return;
-        }
-        if($("#validfrom").val()>$("#validthrough").val()){
-            $.jBox.tip("开始时间不能大于结束时间!");
-            return;
-        }
+
         $.ajax({
             type: "POST",
             dataType: "Text",
-            url: 'addPassword.do?usertype=4',
+            url: 'deletePassword.do',
             data: $('#myForm').serialize(),
             success: function (result) {
                 if(result=="-1"){
-                    $>jBox.tip("信息填写不正确！");
+                    $>jBox.tip("删除失败！");
                     $(".addBtn").removeAttr("disabled");
-                }else if (result=="-2") {
-                    $>jBox.tip("房间尚未绑定门锁，请先将该房间与门锁绑定！");
-                    $(".addBtn").removeAttr("disabled");
-                }else if(result=="-4"){
-                    $>jBox.tip("卡号已存在！");
-                    $(".addBtn").removeAttr("disabled");
+                }else if (result=="1") {
+                    alert("操作成功，待删除！")
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
                 }else{
-                    alert("保存成功，待下发！")
+                    alert("操作成功，待删除！")
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 }
             },
             error: function(data) {
                 $(".addBtn").removeAttr("disabled");
-                $.jBox.tip("信息填写不正确！");
+                $.jBox.tip("操作失败！");
             }
         });
     }

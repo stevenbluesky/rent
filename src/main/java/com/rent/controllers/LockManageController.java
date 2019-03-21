@@ -42,7 +42,6 @@ public class LockManageController {
         Integer size = 10; // 页大小
         int totalCount = 0;
         String params = "";
-        String params2 = "";
         if("1".equals(ifBind)){
             if(StringUtils.isNotBlank(lockName)&&StringUtils.isNotBlank(deviceid)){
                 params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\",\"Name\":\""+lockName+"\",\"IfBind\":true,\"_nodetype\":\"lock\",\"_nodeid\":1},\"PageSize\": "+size+", \"Page\": "+currpage+"}} ";
@@ -63,26 +62,6 @@ public class LockManageController {
             }else{
                 params = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"lock\",\"_nodeid\":1},\"PageSize\":"+size+",\"Page\":"+currpage+"}}";
             }
-        }else{
-            if(StringUtils.isNotBlank(lockName)&&StringUtils.isNotBlank(deviceid)){
-                params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\",\"Name\":\""+lockName+"\",\"_nodetype\":\"lock\",\"_nodeid\":1}}} ";
-            }else if(StringUtils.isNotBlank(lockName)){
-                params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"Name\":\""+lockName+"\",\"_nodetype\":\"lock\",\"_nodeid\":1}}} ";
-            }else if(StringUtils.isNotBlank(deviceid)){
-                params = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\",\"_nodetype\":\"lock\",\"_nodeid\":1}}} ";
-            }else{
-                params = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"lock\",\"_nodeid\":1}}}";
-            }
-
-            if(StringUtils.isNotBlank(lockName)&&StringUtils.isNotBlank(deviceid)){
-                params2 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\",\"Name\":\""+lockName+"\",\"IfBind\":true,\"_nodetype\":\"lock\",\"_nodeid\":1}}}";
-            }else if(StringUtils.isNotBlank(lockName)){
-                params2 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"Name\":\""+lockName+"\",\"IfBind\":true,\"_nodetype\":\"lock\",\"_nodeid\":1}}} ";
-            }else if(StringUtils.isNotBlank(deviceid)){
-                params2 = "{\"method\": \"thing.service.GetNodeList\",\"params\": {\"Conditions\": {\"_deviceid\":\""+deviceid+"\",\"IfBind\":true,\"_nodetype\":\"lock\",\"_nodeid\":1}}} ";
-            }else{
-                params2 = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"lock\",\"IfBind\":true,\"_nodeid\":1}}}";
-            }
         }
 
         String result = RestfulUtil.postHttps(params,"app");
@@ -92,37 +71,23 @@ public class LockManageController {
         // 处理数据
         JSONObject resultMap = JSON.parseObject(result);
         int resultcode = resultMap.getIntValue("resultcode");
-        if(!"2".equals(ifBind)) {
-            if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
-                JSONObject data = resultMap.getJSONObject("data");
-                totalCount = data.getIntValue("TotalCount");
-                if (totalCount > 0) {
-                    pageArray = data.getJSONArray("PageList");
-                    for (int i = 0; i < pageArray.size(); i++) {
-                        Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
-                        if (lock.getName() == null) {
-                            lock.setName("");
-                        }
-                        if (lock.getHouseid() != null) {
-                            HouseInfo houseInfo = prHouseService.findRoomInfoById(lock.getHouseid());
-                            if (houseInfo != null) {
-                                lock.setHousedesc(houseInfo.getDistrictName() + houseInfo.getUnitName() + houseInfo.getRoomNo() + "房");
-                            }
-                        }
-                        pageList.add(lock);
+        if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+            JSONObject data = resultMap.getJSONObject("data");
+            totalCount = data.getIntValue("TotalCount");
+            if (totalCount > 0) {
+                pageArray = data.getJSONArray("PageList");
+                for (int i = 0; i < pageArray.size(); i++) {
+                    Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
+                    if (lock.getName() == null) {
+                        lock.setName("");
                     }
-                }
-            }
-        }else{
-            String result2 = RestfulUtil.postHttps(params2,"app");//所有绑定的门锁
-            JSONObject bindResultMap = JSON.parseObject(result2);
-            if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))&&!RestfulUtil.checkNull(bindResultMap.getJSONObject("data"))) {
-                JSONObject data = resultMap.getJSONObject("data");
-                JSONObject data2 = bindResultMap.getJSONObject("data");
-                totalCount = data.getIntValue("TotalCount")-data2.getIntValue("TotalCount");
-                if (totalCount > 0) {
-                    JSONArray pageArray1 = data.getJSONArray("PageList");
-                    JSONArray pageArray2 = data2.getJSONArray("PageList");
+                    if (lock.getHouseid() != null) {
+                        HouseInfo houseInfo = prHouseService.findRoomInfoById(lock.getHouseid());
+                        if (houseInfo != null) {
+                            lock.setHousedesc(houseInfo.getDistrictName() + houseInfo.getUnitName() + houseInfo.getRoomNo() + "房");
+                        }
+                    }
+                    pageList.add(lock);
                 }
             }
         }

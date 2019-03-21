@@ -96,4 +96,6 @@ public interface PrhRentalMapper {
 
 	List<PrhRental> findByAccntAndDate(HouseAndDateCondition condition);
 
+	List<PrhRental> findPaidByMasterId(Integer id);
+
 }

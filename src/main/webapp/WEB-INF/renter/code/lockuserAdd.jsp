@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" />
-    <title>下发密码</title>
+    <title>增加门锁用户</title>
     <style type="text/css">
         .active>a{
             border-top: 2px solid #cc0000 !important;
@@ -161,21 +161,22 @@
     <table id="contentTable" class="table table-striped table-bordered table-condensed addFloor"  border="1" bordercolor="#a0c6e5" >
 
         <tr>
-            <td class="title">密码*:</td>
+            <td class="title">密码:</td>
             <td><input type="text" id="password" name="password" class="password" value=""></td>
         </tr>
         <tr>
-            <td class="title">开始时间*:</td>
-            <td><input id="validfrom" name="validfrom" type="text"
-                   readonly="readonly" maxlength="20" class="Wdate required" value="<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>"
-                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
+            <td class="title">身份证对码:</td>
+            <td><input type="text" id="idcard" name="idcard" class="idcard" value=""></td>
         </tr>
         <tr>
-            <td class="title">结束时间*:</td>
-            <td><input id="validthrough" name="validthrough" type="text"
-                       readonly="readonly" maxlength="20" class="Wdate required"
-                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
+            <td class="title">MF卡:</td>
+            <td><input type="text" id="mfcard" name="mfcard" class="mfcard" value=""></td>
         </tr>
+        <tr>
+            <td class="title">指纹:</td>
+            <td><textarea name="fingerprint" id="fingerprint" cols="30" rows="6"></textarea></td>
+        </tr>
+
 
         <tr style="text-align: center;">
 
@@ -191,22 +192,30 @@
 <script type="text/javascript">
     function addPassword() {
         var reg = /^\d{4,8}$/;
-        if (!reg.test($("#password").val())) {
+        var passwordvalue = $("#password").val();
+        if (passwordvalue!=""&&!reg.test(passwordvalue)) {
             $.jBox.tip("密码需要4-8位数字!");
             return;
         }
-        if($("#validfrom").val()==""||$("#validthrough").val()==""){
-            $.jBox.tip("有效期不能为空!");
+        var cardno = $("#idcard").val();
+        if (cardno!=""&&cardno.length!=16) {
+            $.jBox.tip("ID卡需要16位对码!");
             return;
         }
-        if($("#validfrom").val()>$("#validthrough").val()){
-            $.jBox.tip("开始时间不能大于结束时间!");
+        var mfcardno = $("#mfcard").val();
+        if (mfcardno!=""&&mfcardno.length!=8) {
+            $.jBox.tip("MF卡需要8位卡号!");
+            return;
+        }
+        var fingerprint = $("#fingerprint").val();
+        if(passwordvalue==""&&cardno==""&&mfcardno==""&&fingerprint==""){
+            $.jBox.tip("请至少选择一种!");
             return;
         }
         $.ajax({
             type: "POST",
             dataType: "Text",
-            url: 'addPassword.do?usertype=1',
+            url: 'addPassword.do',
             data: $('#myForm').serialize(),
             success: function (result) {
                 if(result=="-1"){
@@ -217,6 +226,15 @@
                     $(".addBtn").removeAttr("disabled");
                 }else if(result=="-4"){
                     $>jBox.tip("密码已存在！");
+                    $(".addBtn").removeAttr("disabled");
+                }else if(result=="-5"){
+                    $>jBox.tip("MF卡已存在！");
+                    $(".addBtn").removeAttr("disabled");
+                }else if(result=="-6") {
+                    $ > jBox.tip("身份证已存在！");
+                    $(".addBtn").removeAttr("disabled");
+                }else if(result=="-7") {
+                    $ > jBox.tip("指纹已存在！");
                     $(".addBtn").removeAttr("disabled");
                 }else{
                     alert("保存成功，待下发！")

@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" />
-    <title>下发MF卡</title>
+    <title>修改门锁有效期</title>
     <style type="text/css">
         .active>a{
             border-top: 2px solid #cc0000 !important;
@@ -155,46 +155,37 @@
 <body>
 <form id="myForm" method="post">
     <input type="hidden" name="masterId" value="${master.id}">
-    <input type="hidden" name="guestNo" value="${profile.guestno}"/>
-    <input type="hidden" name="userName" class="userName" value="${profile.name}"/>
-    <input type="hidden" name="mobilePhone" class="mobilePhone" value="${profile.mobile}"/>
     <table id="contentTable" class="table table-striped table-bordered table-condensed addFloor"  border="1" bordercolor="#a0c6e5" >
 
         <tr>
-            <td class="title">MF卡号*:</td>
-            <td><input type="text" id="password" name="password" class="password" value=""></td>
-        </tr>
-        <tr>
-            <td class="title">开始时间*:</td>
-            <td><input id="validfrom" name="validfrom" type="text"
-                       readonly="readonly" maxlength="20" class="Wdate required" value="<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>"
-                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
-        </tr>
-        <tr>
-            <td class="title">结束时间*:</td>
-            <td><input id="validthrough" name="validthrough" type="text"
+            <td class="title">起始日期*:</td>
+            <td><input id="validfrom" name="validfrom" type="text" style="margin-top:5px;"
                        readonly="readonly" maxlength="20" class="Wdate required"
                        onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
         </tr>
-
+        <tr>
+            <td class="title">截止日期*:</td>
+            <td><input id="validthrough" name="validthrough" type="text" style="margin-top:5px;"
+                   readonly="readonly" maxlength="20" class="Wdate required"
+                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true,lang:'zh-cn'});" /></td>
+        </tr>
+        <tr>
+            <td class="title">变更原因:</td>
+            <td><input id="reason" name="reason" type="text" maxlength="20" class="text" style="margin-top:5px;"/></td>
+        </tr>
         <tr style="text-align: center;">
 
             <td colspan="2" style="padding-left:80px;" >
                   <input type="button" style="width: 70px;" value="返回" class="btn"
                     onclick="javascript: parent.layer.close(parent.layer.getFrameIndex(window.name));">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="btn"  type="button" value="确定" onclick="addPassword()"  style="width: 70px;"></td>
+                <input class="btn"  type="button" value="确定" onclick="modifyValidTime()"  style="width: 70px;"></td>
         </tr>
     </table>
 </form>
 </body>
 
 <script type="text/javascript">
-    function addPassword() {
-        var cardno = $("#password").val();
-        if (cardno==""||cardno.length!=8) {
-            $.jBox.tip("MF卡需要8位卡号!");
-            return;
-        }
+    function modifyValidTime() {
         if($("#validfrom").val()==""||$("#validthrough").val()==""){
             $.jBox.tip("有效期不能为空!");
             return;
@@ -206,7 +197,7 @@
         $.ajax({
             type: "POST",
             dataType: "Text",
-            url: 'addPassword.do?usertype=3',
+            url: 'modifyValidTime.do',
             data: $('#myForm').serialize(),
             success: function (result) {
                 if(result=="-1"){
@@ -216,7 +207,7 @@
                     $>jBox.tip("房间尚未绑定门锁，请先将该房间与门锁绑定！");
                     $(".addBtn").removeAttr("disabled");
                 }else if(result=="-4"){
-                    $>jBox.tip("卡号已存在！");
+                    $>jBox.tip("密码已存在！");
                     $(".addBtn").removeAttr("disabled");
                 }else{
                     alert("保存成功，待下发！")

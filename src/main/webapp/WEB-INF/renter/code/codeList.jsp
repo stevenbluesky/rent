@@ -146,7 +146,22 @@ a:hover {
             });
         }
 	}
-	
+    function modifyValidTime(){
+        var id= $('.radioId:checked').val();
+        if(id!=undefined) {
+            layer.open({
+                type: 2,
+                title: '修改门锁有效期',
+                maxmin: false,
+                area: ['400px', '250px'],
+
+                content: 'toModifyValidTime.do?masterId=' + id,
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+    }
 	function print(){
 		var id= $('.radioId:checked').val();
 		location.href="printCode.do?masterId="+id;
@@ -272,7 +287,8 @@ a:hover {
 						<th>单元</th>
 						<th>房号</th>
 						<th>房间编号</th>
-						
+						<th>交费截止日期</th>
+						<th>门锁截止日期</th>
 						<th>备注</th>
 					</tr>
 						<c:if test="${fn:length(page.list)==0}">
@@ -318,96 +334,34 @@ a:hover {
 							<td> ${m.prHouse.roomNo}</td>
  						
  							<td>${m.prHouse.houseCode }</td>
-							
+							<td><fmt:formatDate value="${m.deadlineofRent}" type="date" pattern="yyyy-MM-dd"/></td>
+							<td><fmt:formatDate value="${m.deadlineofLock}" type="date" pattern="yyyy-MM-dd"/></td>
 							<td>${b.remark}</td>
-						
 
 						</tr>
 					</c:forEach>
 
 				</table>
-			
 		
 				<div class="pagination" id="numpage">${numpage}</div>
 				<br/>
 				<input type="hidden" class="opHidden"   >
-				
-				
-				
-				
 								
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 					<input class="btn"  value="门锁用户管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==22}">
 					<input class="btn"  value="门锁用户管理" type="button" onclick="toCard()" />&nbsp;&nbsp;&nbsp;&nbsp;
 			 				</c:if></c:forEach></c:if></c:forEach>
+				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
+					<input class="btn"  value="修改门锁有效期" type="button" onclick="modifyValidTime()" />&nbsp;&nbsp;&nbsp;&nbsp;
+				</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==22}">
+					<input class="btn"  value="修改门锁有效期" type="button" onclick="modifyValidTime()" />&nbsp;&nbsp;&nbsp;&nbsp;
+				</c:if></c:forEach></c:if></c:forEach>
 				
 			</form>
 	   </div> 
 	
 </div>
-<script type="text/javascript">
-function cardSearch(){
-	var  Authorizedata='${estate.authorCode }';	
-	returnstr=JSobj.ReadAllCard(Authorizedata);
-	var info = eval('(' + returnstr + ')');
-	var result= info.Result;
-	
-	if (result!=1) {
-		if (result==5) {
-			$.jBox.tip("读取失败，请尝试到其他物业查询！");		
-		}else if(result==3){
-			$.jBox.tip("读取失败,请正确放置卡片！");	
-		}
-		
-	}else{
-		var card= info.Value;
-		var serial=card.SerialNumber;
-		if (card.CardType==9) {
-			var unit=card.Building;
-			var floor=card.Floor;
-			var room=card.Room;
-			var roomNo;
-			if ($(room).length==1) {
-				roomNo=floor+"0"+room;
-			}else {
-				roomNo=floor+""+room;
-			}
-			var tip="房号卡\n\n流水号："+serial+"\n房源信息："+unit+"单元"+roomNo;
-			alert(tip);
-		}else if(card.CardType==15){
-			var tip="锁号卡\n\n流水号："+serial;
-			alert(tip);
-		}else if(card.CardType==0){
-			var begin=card.BeginTime;
-			var end=card.EndTime;
-			var unit=card.Building;
-			var floor=card.Floor;
-			var room=card.Room;
-			var roomNo;
-			if ($(room).length==1) {
-				roomNo=floor+"0"+room;
-			}else {
-				roomNo=floor+""+room;
-			}
-			var tip="客人卡\n\n流水号："+serial;
-			tip+="\n租期："+begin+"至"+end;
-			tip+="\n房源信息："+unit+"单元"+roomNo;
-			alert(tip);
-		}else if(card.CardType==12){
-			var tip="挂失卡\n\n流水号："+serial;
-			alert(tip);
-		}else if(card.CardType==7){
-			var tip="授权卡\n\n流水号："+serial;
-			alert(tip);
-		}else if(card.CardType==8){
-			var tip="时钟卡\n\n流水号："+serial;
-			tip+="\n写入时间："+card.Clock;
-			alert(tip);
-		}
-	}
-}
-</script>
 	
 </body>
 </html>

@@ -30,6 +30,9 @@ public class Global {
 	public static final int STATUS_SENDING = 0;//下发中
 	public static final int STATUS_DELETEING = 8;//删除中
 	public static final int STATUS_UPDATING_TIME =7;//更新有效期中
+	public static final int STATUA_DELETED = 9;//已删除
+    public static final int STATUS_SEND_FAILED = 4;//下发失败
+	public static final int STATUS_UPDATE_TIME_FAILED = 5;//更新有效期失败
 	/**
 	 * 当前对象实例
 	 */

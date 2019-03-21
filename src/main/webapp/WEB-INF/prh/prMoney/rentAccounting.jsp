@@ -212,10 +212,7 @@
 				<td>
 				<c:if test="${ma.refer1 eq '1' }"
 				>已核算</c:if>
-				<c:if test="${ma.refer1 eq null }"
-				>未核算</c:if>
-				</td>
-				<c:if test="${ma.refer1 eq '' }"
+				<c:if test="${ma.refer1 eq '' || ma.refer1 eq null}"
 				>未核算</c:if>
 				</td>
 				<td>${ma.remark}</td>

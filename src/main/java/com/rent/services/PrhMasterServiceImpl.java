@@ -1,42 +1,39 @@
 package com.rent.services;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.rent.common.utils.MyConvertUtil;
-import com.rent.condition.HouseAndDateCondition;
-import com.rent.condition.MasterCondition;
-import com.rent.condition.MasterReletCondition;
-import com.rent.condition.RenDaliyCondition;
-import com.rent.condition.renAcountCondition;
-import com.rent.dao.PrHouseMapper;
+import com.rent.condition.*;
 import com.rent.dao.PrhMasterMapper;
 import com.rent.dao.PrhRentalMapper;
-import com.rent.dao.SubsidyMapper;
 import com.rent.dao.SubsidyTypeMapper;
-import com.rent.entity.Card;
-import com.rent.entity.PrHouse;
-import com.rent.entity.PrhLinkman;
-import com.rent.entity.PrhMaster;
-import com.rent.entity.PrhRental;
-import com.rent.entity.Profile;
-import com.rent.entity.RentPayWay;
-import com.rent.entity.SubsidyType;
+import com.rent.entity.*;
 import com.rent.services.impl.SubsidyCal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 @Service
 public class PrhMasterServiceImpl implements PrhMasterService {
 
-// 灏佽瀵艰埅灞炴��
 	private void setGuideProperty(List<PrhMaster> prhMasters) {
 		for (PrhMaster b : prhMasters) {
 			
 			b.setPrHouse(prHouseService.findById(b.getHouseId()));
 			b.setProfile(fileManagementService.findById(b.getGuestNo()));
+
+			//房租已付款的结束时间
+			List<PrhRental> paidByMasterId = prhRentalMapper.findPaidByMasterId(b.getId());
+			if(paidByMasterId==null||paidByMasterId.size()==0){
+				b.setDeadlineofRent(null);
+			}else{
+				b.setDeadlineofRent(paidByMasterId.get(0).getEdate());
+			}
+			//锁里下发的用户有效期截止时间
+			List<DoorlockUser> allByGuestNo = doorlockUserService.findAllByGuestNo(b.getGuestNo());
+			if(allByGuestNo==null||allByGuestNo.size()==0){
+				b.setDeadlineofLock(null);
+			}else{
+				b.setDeadlineofLock(allByGuestNo.get(0).getValidthrough());
+			}
 			
 			if (b.getSubsidyTypeId()!=null&&b.getSubsidyTypeId()!=-1) {
 				b.setSubsidyType(subsidyTypeMapper.selectByPrimaryKey(b.getSubsidyTypeId()));
@@ -118,6 +115,8 @@ public class PrhMasterServiceImpl implements PrhMasterService {
 	private RentPayWayService rentPayWayService;
 	@Autowired
 	private SubsidyService subsidyService;
+	@Autowired
+	private DoorlockUserService doorlockUserService;
 	
 	
 	public SubsidyService getSubsidyService() {

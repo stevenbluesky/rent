@@ -1306,13 +1306,9 @@
 	</select>
 
 	<!--登记主单列表 -->
-	<select id="findCanGetCardPaged" resultMap="BaseResultMap"
-		parameterType="com.rent.condition.MasterReletCondition">
-
+	<select id="findCanGetCardPaged" resultMap="BaseResultMap" parameterType="com.rent.condition.MasterReletCondition">
 		SELECT * FROM PRH_MASTER
-		where edate>now() and (sta =1 or sta=2 or sta=5 or sta=6)
-
-		and
+		where edate>now() and (sta =1 or sta=2 or sta=5 or sta=6) and
 		house_id in (
 		select id from PR_HOUSE where 1=1
 

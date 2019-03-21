@@ -4,7 +4,7 @@
 	
 	<sql id="menuColumns">
 		a.id,
-		a.parent_id AS "parent.id",
+		a.parent_id AS `parent.id`,
 		a.parent_ids,
 		a.name,
 		a.href,
@@ -14,12 +14,12 @@
 		a.is_show,
 		a.permission,
 		a.remarks,
-		a.create_by AS "createBy.id",
+		a.create_by AS `createBy.id`,
 		a.create_date,
-		a.update_by AS "updateBy.id",
+		a.update_by AS `updateBy.id`,
 		a.update_date,
 		a.del_flag,
-		p.name AS "parent.name"
+		p.name AS `parent.name`
 	</sql>
 	
 	<sql id="menuJoins">
@@ -46,7 +46,7 @@
 	<select id="findByParentIdsLike" resultType="Menu">
 		SELECT
 			a.id,
-			a.parent_id AS "parent.id",
+			a.parent_id AS `parent.id`,
 			a.parent_ids
 		FROM RENT_MENU a
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.parent_ids LIKE #{parentIds}

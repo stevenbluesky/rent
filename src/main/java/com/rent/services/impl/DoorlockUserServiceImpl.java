@@ -59,8 +59,21 @@ public class DoorlockUserServiceImpl implements DoorlockUserService {
                     doorlockUser.setStatus(Global.STATUS_NORMAL);
                     doorlockUserMapper.updateByPrimaryKey(doorlockUser);
                 } else if (doorlockUser.getStatus() == Global.STATUS_DELETEING) {
-                    doorlockUserMapper.deleteByPrimaryKey(doorlockUser.getDoorlockuserid());
+                    doorlockUserMapper.updateStatustoDeleteByPrimaryKey(doorlockUser.getDoorlockuserid());
                 }
+            }
+        }else{
+            //返回失败
+            DoorlockUser doorlockUser = doorlockUserMapper.selectByReceipt(receipt);
+            if(doorlockUser!=null) {
+                if (doorlockUser.getStatus() == Global.STATUS_SENDING ) {
+                    doorlockUser.setSynstatus(Global.SYN_STATUS_SYNCHRONIZED);
+                    doorlockUser.setStatus(Global.STATUS_SEND_FAILED);
+                }else if(doorlockUser.getStatus() == Global.STATUS_UPDATING_TIME){
+                    doorlockUser.setSynstatus(Global.SYN_STATUS_SYNCHRONIZED);
+                    doorlockUser.setStatus(Global.STATUS_UPDATE_TIME_FAILED);
+                }
+                doorlockUserMapper.updateByPrimaryKey(doorlockUser);
             }
         }
     }
@@ -78,5 +91,15 @@ public class DoorlockUserServiceImpl implements DoorlockUserService {
     @Override
     public List<DoorlockUser> findAvailableAllByMasterid(Integer id) {
         return doorlockUserMapper.findAvailableAllByMasterid(id);
+    }
+
+    @Override
+    public List<DoorlockUser> findAllByGuestNo(String guestno) {
+        return doorlockUserMapper.findAllByGuestno(guestno);
+    }
+
+    @Override
+    public List<DoorlockUser> findInUseByMasterid(Integer masterId) {
+        return doorlockUserMapper.findInUseByMasterid(masterId);
     }
 }

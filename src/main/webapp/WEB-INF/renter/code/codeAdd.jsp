@@ -306,9 +306,14 @@ ul {
 				</table>
 				<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 				<input type="hidden" name="op" class="op" />
-				
-				
+
+
 				<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
+					<input class="btn" value="增加门锁用户" type="button" onClick="toAddLockUserPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
+				</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==23}">
+					<input class="btn" value="增加门锁用户" type="button" onClick="toAddLockUserPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
+				</c:if></c:forEach></c:if></c:forEach>
+				<%--<c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
 					<input class="btn" value="下发密码" type="button" onClick="toAddPasswordPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==23}">
 					<input class="btn" value="下发密码" type="button" onClick="toAddPasswordPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -324,7 +329,7 @@ ul {
 					<input class="btn" value="下发身份证" type="button" onclick="toAddIDCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
 						</c:if><c:if test="${role.id!=1 }"><c:forEach var="m" items="${role.moduleList }"><c:if test="${m.id==24}">
 					<input class="btn" value="下发身份证" type="button" onclick="toAddIDCardPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
-			 	</c:if></c:forEach></c:if></c:forEach>
+			 	</c:if></c:forEach></c:if></c:forEach>--%>
 
                 <c:forEach var="role" items="${user.rolesList}"><c:if test="${role.id==1 }">
                     <input class="btn" value="查看门锁用户" type="button" onclick="toLockUserPage()" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -340,6 +345,35 @@ ul {
 	</div>
 	<br />
 	<script type="text/javascript">
+
+        function toAddLockUserPage() {
+            var chk= $(".radioId");
+            var count=0;
+            var id=null;
+            chk.each(function(e,q){
+                var flag= $(q).is(":checked");
+                if(flag){
+                    id=$(q).val();
+                    count++;
+                }
+            });
+            if(count==0){
+                $.jBox.tip("请选择要下发的用户！");
+                return;
+            }
+            layer.ready(function(){
+                layer.open({
+                    type: 2,
+                    title: '增加门锁用户',
+                    maxmin: false,
+                    area: ['500px', '400px'],
+                    content:'toAddLockuserPage.do?idStr='+id,
+                    end: function(){
+                        location.reload();
+                    }
+                });
+            });
+        }
 		function toAddPasswordPage() {
             var chk= $(".radioId");
             var count=0;

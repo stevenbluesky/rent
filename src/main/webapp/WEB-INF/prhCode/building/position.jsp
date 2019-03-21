@@ -52,9 +52,7 @@ body {
 }
 .allInput{border:none !important; border:1px solid #CCC !important;vertical-align:middle !important; }
 .input  {height:24px !important; line-height:24px !important; border-right:none !important; width:200px !important;}
-.liulan {width:100px !important;height:26px !important;background:url(/jscss/demoimg/201206/bgimg.jpg) no-repeat !important; cursor:pointer !important;
-	margin-bottom: 10px;
-			}
+
 
 .files{	position:absolute !important; left:202px !important; top:41px !important; heigth:29px !important;cursor:pointer !important;
 		 filter: Alpha(opacity=0);    
@@ -210,7 +208,7 @@ body {
 <h2>操作：</h2>
 <table class="rightTable">
 	<tr>
-		<td>上传图片：</td>
+		<td>选择图片：</td>
 		<td class="fileTd">
 			<input type="text" id="txt" readonly="readonly" name="txt" class="input allInput"><input type="button" onmousemove="file.style.pixelLeft=event.x-60;file.style.pixelTop=this.offsetTop;" value="浏览 ..." size="30" onclick="file.click()" class="liulan allInput">
 			<input type="file"  id="up" onchange="txt.value=this.value" name="file" style="height:26px;" class="files allInput"  size="1" hidefocus>		

@@ -1,59 +1,32 @@
 package com.rent.controllers;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.rent.common.config.Global;
+import com.rent.common.utils.MyDateUtil;
+import com.rent.common.utils.NumPageUtil;
+import com.rent.common.utils.RestfulUtil;
+import com.rent.condition.HouseFileContion;
+import com.rent.condition.RenDaliyCondition;
+import com.rent.dao.PrhRentalMapper;
+import com.rent.entity.*;
+import com.rent.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.mysql.fabric.xmlrpc.base.Data;
-import com.rent.common.mapper.JsonMapper;
-import com.rent.common.utils.MyDateUtil;
-import com.rent.common.utils.NumPageUtil;
-import com.rent.condition.HouseFileContion;
-import com.rent.condition.RenDaliyCondition;
-import com.rent.condition.RenterCondition;
-import com.rent.condition.renAcountCondition;
-import com.rent.entity.BuildingNo;
-import com.rent.entity.Estate;
-import com.rent.entity.NameAndId;
-import com.rent.entity.PrHouse;
-import com.rent.entity.PrhMaster;
-import com.rent.entity.PrhPaycode;
-import com.rent.entity.PrhPayment;
-import com.rent.entity.PrhRental;
-import com.rent.entity.Profile;
-import com.rent.entity.RoomType;
-import com.rent.modules.sys.entity.Rent;
-import com.rent.services.BuildingFloorService;
-import com.rent.services.BuildingNoService;
-import com.rent.services.BuildingService;
-import com.rent.services.EstateService;
-import com.rent.services.FileManagementService;
-import com.rent.services.PaymentCodeService;
-import com.rent.services.PrHouseService;
-import com.rent.services.PrhMasterService;
-import com.rent.services.PrhPayCodeService;
-import com.rent.services.PrhPayMentService;
-import com.rent.services.RenterService;
-import com.rent.services.RoomTypeService;
+import java.util.*;
 
 @Controller("financialChargesController")
 public class FinancialChargesController {
@@ -71,8 +44,6 @@ public class FinancialChargesController {
 	@Autowired
 	private RoomTypeService roomTypeService;
 	@Autowired
-	private RenterService enterService;
-	@Autowired
 	private PrhPayCodeService prhPayCodeService;
 	@Autowired
 	private EstateService estateService;
@@ -84,6 +55,10 @@ public class FinancialChargesController {
 	private PaymentCodeService paymentCodeService;
 	@Autowired
 	private PrhPayMentService prhPayMentService;
+	@Autowired
+	private DoorlockUserService doorlockUserService;
+	@Autowired
+	private PrhRentalMapper prhRentalMapper;
 
 	// 进入日常合同扣租
 	@RequestMapping("dailyContractRental")
@@ -390,7 +365,7 @@ public class FinancialChargesController {
 			return "redirect:/ rentAdjustmentAudit?estateId=" + estateId;
 		} else {
 			// 传参数给service
-			boolean flag = enterService.updateHousePrice(chk, caname, reason, decDate);
+			boolean flag = renterService.updateHousePrice(chk, caname, reason, decDate);
 			if (flag) {
 				map.put("estateId", estateId);
 				session.setAttribute("tip", "修改成功！");
@@ -453,7 +428,7 @@ public class FinancialChargesController {
 	// 日常租金付款
 	@RequestMapping("payForm")
 	public String payForm(Integer[] chk, String pay, String ino, Integer payType, Integer accntid,String batch, ModelMap map,
-			HttpSession session, HttpServletRequest request) {
+			HttpSession session, HttpServletRequest request) throws InterruptedException {
 		
 		if (payType == -1 || ino == null || ino == ""||batch==null||batch.length()==0) {
 			session.setAttribute("tip", "请填写*必填信息!");
@@ -472,6 +447,31 @@ public class FinancialChargesController {
 			return "redirect:/balance?chk=" + accntid;
 			// 添加账务付款失败
 		} else if (flag == 3) {
+			List<PrhRental> paidByMasterId = prhRentalMapper.findPaidByMasterId(accntid);
+			Date end = paidByMasterId.get(0).getEdate();
+			List<DoorlockUser> inUseByMasterid = doorlockUserService.findInUseByMasterid(accntid);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat simpledf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			for(DoorlockUser d: inUseByMasterid){
+				if(d.getValidthrough().getTime()<end.getTime()) {
+					String validfrom2 = sdf.format(d.getValidfrom()) + " 00:00";
+					String validthrough2 = sdf.format(end) + " 23:59";
+					Map<String, Object> resultMap = updateValidTimeRequest(d.getDeviceid(),  d.getUsercode(), validfrom2, validthrough2);
+					Thread.sleep(1000);
+					if ((Integer) resultMap.get("resultcode") == 1) {
+						d.setStatus(Global.STATUS_UPDATING_TIME);
+						d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+						d.setReceipt((String) resultMap.get("receipt"));
+						try {
+							d.setValidfrom(simpledf.parse(validfrom2));
+							d.setValidthrough(simpledf.parse(validthrough2));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						doorlockUserService.updateByPrimaryKey(d);
+					}
+				}
+			}
 			session.setAttribute("tip", "付款成功.");
 			return "redirect:/balance?chk=" + accntid;
 			// 两个都成功了
@@ -482,7 +482,18 @@ public class FinancialChargesController {
 		}
 
 	}
-
+	public Map<String,Object> updateValidTimeRequest(String associatedlock,int usercode,String validfrom,String validthrough){
+		String params = "{\"method\": \"thing.service.UpdateUserValidDateTime\",\"async\":true,\"deviceid\": \""+associatedlock+"\",\"nodeid\": 1,\"params\": {\"UserID\": "+usercode+"," +
+				"\"ValidBeginDateTime\": \""+validfrom+"\",\"ValidEndDateTime\": \""+validthrough+"\"}}";
+		String result = RestfulUtil.postHttps(params,"lock");
+		JSONObject resultMap = JSON.parseObject(result);
+		int resultcode = resultMap.getIntValue("resultcode");
+		String receipt = resultMap.getString("receipt");
+		Map<String,Object> map = new HashMap<>();
+		map.put("resultcode",resultcode);
+		map.put("receipt",receipt);
+		return map;
+	}
 	@RequestMapping("updateRentalstaAndupdatePaymentSta")
 	public String updateRentalstaAndupdatePaymentSta(Integer[] chk2, Integer accntid2, ModelMap map,
 			HttpSession session, HttpServletRequest request) {
@@ -491,7 +502,6 @@ public class FinancialChargesController {
 		// 查询全部 物业 分类 ，查询 全部
 		// 循环 方法
 		Integer flag = renterService.updateandinsert(chk2);
-
 		if (flag == 3) {
 			session.setAttribute("tip", "作废成功");
 			return "redirect:/balance?chk=" + accntid2;
@@ -1095,11 +1105,11 @@ public class FinancialChargesController {
 			}
 
 			// 查询总数
-			Integer total = enterService.findCountByExpiringCondition(condition);
+			Integer total = renterService.findCountByExpiringCondition(condition);
 			// 查询所有房型集合
 
 			// 分页查询
-			List<PrhRental> renters = enterService.findCountByExpiringConditionAndPaged(condition, currpage, size);
+			List<PrhRental> renters = renterService.findCountByExpiringConditionAndPaged(condition, currpage, size);
 
 			// 查询总数
 			// 分页工具类

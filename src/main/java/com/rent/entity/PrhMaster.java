@@ -48,6 +48,9 @@ public class PrhMaster {
 
   
     private Date updatetime;
+
+    private Date deadlineofRent;
+    private Date deadlineofLock;
     
     
    
@@ -2386,7 +2389,20 @@ public class PrhMaster {
 	public void setShouldPrice(Double shouldPrice) {
 		this.shouldPrice = shouldPrice;
 	}
-	
 
-    
+    public Date getDeadlineofRent() {
+        return deadlineofRent;
+    }
+
+    public void setDeadlineofRent(Date deadlineofRent) {
+        this.deadlineofRent = deadlineofRent;
+    }
+
+    public Date getDeadlineofLock() {
+        return deadlineofLock;
+    }
+
+    public void setDeadlineofLock(Date deadlineofLock) {
+        this.deadlineofLock = deadlineofLock;
+    }
 }

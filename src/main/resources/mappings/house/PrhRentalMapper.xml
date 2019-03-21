@@ -889,6 +889,11 @@
 		select  <include refid="Base_Column_List" />
 		from PRH_RENTAL where accnt =#{accnt} order by inumber
 	</select>
+
+  <select  id="findPaidByMasterId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" />
+    from PRH_RENTAL where accnt =#{accnt} and STA = 'T' order by inumber desc
+  </select>
  
 
   <delete id="delByMaster" parameterType="java.lang.Integer" >

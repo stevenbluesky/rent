@@ -24,5 +24,9 @@ public interface DoorlockUserMapper {
 
     void deleteByPrimaryKey(Integer doorlockuserid);
 
+    void updateStatustoDeleteByPrimaryKey(Integer doorlockuserid);
+
     List<DoorlockUser> findAvailableAllByMasterid(Integer id);
+
+    List<DoorlockUser> findInUseByMasterid(Integer masterId);
 }

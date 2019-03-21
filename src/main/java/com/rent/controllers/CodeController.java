@@ -3,17 +3,14 @@ package com.rent.controllers;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rent.common.utils.*;
-import com.rent.dao.ProfileMapper;
+import com.rent.dao.*;
 import com.rent.entity.*;
 import com.rent.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.rent.common.config.Global;
 import com.rent.condition.MasterReletCondition;
-import com.rent.dao.PrhTempLiveManMapper;
 
 @Controller("codeController")
 public class CodeController {
@@ -50,6 +46,8 @@ public class CodeController {
 
 	@Autowired
 	private DoorlockUserService doorlockUserService;
+	@Autowired
+	private PrhRentalMapper prhRentalMapper;
 	public CardService getCardService() {
 		return cardService;
 	}
@@ -58,6 +56,8 @@ public class CodeController {
 	}
 	@Autowired
 	private PrhLinkManService prhLinkManService;
+	@Autowired
+	private DoorlockUserMapper doorlockUserMapper;
 	
 	public PrhLinkManService getPrhLinkManService() {
 		return prhLinkManService;
@@ -227,8 +227,50 @@ public class CodeController {
 		return "renter/code/codeAdd.jsp";
 	}
 
-	@RequestMapping("toAddLockUserPage.do")
-	public String toAddPasswordPage(String idStr,ModelMap map,Integer usertype){
+	@RequestMapping("toModifyValidTime.do")
+	public String toModifyValidTime(Integer masterId, ModelMap map){
+		PrhMaster master = prhMasterService.findById(masterId);
+		map.put("master", master);
+		return "renter/code/modifyValidTimePage.jsp";
+	}
+
+	@RequestMapping("modifyValidTime.do")
+	@ResponseBody
+	public String modifyValidTime(Integer masterId,String validfrom,String validthrough,String reason, ModelMap map){
+		PrhMaster master = prhMasterService.findById(masterId);
+		PrHouse house = prHouseService.findById(master.getHouseId());
+		if(StringUtils.isBlank(house.getAssociatedlock())){
+			return "-2";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String validfrom2 = validfrom + " 00:00";
+		String validthrough2 = validthrough + " 23:59";
+		Date begin = null;
+		Date end = null;
+		try {
+			begin = sdf.parse(validfrom2);
+			end = sdf.parse(validthrough2);
+		} catch (ParseException e) {
+			return "-1";
+		}
+		List<DoorlockUser> inUseByMasterid = doorlockUserService.findInUseByMasterid(masterId);
+		for(DoorlockUser d: inUseByMasterid){
+			Map<String, Object> resultMap = sendPasswordRequest(d.getDeviceid(), d.getUsertype(), d.getUsercode(), d.getPassword(), validfrom2, validthrough2);
+			if((Integer) resultMap.get("resultcode")==1){
+				d.setStatus(Global.STATUS_UPDATING_TIME);
+				d.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+				d.setValidfrom(begin);
+				d.setValidthrough(end);
+				d.setReason(reason);
+				d.setReceipt((String)resultMap.get("receipt"));
+				doorlockUserService.updateByPrimaryKey(d);
+			}
+		}
+		return "1";
+	}
+
+	@RequestMapping("toAddLockuserPage.do")
+	public String toAddLockuserPage(String idStr,ModelMap map){
 		Integer masterId=null;
 		Integer linkId=null;
 		Integer personType=null;
@@ -251,15 +293,44 @@ public class CodeController {
 		Profile profile = profileMapper.findBygusetNo(guestNo);
 		map.put("master", master);
 		map.put("profile",profile);
-		if (usertype.intValue()==1){
-			return "renter/code/passwordAdd.jsp";
-		}else if(usertype.intValue()==3){
-			return "renter/code/mfCardAdd.jsp";
-		}else{
-			return "renter/code/idCardAdd.jsp";
-		}
+
+		return "renter/code/lockuserAdd.jsp";
 
 	}
+
+	@RequestMapping("toDeleteLockUser.do")
+	public String toDeleteLockUser(String doorlockuserid,ModelMap map){
+		map.put("doorlockuserid", doorlockuserid);
+		return "renter/code/deleteLockUserPage.jsp";
+	}
+
+	@RequestMapping("deletePassword.do")
+	@ResponseBody
+	public String deletePassword(String doorlockuserid,String reason,ModelMap map){
+		DoorlockUser doorlockUser = doorlockUserService.selectByPrimaryKey(Integer.parseInt(doorlockuserid));
+		if(doorlockUser.getStatus()==Global.STATUS_SEND_FAILED){
+			doorlockUser.setStatus(Global.STATUA_DELETED);
+			doorlockUser.setReason(reason);
+			doorlockUserService.updateByPrimaryKey(doorlockUser);
+			return "1";
+		}
+		String params = "{\"method\": \"thing.service.DeleteUser\",\"deviceid\": \""+doorlockUser.getDeviceid()+"\",\"async\":true,\"nodeid\":1,\"params\":" +
+				"{\"UserType\":"+doorlockUser.getUsertype()+",\"UserID\":"+doorlockUser.getUsercode()+"}}";
+		String result = RestfulUtil.postHttps(params,"lock");
+		JSONObject resultMap = JSON.parseObject(result);
+		int resultcode = resultMap.getIntValue("resultcode");
+		String receipt = resultMap.getString("receipt");
+		if(resultcode==1){
+			doorlockUser.setStatus(Global.STATUS_DELETEING);
+			doorlockUser.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+			doorlockUser.setReceipt(receipt);
+			doorlockUser.setReason(reason);
+			doorlockUserService.updateByPrimaryKey(doorlockUser);
+			return "1";
+		}
+		return "-1";
+	}
+
 
 	@RequestMapping("toLockUserPage.do")
 	public String toLockUserPage(String idStr,ModelMap map){
@@ -267,6 +338,7 @@ public class CodeController {
 		Integer linkId=null;
 		Integer personType=null;
 		String guestNo = "";
+		int ifTempLiveMan = 0;
 		if (idStr.indexOf("-")!=-1) {
 			masterId=Integer.valueOf(idStr.substring(0,idStr.indexOf("-")));
 			linkId=Integer.valueOf(idStr.substring((idStr.indexOf("-")+1),idStr.indexOf("@")));
@@ -280,17 +352,29 @@ public class CodeController {
 		}else if(personType.intValue()==2){
 			guestNo = prhLinkManService.findById(linkId).getGuestno();
 		}else{
+			ifTempLiveMan = 1;
 			guestNo = prhTempLiveManMapper.selectByPrimaryKey(linkId).getGuestno();
 		}
 		map.put("master", master);
-//		List<DoorlockUser> lockuserlist = doorlockUserService.findAllByMasterid(master.getId());
+		map.put("ifTempLiveMan",ifTempLiveMan);
 		List<DoorlockUser> lockuserlist = doorlockUserService.findAllByGuestno(guestNo);
 		map.put("lockuserlist",lockuserlist);
 		return "renter/code/lockUser.jsp";
 	}
 	@RequestMapping("addPassword.do")
 	@ResponseBody
-	public String addPassword(Integer usertype , Integer masterId,String guestNo, String userName, String mobilePhone, String password, String validfrom, String validthrough){
+	public String addPassword(Integer masterId,String guestNo, String userName, String mobilePhone, String password, String idcard, String mfcard,String fingerprint) throws InterruptedException {
+		Date startdate = new Date();
+		Date enddate = null;
+		List<PrhRental> paidByMasterId = prhRentalMapper.findPaidByMasterId(masterId);
+		if(paidByMasterId==null||paidByMasterId.size()==0){
+			return "-1";
+		}else{
+			enddate = paidByMasterId.get(0).getEdate();
+		}
+		SimpleDateFormat simpledf = new SimpleDateFormat("yyyy-MM-dd");
+		String validfrom = simpledf.format(startdate);
+		String validthrough = simpledf.format(enddate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String validfrom2 = validfrom + " 00:00";
 		String validthrough2 = validthrough + " 23:59";
@@ -313,32 +397,123 @@ public class CodeController {
 		}
 		List<DoorlockUser> doorlockUserList = doorlockUserService.findAvailableByDeviceid(house.getAssociatedlock());
 		for(DoorlockUser d : doorlockUserList){
-			if((usertype==1&&d.getPassword().equals(AES.encrypt2Str(password)))||((usertype==3||usertype==4)&&d.getPassword().equals(password))){
+			if(d.getPassword().equals(password)){
 				return "-4";
+			}
+			if(d.getPassword().equals(mfcard)){
+				return "-5";
+			}
+			if(d.getPassword().equals(idcard)){
+				return "-6";
+			}
+			if(d.getPassword().equals(fingerprint)){
+				return "-7";
 			}
 			if(usercodeset.contains(d.getUsercode())){
 				usercodeset.remove(d.getUsercode());
 			}
 		}
 		int usercode = (int)usercodeset.toArray()[0];
-		String params = "{\"method\": \"thing.service.AddUser\",\"async\":true,\"deviceid\": \""+house.getAssociatedlock()+"\",\"nodeid\": 1,\"params\": {\"UserType\": "+usertype+",\"UserLevel\": 2,\"UserID\": "+usercode+"," +
-				"\"UserPassword\": \""+password+"\",\"ValidBeginDateTime\": \""+validfrom2+"\",\"ValidEndDateTime\": \""+validthrough2+"\",\"ValidWeekDays\": 127,\"ValidWeekTime\": \"00:00~23:59\"}}";
+		int usercode1 = (int)usercodeset.toArray()[1];
+		int usercode2 = (int)usercodeset.toArray()[2];
+		int usercode3 = (int)usercodeset.toArray()[3];
+		if(StringUtils.isNotBlank(password)){
+			Map<String, Object> resultMap = sendPasswordRequest(house.getAssociatedlock(), 1, usercode, password, validfrom2, validthrough2);
+			if((Integer) resultMap.get("resultcode")==1){
+				DoorlockUser doorlockUser = new DoorlockUser(1, usercode, userName, mobilePhone, password, begin, end, new Date(),
+						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
+				doorlockUserService.insert(doorlockUser);
+			}
+			Thread.sleep(1000);
+		}
+		if(StringUtils.isNotBlank(idcard)){
+			Map<String, Object> resultMap = sendPasswordRequest(house.getAssociatedlock(), 4, usercode1, idcard, validfrom2, validthrough2);
+			if((Integer) resultMap.get("resultcode")==1){
+				DoorlockUser doorlockUser = new DoorlockUser(4, usercode1, userName, mobilePhone, idcard, begin, end, new Date(),
+						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
+				doorlockUserService.insert(doorlockUser);
+			}
+			Thread.sleep(1000);
+		}
+		if(StringUtils.isNotBlank(mfcard)){
+			Map<String, Object> resultMap = sendPasswordRequest(house.getAssociatedlock(), 3, usercode2, mfcard, validfrom2, validthrough2);
+			if((Integer) resultMap.get("resultcode")==1){
+				DoorlockUser doorlockUser = new DoorlockUser(3, usercode2, userName, mobilePhone, mfcard, begin, end, new Date(),
+						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
+				doorlockUserService.insert(doorlockUser);
+			}
+			Thread.sleep(1000);
+		}
+		if(StringUtils.isNotBlank(fingerprint)){
+			Map<String, Object> resultMap = sendPasswordRequest(house.getAssociatedlock(), 2, usercode3, fingerprint, validfrom2, validthrough2);
+			if((Integer) resultMap.get("resultcode")==1){
+				DoorlockUser doorlockUser = new DoorlockUser(2, usercode3, userName, mobilePhone, fingerprint, begin, end, new Date(),
+						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
+				doorlockUserService.insert(doorlockUser);
+			}
+		}
+
+		return "3";
+	}
+
+	@RequestMapping("sendPasswordAgain.do")
+	@ResponseBody
+	public String sendPasswordAgain(Integer doorlockuserid)  {
+		DoorlockUser lockuser = doorlockUserMapper.selectByPrimaryKey(doorlockuserid);
+
+		PrHouse house = prHouseService.findById(lockuser.getHouseid());
+		if(StringUtils.isBlank(house.getAssociatedlock())){
+			return "-2";
+		}
+
+		Date startdate = lockuser.getValidfrom();
+		Date enddate = lockuser.getValidthrough();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String validfrom = sdf.format(startdate);
+		String validthrough = sdf.format(enddate);
+		int usercode = lockuser.getUsercode();
+		Map<String, Object> resultMap = null;
+		if(lockuser.getStatus()==Global.STATUS_SEND_FAILED){
+			resultMap = sendPasswordRequest(house.getAssociatedlock(), lockuser.getUsertype(), usercode, lockuser.getPassword(), validfrom, validthrough);
+			lockuser.setStatus(Global.STATUS_SENDING);
+		}else if(lockuser.getStatus()==Global.STATUS_UPDATE_TIME_FAILED){
+			resultMap = updateValidTimeRequest(house.getAssociatedlock(), usercode, validfrom, validthrough);
+			lockuser.setStatus(Global.STATUS_UPDATING_TIME);
+		}
+
+		if((Integer) resultMap.get("resultcode")==1){
+			lockuser.setSynstatus(Global.SYN_STATUS_TO_BE_SYNCHRONIZED);
+			lockuser.setReceipt((String) resultMap.get("receipt"));
+
+			doorlockUserService.updateByPrimaryKey(lockuser);
+		}
+
+		return "1";
+	}
+
+	public Map<String,Object> sendPasswordRequest(String associatedlock,int usertype,int usercode,String password,String validfrom,String validthrough){
+		String params = "{\"method\": \"thing.service.AddUser\",\"async\":true,\"deviceid\": \""+associatedlock+"\",\"nodeid\": 1,\"params\": {\"UserType\": "+usertype+",\"UserLevel\": 2,\"UserID\": "+usercode+"," +
+				"\"UserPassword\": \""+password+"\",\"ValidBeginDateTime\": \""+validfrom+"\",\"ValidEndDateTime\": \""+validthrough+"\",\"ValidWeekDays\": 127,\"ValidWeekTime\": \"00:00~23:59\"}}";
 		String result = RestfulUtil.postHttps(params,"lock");
 		JSONObject resultMap = JSON.parseObject(result);
 		int resultcode = resultMap.getIntValue("resultcode");
 		String receipt = resultMap.getString("receipt");
-		if(usertype==1){
-			password = AES.encrypt2Str(password);
-		}
-		if(resultcode==1) {
-			DoorlockUser doorlockUser = new DoorlockUser(usertype, usercode, userName, mobilePhone, password, begin, end, new Date(),
-					master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, receipt,guestNo);
-
-			doorlockUserService.insert(doorlockUser);
-			return "3";
-		}else{
-			return "-1";
-		}
+		Map<String,Object> map = new HashMap<>();
+		map.put("resultcode",resultcode);
+		map.put("receipt",receipt);
+		return map;
+	}
+	public Map<String,Object> updateValidTimeRequest(String associatedlock,int usercode,String validfrom,String validthrough){
+		String params = "{\"method\": \"thing.service.UpdateUserValidDateTime\",\"async\":true,\"deviceid\": \""+associatedlock+"\",\"nodeid\": 1,\"params\": {\"UserID\": "+usercode+"," +
+				"\"ValidBeginDateTime\": \""+validfrom+"\",\"ValidEndDateTime\": \""+validthrough+"\"}}";
+		String result = RestfulUtil.postHttps(params,"lock");
+		JSONObject resultMap = JSON.parseObject(result);
+		int resultcode = resultMap.getIntValue("resultcode");
+		String receipt = resultMap.getString("receipt");
+		Map<String,Object> map = new HashMap<>();
+		map.put("resultcode",resultcode);
+		map.put("receipt",receipt);
+		return map;
 	}
 
 	//身份证挂失

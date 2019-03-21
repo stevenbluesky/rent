@@ -403,9 +403,10 @@
   
    <!--房源管理 -崔少岩  -->
    <select id="findHouseByConditionPaged" parameterType="com.rent.condition.HouseCondition" resultMap="BaseResultMap">
-		       		    select * from PR_HOUSE where 1=1
+        select * from PR_HOUSE
+            <where>
 		       		 <if test="estateId!=null">
-         			    	and estate_id=#{estateId}
+         			    	estate_id=#{estateId}
          			 </if>
          			  <if test="buildingNoId!=null">
 		       		    	and substr(building_no_id, length(building_no_id ),1) = #{buildingNoId}
@@ -433,8 +434,8 @@
            				and is_tui=1
            				</if>
            				
-           			</if>   
-           					
+           			</if>
+            </where>
           	limit #{begin} , #{end}
    			
    </select>

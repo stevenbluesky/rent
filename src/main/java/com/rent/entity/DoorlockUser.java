@@ -28,6 +28,7 @@ public class DoorlockUser {
     private Integer synstatus;
     private String receipt;
     private String guestno;
+    private String reason;
 
     /*doorlockUser.setUsername(userName);
     doorlockUser.setPhonenumber(mobilePhone);
@@ -215,5 +216,13 @@ public class DoorlockUser {
 
     public void setGuestno(String guestno) {
         this.guestno = guestno;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

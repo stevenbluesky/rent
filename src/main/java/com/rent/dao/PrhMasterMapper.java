@@ -2,6 +2,7 @@ package com.rent.dao;
 
 import java.util.List;
 
+import com.rent.entity.PrhRental;
 import org.apache.ibatis.annotations.Param;
 
 import com.rent.common.persistence.annotation.MyBatisDao;
@@ -234,4 +235,5 @@ public interface PrhMasterMapper {
     List<PrhMaster> findMasterBySta(int id);
 
     List<PrhMaster> findOverdueMasterOfRenting();
+
 }
