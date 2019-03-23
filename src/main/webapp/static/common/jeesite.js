@@ -5,6 +5,13 @@
  * @author ThinkGem
  * @version 2014-4-29
  */
+/*var label= {
+    tcpHost:'112.74.20.113',
+    tcpPort:'8888',
+    tcptype:'http',
+    authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBrZXkiOiJpU3VycGFzc0FwcCIsInRpbWVzdGFtcCI6IjEyMzQ1Njc4OTAifQ.KRLkB8N-3w-_tkUfUbHbZCBtZrHuOwKbmQeNK1w08_0',
+    websockettype:'ws'
+}*/
 $(document).ready(function() {
 	try{
 		// 链接去掉虚框

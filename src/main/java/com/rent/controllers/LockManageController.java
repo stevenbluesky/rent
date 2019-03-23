@@ -109,6 +109,32 @@ public class LockManageController {
 
     }
 
+/*    @RequestMapping("findfingerdevice.do")
+    @ResponseBody
+    public List<Lock> findFingerDevice(ModelMap map){
+        String params = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"fingerprintreader\",\"_nodeid\":1}}}";
+        String result = RestfulUtil.postHttps(params,"app");
+        JSONArray pageArray = null;
+        List<Lock> pageList = new ArrayList<>();
+        int totalCount = 0;
+        // 处理数据
+        JSONObject resultMap = JSON.parseObject(result);
+        int resultcode = resultMap.getIntValue("resultcode");
+        if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+            JSONObject data = resultMap.getJSONObject("data");
+            totalCount = data.getIntValue("TotalCount");
+            if (totalCount > 0) {
+                pageArray = data.getJSONArray("PageList");
+                for (int i = 0; i < pageArray.size(); i++) {
+                    Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
+                    pageList.add(lock);
+                }
+            }
+        }
+        return pageList;
+    }*/
+
+
     @RequestMapping("lockNameEdit.do")
     @ResponseBody
     public String lockNameEdit(String deviceid,String houseid,String lockName) {

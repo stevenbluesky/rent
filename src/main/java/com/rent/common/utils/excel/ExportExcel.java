@@ -40,7 +40,7 @@ import com.rent.common.utils.Encodes;
 import com.rent.common.utils.Reflections;
 
 /**
- * 导出Excel文件（导出�?�XLSX”格式，支持大数据量导出   @see org.apache.poi.ss.SpreadsheetVersion�?
+ * 导出Excel文件（导出�?�XLSX”格式，支持大数据量导出   @see org.apache.poi.ss.SpreadsheetVersion�?
  * @author ThinkGem
  * @version 2013-04-21
  */
@@ -49,12 +49,12 @@ public class ExportExcel {
 	private static Logger log = LoggerFactory.getLogger(ExportExcel.class);
 			
 	/**
-	 * 工作薄对�?
+	 * 工作薄对�?
 	 */
 	private SXSSFWorkbook wb;
 	
 	/**
-	 * 工作表对�?
+	 * 工作表对�?
 	 */
 	private Sheet sheet;
 	
@@ -69,24 +69,24 @@ public class ExportExcel {
 	private int rownum;
 	
 	/**
-	 * 注解列表（Object[]{ ExcelField, Field/Method }�?
+	 * 注解列表（Object[]{ ExcelField, Field/Method }�?
 	 */
 	List<Object[]> annotationList = Lists.newArrayList();
 	
 	/**
-	 * 构�?�函�?
-	 * @param title 表格标题，传“空值�?�，表示无标�?
-	 * @param cls 实体对象，�?�过annotation.ExportField获取标题
+	 * 构�?�函�?
+	 * @param title 表格标题，传“空值�?�，表示无标�?
+	 * @param cls 实体对象，�?�过annotation.ExportField获取标题
 	 */
 	public ExportExcel(String title, Class<?> cls){
 		this(title, cls, 1);
 	}
 	
 	/**
-	 * 构�?�函�?
-	 * @param title 表格标题，传“空值�?�，表示无标�?
-	 * @param cls 实体对象，�?�过annotation.ExportField获取标题
-	 * @param type 导出类型�?1:导出数据�?2：导出模板）
+	 * 构�?�函�?
+	 * @param title 表格标题，传“空值�?�，表示无标�?
+	 * @param cls 实体对象，�?�过annotation.ExportField获取标题
+	 * @param type 导出类型�?1:导出数据�?2：导出模板）
 	 * @param groups 导入分组
 	 */
 	public ExportExcel(String title, Class<?> cls, int type, int... groups){
@@ -149,7 +149,7 @@ public class ExportExcel {
 		List<String> headerList = Lists.newArrayList();
 		for (Object[] os : annotationList){
 			String t = ((ExcelField)os[0]).title();
-			// 如果是导出，则去掉注�?
+			// 如果是导出，则去掉注�?
 			if (type==1){
 				String[] ss = StringUtils.split(t, "**", 2);
 				if (ss.length==2){
@@ -162,8 +162,8 @@ public class ExportExcel {
 	}
 	
 	/**
-	 * 构�?�函�?
-	 * @param title 表格标题，传“空值�?�，表示无标�?
+	 * 构�?�函�?
+	 * @param title 表格标题，传“空值�?�，表示无标�?
 	 * @param headers 表头数组
 	 */
 	public ExportExcel(String title, String[] headers) {
@@ -171,8 +171,8 @@ public class ExportExcel {
 	}
 	
 	/**
-	 * 构�?�函�?
-	 * @param title 表格标题，传“空值�?�，表示无标�?
+	 * 构�?�函�?
+	 * @param title 表格标题，传“空值�?�，表示无标�?
 	 * @param headerList 表头列表
 	 */
 	public ExportExcel(String title, List<String> headerList) {
@@ -180,8 +180,8 @@ public class ExportExcel {
 	}
 	
 	/**
-	 * 初始化函�?
-	 * @param title 表格标题，传“空值�?�，表示无标�?
+	 * 初始化函�?
+	 * @param title 表格标题，传“空值�?�，表示无标�?
 	 * @param headerList 表头列表
 	 */
 	private void initialize(String title, List<String> headerList) {
@@ -228,7 +228,7 @@ public class ExportExcel {
 	
 	/**
 	 * 创建表格样式
-	 * @param wb 工作薄对�?
+	 * @param wb 工作薄对�?
 	 * @return 样式列表
 	 */
 	private Map<String, CellStyle> createStyles(Workbook wb) {
@@ -293,8 +293,8 @@ public class ExportExcel {
 	}
 
 	/**
-	 * 添加�?�?
-	 * @return 行对�?
+	 * 添加�?�?
+	 * @return 行对�?
 	 */
 	public Row addRow(){
 		return sheet.createRow(rownum++);
@@ -302,23 +302,23 @@ public class ExportExcel {
 	
 
 	/**
-	 * 添加�?个单元格
+	 * 添加�?个单元格
 	 * @param row 添加的行
 	 * @param column 添加列号
-	 * @param val 添加�?
-	 * @return 单元格对�?
+	 * @param val 添加�?
+	 * @return 单元格对�?
 	 */
 	public Cell addCell(Row row, int column, Object val){
 		return this.addCell(row, column, val, 0, Class.class);
 	}
 	
 	/**
-	 * 添加�?个单元格
+	 * 添加�?个单元格
 	 * @param row 添加的行
 	 * @param column 添加列号
-	 * @param val 添加�?
-	 * @param align 对齐方式�?1：靠左；2：居中；3：靠右）
-	 * @return 单元格对�?
+	 * @param val 添加�?
+	 * @param align 对齐方式�?1：靠左；2：居中；3：靠右）
+	 * @return 单元格对�?
 	 */
 	public Cell addCell(Row row, int column, Object val, int align, Class<?> fieldType){
 		Cell cell = row.createCell(column);
@@ -369,7 +369,7 @@ public class ExportExcel {
 	}
 
 	/**
-	 * 添加数据（�?�过annotation.ExportField添加数据�?
+	 * 添加数据（�?�过annotation.ExportField添加数据�?
 	 * @return list 数据列表
 	 */
 	public <E> ExportExcel setDataList(List<E> list){
@@ -409,8 +409,8 @@ public class ExportExcel {
 	}
 	
 	/**
-	 * 输出数据�?
-	 * @param os 输出数据�?
+	 * 输出数据�?
+	 * @param os 输出数据�?
 	 */
 	public ExportExcel write(OutputStream os) throws IOException{
 		wb.write(os);
@@ -419,7 +419,7 @@ public class ExportExcel {
 	
 	/**
 	 * 输出到客户端
-	 * @param fileName 输出文件�?
+	 * @param fileName 输出文件�?
 	 */
 	public ExportExcel write(HttpServletResponse response, String fileName) throws IOException{
 		response.reset();
@@ -430,8 +430,8 @@ public class ExportExcel {
 	}
 	
 	/**
-	 * 输出到文�?
-	 * @param fileName 输出文件�?
+	 * 输出到文�?
+	 * @param fileName 输出文件�?
 	 */
 	public ExportExcel writeFile(String name) throws FileNotFoundException, IOException{
 		FileOutputStream os = new FileOutputStream(name);
@@ -447,41 +447,41 @@ public class ExportExcel {
 		return this;
 	}
 	
-//	/**
-//	 * 导出测试
-//	 */
-//	public static void main(String[] args) throws Throwable {
-//		
-//		List<String> headerList = Lists.newArrayList();
-//		for (int i = 1; i <= 10; i++) {
-//			headerList.add("表头"+i);
-//		}
-//		
-//		List<String> dataRowList = Lists.newArrayList();
-//		for (int i = 1; i <= headerList.size(); i++) {
-//			dataRowList.add("数据"+i);
-//		}
-//		
-//		List<List<String>> dataList = Lists.newArrayList();
-//		for (int i = 1; i <=1000000; i++) {
-//			dataList.add(dataRowList);
-//		}
-//
-//		ExportExcel ee = new ExportExcel("表格标题", headerList);
-//		
-//		for (int i = 0; i < dataList.size(); i++) {
-//			Row row = ee.addRow();
-//			for (int j = 0; j < dataList.get(i).size(); j++) {
-//				ee.addCell(row, j, dataList.get(i).get(j));
-//			}
-//		}
-//		
-//		ee.writeFile("target/export.xlsx");
-//
-//		ee.dispose();
-//		
-//		log.debug("Export success.");
-//		
-//	}
+/*	*//**
+	 * 导出测试
+	 *//*
+	public static void main(String[] args) throws Throwable {
+
+		List<String> headerList = Lists.newArrayList();
+		for (int i = 1; i <= 10; i++) {
+			headerList.add("表头"+i);
+		}
+
+		List<String> dataRowList = Lists.newArrayList();
+		for (int i = 1; i <= headerList.size(); i++) {
+			dataRowList.add("数据"+i);
+		}
+
+		List<List<String>> dataList = Lists.newArrayList();
+		for (int i = 1; i <=1000000; i++) {
+			dataList.add(dataRowList);
+		}
+
+		ExportExcel ee = new ExportExcel("表格标题", headerList);
+
+		for (int i = 0; i < dataList.size(); i++) {
+			Row row = ee.addRow();
+			for (int j = 0; j < dataList.get(i).size(); j++) {
+				ee.addCell(row, j, dataList.get(i).get(j));
+			}
+		}
+
+		ee.writeFile("target/export.xlsx");
+
+		ee.dispose();
+
+		log.debug("Export success.");
+
+	}*/
 
 }

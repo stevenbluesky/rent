@@ -366,7 +366,7 @@ ul {
                     type: 2,
                     title: '增加门锁用户',
                     maxmin: false,
-                    area: ['500px', '400px'],
+                    area: ['600px', '320px'],
                     content:'toAddLockuserPage.do?idStr='+id,
                     end: function(){
                         location.reload();

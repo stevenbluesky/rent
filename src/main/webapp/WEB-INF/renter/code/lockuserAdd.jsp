@@ -2,6 +2,14 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <%@ include file="/WEB-INF/views/include/head.jsp"%>
 <jsp:useBean id="now" class="java.util.Date"></jsp:useBean>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!-- 加载jeesite.properties配置文件 -->
+<fmt:setBundle basename="jeesite" var="jsite" />
+<!-- 读取配置值key，并赋值给变量var -->
+<fmt:message key="authorization" var="authorization" bundle="${jsite}" />
+<fmt:message key="tcpHost" var="tcpHost" bundle="${jsite}" />
+<fmt:message key="tcpPort" var="tcpPort" bundle="${jsite}" />
+<fmt:message key="websockettype" var="websockettype" bundle="${jsite}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -28,7 +36,7 @@
             color: #c00;
             text-decoration: underline;
         }
-        <!--
+
         body, div, ul, li {
             padding: 0;
         }
@@ -57,23 +65,6 @@
             list-style: none;
         }
 
-        .main {
-            clear: both;
-            padding: 8px;
-            text-align: left;
-        }
-        /*第一种形式*/
-        #tabs0 {
-            height: 800px;
-            width: 100%;
-            border: 1px solid #red;
-            background-color: #f2f6fb;
-        }
-
-        .menu0 {
-            width: 400px;
-        }
-
         .menu0 li {
             display: block;
             float: left;
@@ -82,38 +73,6 @@
             text-align: center;
             cursor: pointer;
             background: orange;
-        }
-
-        .menu0 li.hover {
-            background: #ff0;
-        }
-
-        #main0 .menu0 {
-            display: none;
-        }
-
-        #main0 .menu0.block {
-            display: block;
-        }
-        /*第二种形式*/
-        #tabs {
-            text-align: left;
-            width: 400px;
-        }
-
-        .menu1box {
-            position: relative;
-            overflow: hidden;
-            height: 22px;
-            width: 400px;
-            text-align: left;
-        }
-
-        #menu1 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
         }
 
         #menu1 li {
@@ -126,29 +85,10 @@
             height: 21px;
         }
 
-        #menu1 li.hover {
-            background: #fff;
-            border-left: 1px solid #333;
-            border-top: 1px solid #333;
-            border-right: 1px solid #333;
-        }
-
-        .main1box {
-            clear: both;
-            margin-top: -1px;
-            border: 1px solid #333;
-            height: 181px;
-            width: 400px;
-        }
-
         #main1 ul {
             display: none;
         }
 
-        #main1 ul.block {
-            display: block;
-        }
-        -->
     </style>
     
 </head>
@@ -173,15 +113,28 @@
             <td><input type="text" id="mfcard" name="mfcard" class="mfcard" value=""></td>
         </tr>
         <tr>
-            <td class="title">指纹:</td>
-            <td><textarea name="fingerprint" id="fingerprint" cols="30" rows="6"></textarea></td>
+            <td class="title">指纹:<span id="fingertip"><b>(未采集)</b></span></td>
+            <td>
+                <select id="fingerprintdevice" name="fingerprintdevice"  class="fingerprintdevice" style="width: 210px" title="选择指纹采集器" onchange="deviceChange()">
+                    <c:if test="${locklist==null}"><option value=''>没有可用的指纹采集器</option></c:if>
+                    <c:if test="${locklist!=null}"><option value='' >选择指纹采集器</option></c:if>
+                    <c:forEach var="b" items="${locklist }">
+                        <option value="${b._deviceid}">${b._deviceid}</option>
+                    </c:forEach>
+                </select>
+                <button type="button" id="enterBtn" class="btn">开始指纹采集</button>
+                <input type="hidden" name="fingerprint" id="fingerprint" value=""/>
+                <input type="hidden" id="invokefield"  value=''/>
+            </td>
+
         </tr>
-
-
+        <tr style="text-align: center;">
+            <td colspan="2">提示：若点击“开始指纹采集”后，界面/设备无反应，请检查设备后重试！</td>
+        </tr>
         <tr style="text-align: center;">
 
-            <td colspan="2" style="padding-left:80px;" >
-                  <input type="button" style="width: 70px;" value="返回" class="btn"
+            <td colspan="2" style="padding-left:160px;" >
+                  <input type="button" style="width: 70px;" value="返回" class="btn" id="backbtn"
                     onclick="javascript: parent.layer.close(parent.layer.getFrameIndex(window.name));">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input class="btn"  type="button" value="确定" onclick="addPassword()"  style="width: 70px;"></td>
         </tr>
@@ -190,6 +143,127 @@
 </body>
 
 <script type="text/javascript">
+    var authorization = "${authorization}";
+    var tcpHost = "${tcpHost}";
+    var tcpPort = "${tcpPort}";
+    var websockettype = "${websockettype}";
+    var noresponse = true;
+
+    var ws1, ws2;
+    $().ready(function(){
+        if (window.WebSocket === undefined) {
+            alert("Your browser does not support WebSockets");
+            return;
+        } else {
+            ws1 = initWS1();
+            ws2 = initWS2();
+        }
+        if (window.sessionStorage) {
+            var pv = window.sessionStorage.getItem("passwordval");
+            var mv = window.sessionStorage.getItem("mfcardval");
+            var iv = window.sessionStorage.getItem("idcardval");
+            var tip = window.sessionStorage.getItem("tip");
+            if (pv != "" && pv != null){
+                document.getElementById("password").value = pv;
+            }
+            if (mv != "" && mv != null){
+                document.getElementById("mfcard").value = mv;
+            }
+            if (iv != "" && iv != null){
+                document.getElementById("idcard").value = iv;
+            }
+            if(tip != "" && tip != "null" && tip !=null){
+                $.jBox.tip(tip);
+            }
+            window.sessionStorage.removeItem("passwordval");
+            window.sessionStorage.removeItem("mfcardval");
+            window.sessionStorage.removeItem("idcardval");
+            window.sessionStorage.removeItem("tip");
+        }else
+        {
+            // 不支持 sessionStorage，用 Dojo 实现相同功能
+        }
+    });
+    function initWS1() {
+        var resultData = "";
+        var socket = new WebSocket(websockettype+"://"+tcpHost+":"+tcpPort+"/ws/fingerprint")
+        socket.onopen = function() {
+            socket.send(authorization);
+        };
+        socket.onmessage = function (e) {
+            resultData = eval('(' + JSON.parse(e.data) + ')');
+            if(resultData.resultcode==1&&resultData.data.FingerPrintDataIndex==undefined&&resultData.data.FingerPrintDataHex==undefined&&resultData.id==undefined){
+                noresponse = false;
+                $.jBox.tip("请开始采集指纹!");
+            }else if(resultData.resultcode==1&&resultData.data.FingerPrintDataIndex!=undefined&&resultData.data.FingerPrintDataHex!=undefined) {
+                var finger = $("#fingerprint").val();
+                $("#fingerprint").val(finger+resultData.data.FingerPrintDataHex );
+            }else if(resultData.resultcode==1&&resultData.data.FingerPrintDataIndex==undefined&&resultData.data.FingerPrintDataHex==undefined&&resultData.id!=undefined) {
+                $("#fingertip").html("<font color='green'><b>(已采集)</b></font>")
+                $.jBox.tip("采集指纹成功!");
+            }else if(resultData.resultcode===0){
+                saveToStorage('指纹采集失败!');
+            }else if(resultData.resultcode===3){
+                $.jBox.tip("请再次采集指纹!");
+            }else{
+                noresponse = false;
+                if(resultData.Tip_CN!=undefined){
+                    saveToStorage(resultData.Tip_CN+"!");
+                }else if(resultData.errorinfo_cn!=undefined){
+                    saveToStorage(resultData.errorinfo_cn+"!");
+                }else{
+                    saveToStorage("请求回复："+resultData.resultcode);
+                }
+
+            }
+        }
+        socket.onclose = function () {
+        }
+        return socket;
+    }
+
+    function initWS2() {
+        var container = $("#container")
+        var socket = new WebSocket(websockettype+"://"+tcpHost+":"+tcpPort+"/ws/receiveReport")
+        socket.onopen = function() {
+            socket.send(authorization);
+        };
+        socket.onmessage = function (e) {
+            // alert("<p> server push report:" + JSON.parse(e.data) + "</p>");
+        }
+        socket.onclose = function () {
+        }
+        return socket;
+    }
+
+    function deviceChange(){
+        var deviceid = $("#fingerprintdevice").val();
+        var requeststr = "{\"method\":\"thing.service.EnterReadFingerPrint\", \"deviceid\":\""+deviceid+"\"}";
+        $("#invokefield").val(requeststr);
+    }
+
+    $("#enterBtn").click(function (e) {
+        e.preventDefault();
+        var deviceid = $("#fingerprintdevice").val();
+        if(deviceid==""||deviceid==undefined||deviceid==null){
+            $.jBox.tip("请先选择指纹录入器!");
+            return;
+        }
+        $('#enterBtn').attr("disabled",true);
+        ws1.send($("#invokefield").val());
+
+        var repeat = 6;
+        timer = setInterval(function () {
+            if (repeat == 1 && noresponse) {
+                clearInterval(timer);
+                //设备无反应
+                saveToStorage("未收到设备回复，请重试！");
+            }
+            repeat--;
+        },1000);
+
+    });
+
     function addPassword() {
         var reg = /^\d{4,8}$/;
         var passwordvalue = $("#password").val();
@@ -218,7 +292,11 @@
             url: 'addPassword.do',
             data: $('#myForm').serialize(),
             success: function (result) {
-                if(result=="-1"){
+                if(result=="0") {
+                    alert("保存成功，待下发！")
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else if(result=="-1"){
                     $>jBox.tip("信息填写不正确！");
                     $(".addBtn").removeAttr("disabled");
                 }else if (result=="-2") {
@@ -237,7 +315,20 @@
                     $ > jBox.tip("指纹已存在！");
                     $(".addBtn").removeAttr("disabled");
                 }else{
-                    alert("保存成功，待下发！")
+                   var tip = "";
+                    if(((result)%(Math.pow(2, 1)))/(Math.pow(2, 1-1)) >= 1.0){
+                        tip +=" 密码";
+                    }
+                    if(((result)%(Math.pow(2, 2)))/(Math.pow(2, 2-1)) >= 1.0){
+                        tip +=" 身份证";
+                    }
+                    if(((result)%(Math.pow(2, 3)))/(Math.pow(2, 3-1)) >= 1.0){
+                        tip +=" MF卡";
+                    }
+                    if(((result)%(Math.pow(2, 4)))/(Math.pow(2, 4-1)) >= 1.0){
+                        tip +=" 指纹";
+                    }
+                    alert(tip+"设置失败，请重试！")
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 }
@@ -247,6 +338,20 @@
                 $.jBox.tip("信息填写不正确！");
             }
         });
+    }
+    function saveToStorage(tip) {
+        if (window.sessionStorage) {
+            var passwordval = document.getElementById("password").value;
+            var mfcardval = document.getElementById("mfcard").value;
+            var idcardval = document.getElementById("idcard").value;
+            window.sessionStorage.setItem("passwordval", passwordval);
+            window.sessionStorage.setItem("mfcardval", mfcardval);
+            window.sessionStorage.setItem("idcardval", idcardval);
+            window.sessionStorage.setItem("tip", tip);
+            window.location.reload();
+        } else {
+            // 不支持 sessionStorage，用 Dojo 实现相同功能
+        }
     }
 </script>
 </html>

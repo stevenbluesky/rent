@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.rent.common.utils.*;
 import com.rent.dao.*;
@@ -293,11 +294,32 @@ public class CodeController {
 		Profile profile = profileMapper.findBygusetNo(guestNo);
 		map.put("master", master);
 		map.put("profile",profile);
-
+		map.put("locklist",findFingerDevice());
 		return "renter/code/lockuserAdd.jsp";
 
 	}
-
+	private List<Lock> findFingerDevice(){
+		String params = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"fingerprintreader\",\"_nodeid\":1}}}";
+		String result = RestfulUtil.postHttps(params,"app");
+		JSONArray pageArray = null;
+		List<Lock> pageList = new ArrayList<>();
+		int totalCount = 0;
+		// 处理数据
+		JSONObject resultMap = JSON.parseObject(result);
+		int resultcode = resultMap.getIntValue("resultcode");
+		if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
+			JSONObject data = resultMap.getJSONObject("data");
+			totalCount = data.getIntValue("TotalCount");
+			if (totalCount > 0) {
+				pageArray = data.getJSONArray("PageList");
+				for (int i = 0; i < pageArray.size(); i++) {
+					Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
+					pageList.add(lock);
+				}
+			}
+		}
+		return pageList.size()>0?pageList:null;
+	}
 	@RequestMapping("toDeleteLockUser.do")
 	public String toDeleteLockUser(String doorlockuserid,ModelMap map){
 		map.put("doorlockuserid", doorlockuserid);
@@ -364,6 +386,7 @@ public class CodeController {
 	@RequestMapping("addPassword.do")
 	@ResponseBody
 	public String addPassword(Integer masterId,String guestNo, String userName, String mobilePhone, String password, String idcard, String mfcard,String fingerprint) throws InterruptedException {
+		int errorResult = 0;
 		Date startdate = new Date();
 		Date enddate = null;
 		List<PrhRental> paidByMasterId = prhRentalMapper.findPaidByMasterId(masterId);
@@ -423,15 +446,19 @@ public class CodeController {
 				DoorlockUser doorlockUser = new DoorlockUser(1, usercode, userName, mobilePhone, password, begin, end, new Date(),
 						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
 				doorlockUserService.insert(doorlockUser);
+			}else{
+				errorResult += 1;
 			}
 			Thread.sleep(1000);
 		}
-		if(StringUtils.isNotBlank(idcard)){
+		if(StringUtils.isNotBlank(idcard)) {
 			Map<String, Object> resultMap = sendPasswordRequest(house.getAssociatedlock(), 4, usercode1, idcard, validfrom2, validthrough2);
-			if((Integer) resultMap.get("resultcode")==1){
+			if ((Integer) resultMap.get("resultcode") == 1) {
 				DoorlockUser doorlockUser = new DoorlockUser(4, usercode1, userName, mobilePhone, idcard, begin, end, new Date(),
-						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
+						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"), guestNo);
 				doorlockUserService.insert(doorlockUser);
+			} else{
+				errorResult += 2;
 			}
 			Thread.sleep(1000);
 		}
@@ -441,6 +468,8 @@ public class CodeController {
 				DoorlockUser doorlockUser = new DoorlockUser(3, usercode2, userName, mobilePhone, mfcard, begin, end, new Date(),
 						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
 				doorlockUserService.insert(doorlockUser);
+			}else {
+				errorResult += 4;
 			}
 			Thread.sleep(1000);
 		}
@@ -450,10 +479,12 @@ public class CodeController {
 				DoorlockUser doorlockUser = new DoorlockUser(2, usercode3, userName, mobilePhone, fingerprint, begin, end, new Date(),
 						master.getHouseId(), masterId, house.getAssociatedlock(), Global.STATUS_SENDING, Global.SYN_STATUS_TO_BE_SYNCHRONIZED, (String) resultMap.get("receipt"),guestNo);
 				doorlockUserService.insert(doorlockUser);
+			}else {
+				errorResult += 8;
 			}
 		}
 
-		return "3";
+		return String.valueOf(errorResult);
 	}
 
 	@RequestMapping("sendPasswordAgain.do")
