@@ -292,8 +292,11 @@ public class PrHouseController {
 					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
 				}
 			}
-			String empty = "";
-			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + (lock!=null?lock.getName():empty) + "\",\"Houseid\":" + prHouse.getId() + ",\"IfBind\":true}}";
+			String namestr = "";
+			if(lock!=null&&StringUtils.isNotBlank(lock.getName())&&!"null".equals(lock.getName())){
+				namestr = lock.getName();
+			}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + namestr + "\",\"Houseid\":" + prHouse.getId() + ",\"IfBind\":true}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
 			JSONObject resultMap2 = JSON.parseObject(result2);
 			int resultcode2 = resultMap2.getIntValue("resultcode");
@@ -397,7 +400,11 @@ public class PrHouseController {
 					lock = JSON.parseObject(data.getJSONArray("PageList").get(0).toString(), Lock.class);
 				}
 			}
-			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + lock.getName() + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
+			String namestr = "";
+			if(org.apache.commons.lang3.StringUtils.isNotBlank(lock.getName())&&!"null".equals(lock.getName())){
+				namestr = lock.getName();
+			}
+			String params1 = "{\"method\": \"thing.service.SetNodeExtendedAttribute\",\"deviceid\": \"" + prHouse.getAssociatedlock() + "\",\"nodeid\":1,\"params\":{\"Name\":\"" + namestr + "\",\"Houseid\":" + oldHouse.getId() + ",\"IfBind\":true}}";
 			String result2 = RestfulUtil.postHttps(params1, "app");
 			JSONObject resultMap2 = JSON.parseObject(result2);
 			int resultcode2 = resultMap2.getIntValue("resultcode");

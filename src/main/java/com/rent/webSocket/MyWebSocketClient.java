@@ -1,6 +1,7 @@
 package com.rent.webSocket;
 
 import com.rent.common.utils.MjConfig;
+import com.rent.common.utils.RestfulUtil;
 import com.rent.services.DoorlockUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,7 +30,7 @@ public class MyWebSocketClient {
             @Override
             public void onOpen(ServerHandshake arg0) {
                 logger.debug("Start building a connection...");
-                client.send(MjConfig.get("authorization"));
+                client.send(RestfulUtil.getAuthorization());
             }
 
             @Override
@@ -50,7 +51,7 @@ public class MyWebSocketClient {
 
             @Override
             public void onClose(int arg0, String arg1, boolean arg2) {
-                logger.debug("客户端已关闭,开始尝试重新连接...");
+                logger.debug("WebSocket client closed , Start trying to reconnect...");
                 try {
                     MyWebSocketClient.createConnect();
                 } catch (Exception e) {

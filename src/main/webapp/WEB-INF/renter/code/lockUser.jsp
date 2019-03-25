@@ -254,8 +254,8 @@
             type: 2,
             title: '删除',
             maxmin: false,
-            area: ['400px', '300px'],
-
+            area: ['400px', '150px'],
+            offset: [50,0],//坐标
             content: 'toDeleteLockUser.do?doorlockuserid=' + obj,
             end: function () {
                 location.reload();

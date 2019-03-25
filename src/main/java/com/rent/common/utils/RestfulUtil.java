@@ -1,11 +1,13 @@
 package com.rent.common.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Map;
 
@@ -31,9 +33,39 @@ public class RestfulUtil {
 		}
 	}
 
+	public static String getAuthorization(){
+		JSONObject jsonObject = new JSONObject(true);
+		jsonObject.put("alg","HS256");
+		jsonObject.put("typ","JWT");
+		String data = jsonObject.toJSONString();
+		String encodedStr = null;
+		try {
+			encodedStr = Base64URL.encode(data);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		//--------
+		JSONObject jsonObject1 = new JSONObject(true);
+		jsonObject1.put("appkey", MjConfig.get("appkey"));
+		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
+		jsonObject1.put("timestamp",timestamp);
+		String data1 = jsonObject1.toJSONString();
+		String encodedStr1 = null;
+		try {
+			encodedStr1 = Base64URL.encode(data1);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		//--------
+		String message = encodedStr+"."+encodedStr1;
+		String secret = MjConfig.get("secret");
+		String signature = HMACSHA256.sha256_HMAC(message, secret);
+		return "Bearer "+encodedStr+"."+encodedStr1+"."+signature;
+	}
+
 	public static String postHttps(String json,String project){
-		String authorization = MjConfig.get("authorization");
 		try{
+			String authorization = getAuthorization();
 			String str = HttpUtil.httprequest(MjConfig.get("tcptype")+"://"+MjConfig.get("tcpHost")+":"+MjConfig.get("tcpPort")+"/"+project, json, authorization);
 			log.info(str);
 			return str;

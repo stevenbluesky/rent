@@ -295,6 +295,7 @@ public class CodeController {
 		map.put("master", master);
 		map.put("profile",profile);
 		map.put("locklist",findFingerDevice());
+		map.put("authorization",RestfulUtil.getAuthorization());
 		return "renter/code/lockuserAdd.jsp";
 
 	}

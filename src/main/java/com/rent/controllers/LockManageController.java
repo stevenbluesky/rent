@@ -6,21 +6,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.rent.common.utils.NumPageUtil;
 import com.rent.common.utils.RestfulUtil;
 import com.rent.door.HouseInfo;
-import com.rent.entity.*;
+import com.rent.entity.Lock;
 import com.rent.services.PrHouseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liwenxiang
@@ -109,31 +106,6 @@ public class LockManageController {
 
     }
 
-/*    @RequestMapping("findfingerdevice.do")
-    @ResponseBody
-    public List<Lock> findFingerDevice(ModelMap map){
-        String params = "{\"method\":\"thing.service.GetNodeList\",\"params\":{\"Conditions\":{\"_nodetype\":\"fingerprintreader\",\"_nodeid\":1}}}";
-        String result = RestfulUtil.postHttps(params,"app");
-        JSONArray pageArray = null;
-        List<Lock> pageList = new ArrayList<>();
-        int totalCount = 0;
-        // 处理数据
-        JSONObject resultMap = JSON.parseObject(result);
-        int resultcode = resultMap.getIntValue("resultcode");
-        if (!RestfulUtil.checkNull(resultMap.getJSONObject("data"))) {
-            JSONObject data = resultMap.getJSONObject("data");
-            totalCount = data.getIntValue("TotalCount");
-            if (totalCount > 0) {
-                pageArray = data.getJSONArray("PageList");
-                for (int i = 0; i < pageArray.size(); i++) {
-                    Lock lock = JSON.parseObject(pageArray.get(i).toString(), Lock.class);
-                    pageList.add(lock);
-                }
-            }
-        }
-        return pageList;
-    }*/
-
 
     @RequestMapping("lockNameEdit.do")
     @ResponseBody
@@ -166,6 +138,7 @@ public class LockManageController {
             return "failed";
         }
     }
+
     @RequestMapping("toLockNameEdit.do")
     public String toLockNameEdit(String baseinfo, ModelMap map) {
         String[] info = baseinfo.split("@");

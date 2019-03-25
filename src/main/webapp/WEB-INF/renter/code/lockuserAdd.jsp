@@ -6,7 +6,6 @@
 <!-- 加载jeesite.properties配置文件 -->
 <fmt:setBundle basename="jeesite" var="jsite" />
 <!-- 读取配置值key，并赋值给变量var -->
-<fmt:message key="authorization" var="authorization" bundle="${jsite}" />
 <fmt:message key="tcpHost" var="tcpHost" bundle="${jsite}" />
 <fmt:message key="tcpPort" var="tcpPort" bundle="${jsite}" />
 <fmt:message key="websockettype" var="websockettype" bundle="${jsite}" />
